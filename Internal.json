@@ -417,6 +417,14 @@
                     "size": 2,
                     "name": "Miner House"
                   }
+                },
+                {
+                  "Script.Building": {
+                    "active": true,
+                    "graph": "GraphGLTF|2025-04-08T10:48:00.622Z|81801",
+                    "size": 3,
+                    "name": "House_Big"
+                  }
                 }
               ]
             },
