@@ -84,7 +84,9 @@ namespace Script {
                     let diff = pos.clone.subtract(this.prevPosition);
                     // console.log(_event.movementX, _event.movementY, pos, this.prevPosition, diff);
                     this.camera.node.mtxLocal.translate(diff.negate(), false);
-                    this.prevPosition = pos;
+                    requestAnimationFrame(()=>{
+                        this.prevPosition = getPlanePositionFromMouseEvent(_event);
+                    })
                     // console.log(this.camera.node.mtxLocal.translation);
                     break;
                 }
