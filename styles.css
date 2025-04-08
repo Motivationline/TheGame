@@ -14,3 +14,21 @@ canvas.fullscreen {
   width: 100vw; 
   height: 100vh; 
 }
+
+div.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+div.overlay > * {
+  pointer-events: all;
+}
+
+.bg {
+  background-color: whitesmoke;
+}
+
+.hidden {
+  display: none;
+}
