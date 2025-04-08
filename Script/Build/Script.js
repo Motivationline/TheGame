@@ -132,6 +132,7 @@ var Script;
         let camera = Script.findFirstCameraInGraph(graph);
         Script.viewport.initialize("game", graph, camera, canvas);
         canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: Script.viewport }));
+        Script.setupUI();
     }
 })(Script || (Script = {}));
 var Script;
@@ -241,9 +242,7 @@ var Script;
             this.marker.getComponent(ƒ.ComponentMaterial).clrPrimary = _color;
         }
         tilePositionFromMouseEvent(_event) {
-            let mousePos = new ƒ.Vector2(_event.clientX, _event.clientY);
-            let ray = Script.viewport.getRayFromClient(mousePos);
-            let pos = ray.intersectPlane(ƒ.Vector3.ZERO(), ƒ.Vector3.Y(1));
+            let pos = Script.getPlanePositionFromMouseEvent(_event);
             let tilePos = this.grid.getTilePosition(new ƒ.Vector2(pos.x, pos.z));
             return tilePos;
         }
@@ -260,13 +259,12 @@ var Script;
 /// <reference path="Grid/Controller.ts" />
 (function (Script) {
     var ƒ = FudgeCore;
-    ƒ.Project.addEventListener("resourcesLoaded" /* ƒ.EVENT.RESOURCES_LOADED */, start);
-    function start() {
+    function setupUI() {
         if (ƒ.Project.mode === ƒ.MODE.EDITOR)
             return;
         const uis = new Map([
             ["build", new Script.GridBuilder()],
-            ["move", new MoveController()],
+            ["move", new CameraController()],
         ]);
         let activeUI = uis.get("move");
         activeUI.enable();
@@ -282,16 +280,59 @@ var Script;
             });
         });
     }
-    class MoveController {
+    Script.setupUI = setupUI;
+    class CameraController {
         constructor() {
+            this.canvas = document.querySelector("canvas");
+            this.camera = Script.findFirstCameraInGraph(Script.viewport.getBranch());
+            this.currentZoom = 0;
+            this.zoomFactor = 10;
+            this.zoom = (_event) => {
+                const direction = -Math.sign(_event.deltaY);
+                const newZoom = this.currentZoom + direction;
+                if (newZoom < 0 || newZoom > 10)
+                    return;
+                this.currentZoom += direction;
+                this.camera.node.mtxLocal.translateZ(direction * this.zoomFactor, true);
+            };
+            this.moving = false;
+            this.mouseEvent = (_event) => {
+                switch (_event.type) {
+                    case "mousedown": {
+                        this.moving = true;
+                        this.prevPosition = Script.getPlanePositionFromMouseEvent(_event);
+                        break;
+                    }
+                    case "mouseup": {
+                        this.moving = false;
+                        break;
+                    }
+                    case "mousemove": {
+                        if (!this.moving)
+                            break;
+                        let pos = Script.getPlanePositionFromMouseEvent(_event);
+                        let diff = pos.clone.subtract(this.prevPosition);
+                        // console.log(_event.movementX, _event.movementY, pos, this.prevPosition, diff);
+                        this.camera.node.mtxLocal.translate(diff.negate(), false);
+                        this.prevPosition = pos;
+                        // console.log(this.camera.node.mtxLocal.translation);
+                        break;
+                    }
+                }
+            };
             this.wrapper = document.getElementById("move-menu");
         }
-        disable() {
-            this.wrapper.classList.add("hidden");
-        }
-        ;
         enable() {
             this.wrapper.classList.remove("hidden");
+            this.canvas.addEventListener("wheel", this.zoom);
+            this.canvas.addEventListener("mousedown", this.mouseEvent);
+            this.canvas.addEventListener("mouseup", this.mouseEvent);
+            this.canvas.addEventListener("mousemove", this.mouseEvent);
+        }
+        ;
+        disable() {
+            this.wrapper.classList.add("hidden");
+            this.canvas.removeEventListener("wheel", this.zoom);
         }
         ;
     }
@@ -386,6 +427,13 @@ var Script;
         return s.charAt(0).toLocaleUpperCase() + s.slice(1);
     }
     Script.capitalize = capitalize;
+    function getPlanePositionFromMouseEvent(_event) {
+        let mousePos = new ƒ.Vector2(_event.clientX, _event.clientY);
+        let ray = Script.viewport.getRayFromClient(mousePos);
+        let pos = ray.intersectPlane(ƒ.Vector3.ZERO(), ƒ.Vector3.Y(1));
+        return pos;
+    }
+    Script.getPlanePositionFromMouseEvent = getPlanePositionFromMouseEvent;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {

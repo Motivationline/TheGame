@@ -55,6 +55,7 @@ declare namespace Script {
         enable: () => void;
         disable: () => void;
     }
+    function setupUI(): void;
 }
 declare namespace Script {
     import ƒ = FudgeCore;
@@ -75,6 +76,7 @@ declare namespace Script {
     export function randomRange(min?: number, max?: number): number;
     export function randomString(length: number): string;
     export function capitalize(s: string): string;
+    export function getPlanePositionFromMouseEvent(_event: MouseEvent): ƒ.Vector3;
     export {};
 }
 declare namespace Script {

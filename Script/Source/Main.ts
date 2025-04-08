@@ -35,5 +35,7 @@ namespace Script {
 
     viewport.initialize("game", graph, camera, canvas);
     canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: viewport }));
+
+    setupUI();
   }
 }

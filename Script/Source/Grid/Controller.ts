@@ -119,9 +119,7 @@ namespace Script {
         }
 
         private tilePositionFromMouseEvent(_event: MouseEvent) {
-            let mousePos = new ƒ.Vector2(_event.clientX, _event.clientY);
-            let ray = viewport.getRayFromClient(mousePos);
-            let pos = ray.intersectPlane(ƒ.Vector3.ZERO(), ƒ.Vector3.Y(1));
+            let pos = getPlanePositionFromMouseEvent(_event);
             let tilePos = this.grid.getTilePosition(new ƒ.Vector2(pos.x, pos.z));
             return tilePos;
         }

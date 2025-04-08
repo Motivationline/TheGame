@@ -9,15 +9,12 @@ namespace Script {
         disable: () => void;
     }
 
-
-    ƒ.Project.addEventListener(ƒ.EVENT.RESOURCES_LOADED, <EventListener><unknown>start);
-
-    function start() {
-        if(ƒ.Project.mode === ƒ.MODE.EDITOR) return;
+    export function setupUI() {
+        if (ƒ.Project.mode === ƒ.MODE.EDITOR) return;
 
         const uis = new Map<string, ToggleableUI>([
             ["build", new GridBuilder()],
-            ["move", new MoveController()],
+            ["move", new CameraController()],
         ])
         let activeUI: ToggleableUI = uis.get("move");
         activeUI.enable();
@@ -34,19 +31,65 @@ namespace Script {
 
     }
 
-    class MoveController implements ToggleableUI {
+    class CameraController implements ToggleableUI {
         wrapper: HTMLElement;
+        canvas = document.querySelector("canvas");
+        camera = findFirstCameraInGraph(viewport.getBranch());
+        currentZoom: number = 0;
+        zoomFactor: number = 10;
+
         constructor() {
             this.wrapper = document.getElementById("move-menu");
         }
 
-        disable() {
-            this.wrapper.classList.add("hidden");
-        };
-
         enable() {
             this.wrapper.classList.remove("hidden");
+            this.canvas.addEventListener("wheel", this.zoom);
+            this.canvas.addEventListener("mousedown", this.mouseEvent);
+            this.canvas.addEventListener("mouseup", this.mouseEvent);
+            this.canvas.addEventListener("mousemove", this.mouseEvent);
         };
+        disable() {
+            this.wrapper.classList.add("hidden");
+            this.canvas.removeEventListener("wheel", this.zoom);
+        };
+
+        private zoom = (_event: WheelEvent) => {
+            const direction = -Math.sign(_event.deltaY);
+
+            const newZoom = this.currentZoom + direction;
+            if (newZoom < 0 || newZoom > 10) return;
+            this.currentZoom += direction;
+
+            this.camera.node.mtxLocal.translateZ(direction * this.zoomFactor, true);
+
+        }
+
+        moving = false;
+        prevPosition: ƒ.Vector3;
+        private mouseEvent = (_event: MouseEvent) => {
+            switch (_event.type) {
+                case "mousedown": {
+                    this.moving = true;
+                    this.prevPosition = getPlanePositionFromMouseEvent(_event);
+                    break;
+                }
+                case "mouseup": {
+                    this.moving = false;
+                    break;
+                }
+                case "mousemove": {
+                    if (!this.moving) break;
+                    let pos = getPlanePositionFromMouseEvent(_event);
+                    let diff = pos.clone.subtract(this.prevPosition);
+                    // console.log(_event.movementX, _event.movementY, pos, this.prevPosition, diff);
+                    this.camera.node.mtxLocal.translate(diff.negate(), false);
+                    this.prevPosition = pos;
+                    // console.log(this.camera.node.mtxLocal.translation);
+                    break;
+                }
+            }
+        }
     }
 }
 
