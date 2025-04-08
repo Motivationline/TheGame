@@ -96,216 +96,6 @@
       "type": "Graph"
     }
   },
-  "Graph|2025-03-05T11:38:04.024Z|25869": {
-    "ƒ.Graph": {
-      "name": "MainScene",
-      "active": true,
-      "components": {},
-      "children": [
-        {
-          "ƒ.Node": {
-            "name": "camera",
-            "active": true,
-            "components": {
-              "ComponentCamera": [
-                {
-                  "ƒ.ComponentCamera": {
-                    "backgroundColor": {
-                      "r": 0,
-                      "g": 0,
-                      "b": 0,
-                      "a": 1
-                    },
-                    "backgroundEnabled": true,
-                    "projection": "central",
-                    "fieldOfView": 45,
-                    "direction": "diagonal",
-                    "near": 1,
-                    "far": 2000,
-                    "aspect": 1.510172143974961,
-                    "pivot": {
-                      "translation": "[0, 0, 0]",
-                      "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    }
-                  }
-                }
-              ],
-              "ComponentTransform": [
-                {
-                  "ƒ.ComponentTransform": {
-                    "local": {
-                      "translation": "[-7.5, 10, -7.5]",
-                      "rotation": "[30.566401826761794, 45, -0.0000012038336639031983]",
-                      "scaling": "[1, 1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    }
-                  }
-                }
-              ]
-            },
-            "children": []
-          }
-        },
-        {
-          "ƒ.Node": {
-            "name": "basearea",
-            "active": true,
-            "components": {
-              "ComponentMaterial": [
-                {
-                  "ƒ.ComponentMaterial": {
-                    "sortForAlpha": false,
-                    "clrPrimary": "[0.043137254901960784, 0.6784313725490196, 0.16862745098039217, 1]",
-                    "clrSecondary": "[1, 1, 1, 1]",
-                    "pivot": {
-                      "translation": "[0, 0]",
-                      "rotation": 0,
-                      "scaling": "[1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    },
-                    "idMaterial": "Material|2025-04-07T11:28:44.995Z|71214"
-                  }
-                }
-              ],
-              "ComponentMesh": [
-                {
-                  "ƒ.ComponentMesh": {
-                    "idMesh": "MeshQuad|2025-04-07T11:28:36.118Z|26450",
-                    "pivot": {
-                      "translation": "[0.5, 0, 0.5]",
-                      "rotation": "[-90, 0, 0]",
-                      "scaling": "[1, 1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    }
-                  }
-                }
-              ],
-              "ComponentTransform": [
-                {
-                  "ƒ.ComponentTransform": {
-                    "local": {
-                      "translation": "[0, 0, 0]",
-                      "rotation": "[0, 0, 0]",
-                      "scaling": "[10, 1, 10]"
-                    },
-                    "Component": {
-                      "active": true
-                    }
-                  }
-                }
-              ]
-            },
-            "children": []
-          }
-        },
-        {
-          "ƒ.Node": {
-            "name": "buildings",
-            "active": true,
-            "components": {
-              "Building": [
-                {
-                  "Script.Building": {
-                    "active": true,
-                    "graph": "Graph|2025-04-08T06:37:31.827Z|46952",
-                    "size": 1,
-                    "name": "1x1"
-                  }
-                },
-                {
-                  "Script.Building": {
-                    "active": true,
-                    "graph": "Graph|2025-04-08T06:38:54.587Z|91903",
-                    "size": 2,
-                    "name": ""
-                  }
-                },
-                {
-                  "Script.Building": {
-                    "active": true,
-                    "graph": "Graph|2025-04-08T06:39:49.139Z|03664",
-                    "size": 3,
-                    "name": "default 3x3"
-                  }
-                }
-              ]
-            },
-            "children": []
-          }
-        }
-      ],
-      "idResource": "Graph|2025-03-05T11:38:04.024Z|25869",
-      "type": "Graph"
-    }
-  },
-  "Graph|2025-04-07T11:47:32.420Z|15727": {
-    "ƒ.Graph": {
-      "name": "Tile",
-      "active": true,
-      "components": {
-        "ComponentMesh": [
-          {
-            "ƒ.ComponentMesh": {
-              "idMesh": "MeshQuad|2025-04-07T11:28:36.118Z|26450",
-              "pivot": {
-                "translation": "[0.5, 0, 0.5]",
-                "rotation": "[-90, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ],
-        "ComponentMaterial": [
-          {
-            "ƒ.ComponentMaterial": {
-              "sortForAlpha": false,
-              "clrPrimary": "[0.6352941176470588, 0.027450980392156862, 0.027450980392156862, 1]",
-              "clrSecondary": "[1, 1, 1, 1]",
-              "pivot": {
-                "translation": "[0, 0]",
-                "rotation": 0,
-                "scaling": "[1, 1]"
-              },
-              "Component": {
-                "active": true
-              },
-              "idMaterial": "Material|2025-04-07T11:28:44.995Z|71214"
-            }
-          }
-        ],
-        "ComponentTransform": [
-          {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0, 0, 0]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ]
-      },
-      "children": [],
-      "idResource": "Graph|2025-04-07T11:47:32.420Z|15727",
-      "type": "Graph"
-    }
-  },
   "Graph|2025-04-08T06:38:54.587Z|91903": {
     "ƒ.Graph": {
       "name": "Building2x2",
@@ -420,6 +210,334 @@
       "children": [],
       "idResource": "Graph|2025-04-08T06:39:49.139Z|03664",
       "type": "Graph"
+    }
+  },
+  "Material|2025-04-08T10:35:53.885Z|66329": {
+    "ƒ.Material": {
+      "name": "ShaderPhong",
+      "idResource": "Material|2025-04-08T10:35:53.885Z|66329",
+      "shader": "ShaderPhong",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0.5,
+          "intensity": 0.7,
+          "metallic": 0
+        }
+      },
+      "alphaClip": 0.01
+    }
+  },
+  "GraphGLTF|2025-04-08T10:32:49.691Z|74350": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350",
+      "type": "GraphGLTF",
+      "url": "Assets\\Houses\\House_Miner.glb"
+    }
+  },
+  "Graph|2025-03-05T11:38:04.024Z|25869": {
+    "ƒ.Graph": {
+      "name": "MainScene",
+      "active": true,
+      "components": {},
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "camera",
+            "active": true,
+            "components": {
+              "ComponentCamera": [
+                {
+                  "ƒ.ComponentCamera": {
+                    "backgroundColor": {
+                      "r": 0,
+                      "g": 0,
+                      "b": 0,
+                      "a": 1
+                    },
+                    "backgroundEnabled": true,
+                    "projection": "central",
+                    "fieldOfView": 5,
+                    "direction": "diagonal",
+                    "near": 1,
+                    "far": 2000,
+                    "aspect": 0.9800629590766002,
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[-70, 59, -70]",
+                      "rotation": "[29, 45, -0.0000012038336639031983]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentAmbientOcclusion": [
+                {
+                  "ƒ.ComponentAmbientOcclusion": {
+                    "sampleRadius": 16,
+                    "bias": 0.4000000000000002,
+                    "attenuationConstant": 2.5,
+                    "attenuationLinear": 1,
+                    "attenuationQuadratic": 1,
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        },
+        {
+          "ƒ.Node": {
+            "name": "basearea",
+            "active": true,
+            "components": {
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[0.043137254901960784, 0.6784313725490196, 0.16862745098039217, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0, 0]",
+                      "rotation": 0,
+                      "scaling": "[1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2025-04-08T10:35:53.885Z|66329"
+                  }
+                }
+              ],
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshQuad|2025-04-07T11:28:36.118Z|26450",
+                    "pivot": {
+                      "translation": "[0.5, 0, 0.5]",
+                      "rotation": "[-90, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[10, 1, 10]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        },
+        {
+          "ƒ.Node": {
+            "name": "buildings",
+            "active": true,
+            "components": {
+              "Building": [
+                {
+                  "Script.Building": {
+                    "active": true,
+                    "graph": "Graph|2025-04-08T06:37:31.827Z|46952",
+                    "size": 1,
+                    "name": "1x1"
+                  }
+                },
+                {
+                  "Script.Building": {
+                    "active": true,
+                    "graph": "Graph|2025-04-08T06:38:54.587Z|91903",
+                    "size": 2,
+                    "name": ""
+                  }
+                },
+                {
+                  "Script.Building": {
+                    "active": true,
+                    "graph": "Graph|2025-04-08T06:39:49.139Z|03664",
+                    "size": 3,
+                    "name": "default 3x3"
+                  }
+                },
+                {
+                  "Script.Building": {
+                    "active": true,
+                    "graph": "GraphGLTF|2025-04-08T10:32:49.691Z|74350",
+                    "size": 2,
+                    "name": "Miner House"
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        },
+        {
+          "ƒ.Node": {
+            "name": "Light",
+            "active": true,
+            "components": {
+              "ComponentLight": [
+                {
+                  "ƒ.ComponentLight": {
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "light": {
+                      "ƒ.LightAmbient": {
+                        "color": "[1, 1, 1, 1]",
+                        "intensity": 1
+                      }
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        }
+      ],
+      "idResource": "Graph|2025-03-05T11:38:04.024Z|25869",
+      "type": "Graph"
+    }
+  },
+  "Graph|2025-04-07T11:47:32.420Z|15727": {
+    "ƒ.Graph": {
+      "name": "Tile",
+      "active": true,
+      "components": {
+        "ComponentMesh": [
+          {
+            "ƒ.ComponentMesh": {
+              "idMesh": "MeshQuad|2025-04-07T11:28:36.118Z|26450",
+              "pivot": {
+                "translation": "[0.5, 0, 0.5]",
+                "rotation": "[-90, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentMaterial": [
+          {
+            "ƒ.ComponentMaterial": {
+              "sortForAlpha": false,
+              "clrPrimary": "[0.6352941176470588, 0.027450980392156862, 0.027450980392156862, 1]",
+              "clrSecondary": "[1, 1, 1, 1]",
+              "pivot": {
+                "translation": "[0, 0]",
+                "rotation": 0,
+                "scaling": "[1, 1]"
+              },
+              "Component": {
+                "active": true
+              },
+              "idMaterial": "Material|2025-04-07T11:28:44.995Z|71214"
+            }
+          }
+        ],
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [],
+      "idResource": "Graph|2025-04-07T11:47:32.420Z|15727",
+      "type": "Graph"
+    }
+  },
+  "GraphGLTF|2025-04-08T10:48:00.622Z|81801": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801",
+      "type": "GraphGLTF",
+      "url": "Assets\\Houses\\House_Big.glb"
     }
   }
 }

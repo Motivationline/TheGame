@@ -31,8 +31,27 @@
           },
           {
             "idResource": "Graph|2025-04-08T06:39:49.139Z|03664"
+          },
+          {
+            "name": "House_Miner",
+            "entries": [
+              {
+                "idResource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350"
+              }
+            ]
+          },
+          {
+            "name": "House_Big",
+            "entries": [
+              {
+                "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801"
+              }
+            ]
           }
         ]
+      },
+      {
+        "idResource": "Material|2025-04-08T10:35:53.885Z|66329"
       }
     ]
   }
