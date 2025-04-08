@@ -166,7 +166,7 @@ var Script;
                 // visually add building
                 let marker = await ƒ.Project.createGraphInstance(this.selectedBuilding.graph);
                 Script.viewport.getBranch().appendChild(marker);
-                marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x, 0, this.currentPosition.y);
+                marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x + this.selectedBuilding.size / 2, 0, this.currentPosition.y + this.selectedBuilding.size / 2);
             };
             if (ƒ.Project.mode === ƒ.MODE.EDITOR)
                 return;
@@ -262,6 +262,8 @@ var Script;
     var ƒ = FudgeCore;
     ƒ.Project.addEventListener("resourcesLoaded" /* ƒ.EVENT.RESOURCES_LOADED */, start);
     function start() {
+        if (ƒ.Project.mode === ƒ.MODE.EDITOR)
+            return;
         const uis = new Map([
             ["build", new Script.GridBuilder()],
             ["move", new MoveController()],

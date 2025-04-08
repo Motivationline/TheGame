@@ -78,7 +78,7 @@ namespace Script {
             // visually add building
             let marker = await ƒ.Project.createGraphInstance(this.selectedBuilding.graph);
             viewport.getBranch().appendChild(marker);
-            marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x, 0, this.currentPosition.y);
+            marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x + this.selectedBuilding.size / 2, 0, this.currentPosition.y + this.selectedBuilding.size / 2);
         }
 
         private checkAndSetCurrentPosition(_startPos: ƒ.Vector2): boolean {

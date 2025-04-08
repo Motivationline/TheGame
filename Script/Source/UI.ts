@@ -13,6 +13,7 @@ namespace Script {
     ƒ.Project.addEventListener(ƒ.EVENT.RESOURCES_LOADED, <EventListener><unknown>start);
 
     function start() {
+        if(ƒ.Project.mode === ƒ.MODE.EDITOR) return;
 
         const uis = new Map<string, ToggleableUI>([
             ["build", new GridBuilder()],
