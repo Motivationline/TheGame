@@ -615,5 +615,45 @@
       "idResource": "Graph|2025-04-09T07:19:42.868Z|15220",
       "type": "Graph"
     }
+  },
+  "GraphGLTF|2025-04-09T12:26:24.730Z|28009": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-09T12:26:24.730Z|28009",
+      "type": "GraphGLTF",
+      "url": "Assets\\Environment\\Ground\\Sandboden_Tile.glb"
+    }
+  },
+  "GraphGLTF|2025-04-09T12:26:28.790Z|34974": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-09T12:26:28.790Z|34974",
+      "type": "GraphGLTF",
+      "url": "Assets\\Environment\\Ground\\Waldboden_Tile.glb"
+    }
+  },
+  "GraphGLTF|2025-04-09T12:26:32.762Z|17197": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-09T12:26:32.762Z|17197",
+      "type": "GraphGLTF",
+      "url": "Assets\\Environment\\Ground\\Steinboden_Tile.glb"
+    }
+  },
+  "GraphGLTF|2025-04-09T12:26:35.751Z|49623": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-09T12:26:35.751Z|49623",
+      "type": "GraphGLTF",
+      "url": "Assets\\Environment\\Ground\\Blumenwiese_Tile.glb"
+    }
   }
 }

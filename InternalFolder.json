@@ -60,6 +60,48 @@
       },
       {
         "idResource": "Material|2025-04-08T10:35:53.885Z|66329"
+      },
+      {
+        "name": "Environment",
+        "entries": [
+          {
+            "name": "Ground",
+            "entries": [
+              {
+                "name": "Sand",
+                "entries": [
+                  {
+                    "idResource": "GraphGLTF|2025-04-09T12:26:24.730Z|28009"
+                  }
+                ]
+              },
+              {
+                "name": "Wald",
+                "entries": [
+                  {
+                    "idResource": "GraphGLTF|2025-04-09T12:26:28.790Z|34974"
+                  }
+                ]
+              },
+              {
+                "name": "Stein",
+                "entries": [
+                  {
+                    "idResource": "GraphGLTF|2025-04-09T12:26:32.762Z|17197"
+                  }
+                ]
+              },
+              {
+                "name": "Blumen",
+                "entries": [
+                  {
+                    "idResource": "GraphGLTF|2025-04-09T12:26:35.751Z|49623"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   }
