@@ -263,7 +263,7 @@ var Script;
         if (ƒ.Project.mode === ƒ.MODE.EDITOR)
             return;
         const uis = new Map([
-            ["build", new Script.GridBuilder()],
+            ["build", new Script.GridBuilder(new Script.Grid(new ƒ.Vector2(21, 21)))],
             ["move", new CameraController()],
         ]);
         let activeUI = uis.get("move");
@@ -335,6 +335,9 @@ var Script;
         disable() {
             this.wrapper.classList.add("hidden");
             this.canvas.removeEventListener("wheel", this.zoom);
+            this.canvas.removeEventListener("mousedown", this.mouseEvent);
+            this.canvas.removeEventListener("mouseup", this.mouseEvent);
+            this.canvas.removeEventListener("mousemove", this.mouseEvent);
         }
         ;
     }

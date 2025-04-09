@@ -254,6 +254,31 @@
       "url": "Assets\\Houses\\House_Miner.glb"
     }
   },
+  "GraphGLTF|2025-04-08T10:48:00.622Z|81801": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801",
+      "type": "GraphGLTF",
+      "url": "Assets\\Houses\\House_Big.glb"
+    }
+  },
   "Graph|2025-03-05T11:38:04.024Z|25869": {
     "ƒ.Graph": {
       "name": "MainScene",
@@ -296,7 +321,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-70, 59, -70]",
+                      "translation": "[-100, 86, -100]",
                       "rotation": "[29, 45, -0.0000012038336639031983]",
                       "scaling": "[1, 1, 1]"
                     },
@@ -368,7 +393,7 @@
                     "local": {
                       "translation": "[0, 0, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[10, 1, 10]"
+                      "scaling": "[21, 1, 21]"
                     },
                     "Component": {
                       "active": true
@@ -523,9 +548,9 @@
       "type": "Graph"
     }
   },
-  "GraphGLTF|2025-04-08T10:48:00.622Z|81801": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
+  "Graph|2025-04-09T07:19:42.868Z|15220": {
+    "ƒ.Graph": {
+      "name": "Eumling",
       "active": true,
       "components": {
         "ComponentTransform": [
@@ -543,9 +568,52 @@
           }
         ]
       },
-      "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801",
-      "type": "GraphGLTF",
-      "url": "Assets\\Houses\\House_Big.glb"
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "VisibleParts",
+            "active": true,
+            "components": {
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshCube|2025-04-08T06:37:52.687Z|13643",
+                    "pivot": {
+                      "translation": "[0, 0.5, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[1, 1, 1, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0, 0]",
+                      "rotation": 0,
+                      "scaling": "[1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-09T07:19:42.868Z|15220",
+      "type": "Graph"
     }
   }
 }

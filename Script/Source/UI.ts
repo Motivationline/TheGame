@@ -13,7 +13,7 @@ namespace Script {
         if (ƒ.Project.mode === ƒ.MODE.EDITOR) return;
 
         const uis = new Map<string, ToggleableUI>([
-            ["build", new GridBuilder()],
+            ["build", new GridBuilder(new Grid(new ƒ.Vector2(21, 21)))],
             ["move", new CameraController()],
         ])
         let activeUI: ToggleableUI = uis.get("move");
@@ -52,6 +52,9 @@ namespace Script {
         disable() {
             this.wrapper.classList.add("hidden");
             this.canvas.removeEventListener("wheel", this.zoom);
+            this.canvas.removeEventListener("mousedown", this.mouseEvent);
+            this.canvas.removeEventListener("mouseup", this.mouseEvent);
+            this.canvas.removeEventListener("mousemove", this.mouseEvent);
         };
 
         private zoom = (_event: WheelEvent) => {
