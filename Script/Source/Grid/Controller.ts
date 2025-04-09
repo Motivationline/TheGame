@@ -60,7 +60,7 @@ namespace Script {
             let tilePos = this.tilePositionFromMouseEvent(_event);
             let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
             if (newPosInGrid === false) return;
-            this.marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x, 0.001, this.currentPosition.y);
+            this.marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x, 0.01, this.currentPosition.y);
             this.marker.activate(true);
         }
 

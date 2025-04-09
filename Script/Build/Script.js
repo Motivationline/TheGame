@@ -120,6 +120,7 @@ var Script;
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
+        Script.UpdateScriptComponent.updateAllInBranch(Script.viewport.getBranch());
         Script.viewport.draw();
         // ƒ.AudioManager.default.update();
     }
@@ -149,7 +150,7 @@ var Script;
                 let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
                 if (newPosInGrid === false)
                     return;
-                this.marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x, 0.001, this.currentPosition.y);
+                this.marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x, 0.01, this.currentPosition.y);
                 this.marker.activate(true);
             };
             this.placeOnGrid = async (_event) => {
@@ -345,6 +346,288 @@ var Script;
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;
+    let Building = (() => {
+        var _a;
+        let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
+        let _classDescriptor;
+        let _classExtraInitializers = [];
+        let _classThis;
+        let _classSuper = ƒ.Component;
+        let _instanceExtraInitializers = [];
+        let _graph_decorators;
+        let _graph_initializers = [];
+        let _size_decorators;
+        let _size_initializers = [];
+        let _name_decorators;
+        let _name_initializers = [];
+        var Building = class extends _classSuper {
+            static { _classThis = this; }
+            static {
+                const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+                _graph_decorators = [ƒ.serialize(ƒ.Graph)];
+                _size_decorators = [ƒ.serialize(Number)];
+                _name_decorators = [ƒ.serialize(String)];
+                __esDecorate(null, null, _graph_decorators, { kind: "field", name: "graph", static: false, private: false, access: { has: obj => "graph" in obj, get: obj => obj.graph, set: (obj, value) => { obj.graph = value; } }, metadata: _metadata }, _graph_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _size_decorators, { kind: "field", name: "size", static: false, private: false, access: { has: obj => "size" in obj, get: obj => obj.size, set: (obj, value) => { obj.size = value; } }, metadata: _metadata }, _size_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: obj => "name" in obj, get: obj => obj.name, set: (obj, value) => { obj.name = value; } }, metadata: _metadata }, _name_initializers, _instanceExtraInitializers);
+                __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+                Building = _classThis = _classDescriptor.value;
+                if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            }
+            static { this.all = []; }
+            get isSingleton() {
+                return false;
+            }
+            constructor() {
+                super();
+                this.graph = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _graph_initializers, void 0));
+                this.size = __runInitializers(this, _size_initializers, 1);
+                this.name = __runInitializers(this, _name_initializers, "");
+                if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                    return;
+                ƒ.Project.addEventListener("resourcesLoaded" /* ƒ.EVENT.RESOURCES_LOADED */, () => {
+                    Building.all.push({ graph: this.graph, size: this.size, name: this.name });
+                });
+            }
+            static {
+                __runInitializers(_classThis, _classExtraInitializers);
+            }
+        };
+        return Building = _classThis;
+    })();
+    Script.Building = Building;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    class UpdateScriptComponent extends ƒ.Component {
+        constructor() {
+            super();
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            this.addEventListener("preupdate", this.prestart, { once: true });
+            this.addEventListener("update", this.start, { once: true });
+            this.addEventListener("update", this.update);
+            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.remove);
+            this.addEventListener("componentDeactivate" /* ƒ.EVENT.COMPONENT_DEACTIVATE */, this.remove);
+        }
+        // runs updates of all updateable components
+        static updateAllInBranch(_branch) {
+            let event = new CustomEvent("update", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
+            let preEvent = new CustomEvent("preupdate", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
+            for (let node of _branch) {
+                for (let component of node.getAllComponents()) {
+                    if (component instanceof UpdateScriptComponent) {
+                        if (component.active)
+                            component.dispatchEvent(preEvent);
+                    }
+                }
+            }
+            for (let node of _branch) {
+                for (let component of node.getAllComponents()) {
+                    if (component instanceof UpdateScriptComponent) {
+                        if (component.active)
+                            component.dispatchEvent(event);
+                    }
+                }
+            }
+        }
+    }
+    Script.UpdateScriptComponent = UpdateScriptComponent;
+})(Script || (Script = {}));
+/// <reference path="../Plugins/UpdateScriptComponent.ts" />
+var Script;
+/// <reference path="../Plugins/UpdateScriptComponent.ts" />
+(function (Script) {
+    var ƒ = FudgeCore;
+    let JobProviderType;
+    (function (JobProviderType) {
+        JobProviderType[JobProviderType["GATHER_STONE"] = 0] = "GATHER_STONE";
+        JobProviderType[JobProviderType["GATHER_FOOD"] = 1] = "GATHER_FOOD";
+        JobProviderType[JobProviderType["STORE_RESOURCE"] = 2] = "STORE_RESOURCE";
+        JobProviderType[JobProviderType["BUILD"] = 3] = "BUILD";
+        JobProviderType[JobProviderType["NONE"] = 4] = "NONE";
+    })(JobProviderType = Script.JobProviderType || (Script.JobProviderType = {}));
+    let JobProvider = (() => {
+        var _a;
+        let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
+        let _classDescriptor;
+        let _classExtraInitializers = [];
+        let _classThis;
+        let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
+        let _jobType_decorators;
+        let _jobType_initializers = [];
+        var JobProvider = class extends _classSuper {
+            static { _classThis = this; }
+            constructor() {
+                super(...arguments);
+                this.jobType = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _jobType_initializers, void 0));
+            }
+            static {
+                const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+                _jobType_decorators = [ƒ.serialize(JobProviderType)];
+                __esDecorate(null, null, _jobType_decorators, { kind: "field", name: "jobType", static: false, private: false, access: { has: obj => "jobType" in obj, get: obj => obj.jobType, set: (obj, value) => { obj.jobType = value; } }, metadata: _metadata }, _jobType_initializers, _instanceExtraInitializers);
+                __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+                JobProvider = _classThis = _classDescriptor.value;
+                if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            }
+            static { this.JobProviders = []; }
+            start(_e) {
+                JobProvider.JobProviders.push(this);
+            }
+            remove(_e) {
+                let index = JobProvider.JobProviders.indexOf(this);
+                JobProvider.JobProviders.splice(index, 1);
+            }
+            static {
+                __runInitializers(_classThis, _classExtraInitializers);
+            }
+        };
+        return JobProvider = _classThis;
+    })();
+    Script.JobProvider = JobProvider;
+    class JobProviderGatherFood extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this.jobType = JobProviderType.GATHER_FOOD;
+        }
+    }
+    Script.JobProviderGatherFood = JobProviderGatherFood;
+    class JobProviderGatherStone extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this.jobType = JobProviderType.GATHER_STONE;
+        }
+    }
+    Script.JobProviderGatherStone = JobProviderGatherStone;
+    class JobProviderStoreResource extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this.jobType = JobProviderType.STORE_RESOURCE;
+        }
+    }
+    Script.JobProviderStoreResource = JobProviderStoreResource;
+    class JobProviderBuild extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this.jobType = JobProviderType.BUILD;
+        }
+    }
+    Script.JobProviderBuild = JobProviderBuild;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    class JobTaker extends Script.UpdateScriptComponent {
+        #job;
+        #progress;
+        #executableJobs;
+        #target;
+        constructor() {
+            super();
+            this.#job = Script.JobProviderType.GATHER_FOOD;
+            this.#progress = 0;
+            this.speed = 1;
+            this.gatherResource = (deltaTime) => {
+                console.log(this.#progress);
+                switch (this.#progress) {
+                    case 0: {
+                        // look for target
+                        const target = JobTaker.findClosestJobProvider(this.#job, this.node.mtxWorld.translation);
+                        if (target) {
+                            this.#progress++;
+                            this.#target = target;
+                            this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);
+                        }
+                        break;
+                    }
+                    case 1:
+                    case 4: {
+                        // move to target
+                        let reachedTarget = this.moveToTarget(deltaTime);
+                        if (reachedTarget) {
+                            this.#progress++;
+                            new ƒ.Timer(ƒ.Time.game, this.#progress === 2 ? 2000 : 100, 1, () => { this.#progress++; });
+                        }
+                        break;
+                    }
+                    case 2: {
+                        // at gathering site
+                        // play animation or some junk
+                        break;
+                    }
+                    case 3: {
+                        // ready to find the place to drop stuff off
+                        const target = JobTaker.findClosestJobProvider(Script.JobProviderType.STORE_RESOURCE, this.node.mtxWorld.translation);
+                        if (target) {
+                            this.#progress++;
+                            this.#target = target;
+                            this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);
+                        }
+                        break;
+                    }
+                    case 5: {
+                        // at deploy site
+                        break;
+                    }
+                    case 6: {
+                        // dropped off the resources
+                        this.#progress = 0;
+                        break;
+                    }
+                }
+            };
+            this.build = () => {
+            };
+            this.#prevDistance = Infinity;
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            this.#executableJobs = new Map([
+                [Script.JobProviderType.BUILD, this.build],
+                [Script.JobProviderType.GATHER_FOOD, this.gatherResource],
+                [Script.JobProviderType.GATHER_STONE, this.gatherResource],
+            ]);
+        }
+        set job(_job) {
+            this.#job = _job;
+            this.#progress = 0;
+        }
+        static findClosestJobProvider(_job, _location) {
+            const foundProviders = [];
+            for (let provider of Script.JobProvider.JobProviders) {
+                if (provider.jobType === _job) {
+                    foundProviders.push(provider);
+                }
+            }
+            if (!foundProviders.length)
+                return undefined;
+            foundProviders.sort((a, b) => a.node.mtxWorld.translation.getDistance(_location) - b.node.mtxWorld.translation.getDistance(_location));
+            return foundProviders[0];
+        }
+        update(_e) {
+            this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
+        }
+        #prevDistance;
+        moveToTarget(deltaTime) {
+            let distance = this.node.mtxWorld.translation.getDistance(this.#target.node.mtxWorld.translation);
+            if (distance > this.#prevDistance) {
+                // target reached
+                this.node.mtxLocal.translate(this.node.mtxWorld.getTranslationTo(this.#target.node.mtxWorld));
+                this.#prevDistance = Infinity;
+                return true;
+            }
+            this.#prevDistance = distance;
+            // move to target
+            this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
+            return false;
+        }
+    }
+    Script.JobTaker = JobTaker;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
     function findFirstCameraInGraph(_graph) {
         let cam = _graph.getComponent(ƒ.ComponentCamera);
         if (cam)
@@ -439,59 +722,5 @@ var Script;
         return pos;
     }
     Script.getPlanePositionFromMouseEvent = getPlanePositionFromMouseEvent;
-})(Script || (Script = {}));
-var Script;
-(function (Script) {
-    var ƒ = FudgeCore;
-    let Building = (() => {
-        var _a;
-        let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
-        let _classDescriptor;
-        let _classExtraInitializers = [];
-        let _classThis;
-        let _classSuper = ƒ.Component;
-        let _instanceExtraInitializers = [];
-        let _graph_decorators;
-        let _graph_initializers = [];
-        let _size_decorators;
-        let _size_initializers = [];
-        let _name_decorators;
-        let _name_initializers = [];
-        var Building = class extends _classSuper {
-            static { _classThis = this; }
-            static {
-                const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
-                _graph_decorators = [ƒ.serialize(ƒ.Graph)];
-                _size_decorators = [ƒ.serialize(Number)];
-                _name_decorators = [ƒ.serialize(String)];
-                __esDecorate(null, null, _graph_decorators, { kind: "field", name: "graph", static: false, private: false, access: { has: obj => "graph" in obj, get: obj => obj.graph, set: (obj, value) => { obj.graph = value; } }, metadata: _metadata }, _graph_initializers, _instanceExtraInitializers);
-                __esDecorate(null, null, _size_decorators, { kind: "field", name: "size", static: false, private: false, access: { has: obj => "size" in obj, get: obj => obj.size, set: (obj, value) => { obj.size = value; } }, metadata: _metadata }, _size_initializers, _instanceExtraInitializers);
-                __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: obj => "name" in obj, get: obj => obj.name, set: (obj, value) => { obj.name = value; } }, metadata: _metadata }, _name_initializers, _instanceExtraInitializers);
-                __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-                Building = _classThis = _classDescriptor.value;
-                if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
-            }
-            static { this.all = []; }
-            get isSingleton() {
-                return false;
-            }
-            constructor() {
-                super();
-                this.graph = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _graph_initializers, void 0));
-                this.size = __runInitializers(this, _size_initializers, 1);
-                this.name = __runInitializers(this, _name_initializers, "");
-                if (ƒ.Project.mode == ƒ.MODE.EDITOR)
-                    return;
-                ƒ.Project.addEventListener("resourcesLoaded" /* ƒ.EVENT.RESOURCES_LOADED */, () => {
-                    Building.all.push({ graph: this.graph, size: this.size, name: this.name });
-                });
-            }
-            static {
-                __runInitializers(_classThis, _classExtraInitializers);
-            }
-        };
-        return Building = _classThis;
-    })();
-    Script.Building = Building;
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map

@@ -59,6 +59,80 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
+    interface Build {
+        graph: ƒ.Graph;
+        size: number;
+        name: string;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    class Building extends ƒ.Component implements Build {
+        static all: Build[];
+        get isSingleton(): boolean;
+        graph: ƒ.Graph;
+        size: number;
+        name: string;
+        constructor();
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    interface UpdateEvent {
+        deltaTime: number;
+    }
+    abstract class UpdateScriptComponent extends ƒ.Component {
+        constructor();
+        static updateAllInBranch(_branch: ƒ.Node): void;
+        prestart?(_e: CustomEvent<UpdateEvent>): void;
+        start?(_e: CustomEvent<UpdateEvent>): void;
+        update?(_e: CustomEvent<UpdateEvent>): void;
+        remove?(_e: CustomEvent): void;
+    }
+}
+declare namespace Script {
+    enum JobProviderType {
+        GATHER_STONE = 0,
+        GATHER_FOOD = 1,
+        STORE_RESOURCE = 2,
+        BUILD = 3,
+        NONE = 4
+    }
+    abstract class JobProvider extends UpdateScriptComponent {
+        static JobProviders: JobProvider[];
+        jobType: JobProviderType;
+        start(_e: CustomEvent<UpdateEvent>): void;
+        remove(_e: CustomEvent): void;
+    }
+    class JobProviderGatherFood extends JobProvider {
+        jobType: JobProviderType;
+    }
+    class JobProviderGatherStone extends JobProvider {
+        jobType: JobProviderType;
+    }
+    class JobProviderStoreResource extends JobProvider {
+        jobType: JobProviderType;
+    }
+    class JobProviderBuild extends JobProvider {
+        jobType: JobProviderType;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    class JobTaker extends UpdateScriptComponent {
+        #private;
+        speed: number;
+        constructor();
+        set job(_job: JobProviderType);
+        static findClosestJobProvider(_job: JobProviderType, _location: ƒ.Vector3): JobProvider | undefined;
+        update(_e: CustomEvent<UpdateEvent>): void;
+        private gatherResource;
+        private build;
+        private moveToTarget;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
     export function findFirstCameraInGraph(_graph: ƒ.Node): ƒ.ComponentCamera;
     export function enumToArray<T extends object>(anEnum: T): T[keyof T][];
     export function randomEnum<T extends object>(anEnum: T): T[keyof T];
@@ -78,23 +152,4 @@ declare namespace Script {
     export function capitalize(s: string): string;
     export function getPlanePositionFromMouseEvent(_event: MouseEvent): ƒ.Vector3;
     export {};
-}
-declare namespace Script {
-    import ƒ = FudgeCore;
-    interface Build {
-        graph: ƒ.Graph;
-        size: number;
-        name: string;
-    }
-}
-declare namespace Script {
-    import ƒ = FudgeCore;
-    class Building extends ƒ.Component implements Build {
-        static all: Build[];
-        get isSingleton(): boolean;
-        graph: ƒ.Graph;
-        size: number;
-        name: string;
-        constructor();
-    }
 }

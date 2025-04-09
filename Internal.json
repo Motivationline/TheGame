@@ -89,6 +89,14 @@
               "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
             }
           }
+        ],
+        "JobProviderGatherFood": [
+          {
+            "Script.JobProviderGatherFood": {
+              "active": true,
+              "jobType": 1
+            }
+          }
         ]
       },
       "children": [],
@@ -203,6 +211,14 @@
                 "active": true
               },
               "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
+            }
+          }
+        ],
+        "JobProviderStoreResource": [
+          {
+            "Script.JobProviderStoreResource": {
+              "active": true,
+              "jobType": 2
             }
           }
         ]
@@ -484,6 +500,12 @@
             },
             "children": []
           }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-09T07:19:42.868Z|15220"
+          }
         }
       ],
       "idResource": "Graph|2025-03-05T11:38:04.024Z|25869",
@@ -557,13 +579,20 @@
           {
             "ƒ.ComponentTransform": {
               "local": {
-                "translation": "[0, 0, 0]",
+                "translation": "[10, 0, 10]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
               "Component": {
                 "active": true
               }
+            }
+          }
+        ],
+        "JobTaker": [
+          {
+            "Script.JobTaker": {
+              "active": true
             }
           }
         ]
