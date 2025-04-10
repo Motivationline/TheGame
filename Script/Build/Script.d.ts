@@ -17,9 +17,10 @@ declare namespace Script {
         #private;
         constructor(_size: ƒ.Vector2);
         set size(_size: ƒ.Vector2);
-        getTilePosition(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
-        getTile(_pos: ƒ.Vector2): Tile | undefined | null;
+        getTile(_pos: ƒ.Vector2, inWorldCoordinates?: boolean): Tile | undefined | null;
         setTile(_tile: Tile | undefined, _pos: ƒ.Vector2): void;
+        worldPosToTilePos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
+        tilePosToWorldPos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
     }
 }
 declare namespace Script {
@@ -36,6 +37,7 @@ declare namespace Script {
         selectedBuilding: Build;
         marker: ƒ.Node;
         currentPosition: ƒ.Vector2;
+        currentWorldPosition: ƒ.Vector2;
         currentPositionOccupied: boolean;
         constructor(grid?: Grid);
         enable(): Promise<void>;

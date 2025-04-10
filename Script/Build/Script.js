@@ -90,10 +90,9 @@ var Script;
             }
             this.#tiles = newTiles;
         }
-        getTilePosition(_pos, _out = new ƒ.Vector2()) {
-            return _out.set(Math.floor(_pos.x), Math.floor(_pos.y));
-        }
-        getTile(_pos) {
+        getTile(_pos, inWorldCoordinates = true) {
+            if (inWorldCoordinates)
+                _pos = this.worldPosToTilePos(_pos);
             if (_pos.x < 0 || _pos.y < 0)
                 return null;
             if (_pos.x > this.#size.x - 1 || _pos.y > this.#size.y - 1)
@@ -102,6 +101,12 @@ var Script;
         }
         setTile(_tile, _pos) {
             this.#tiles[_pos.y][_pos.x] = _tile;
+        }
+        worldPosToTilePos(_pos, _out = new ƒ.Vector2()) {
+            return _out.set(Math.floor(_pos.x + this.#size.x / 2), Math.floor(_pos.y + this.#size.y / 2));
+        }
+        tilePosToWorldPos(_pos, _out = new ƒ.Vector2()) {
+            return _out.set(_pos.x - this.#size.x / 2, _pos.y - this.#size.y / 2);
         }
     }
     Script.Grid = Grid;
@@ -150,7 +155,7 @@ var Script;
                 let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
                 if (newPosInGrid === false)
                     return;
-                this.marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x, 0.01, this.currentPosition.y);
+                this.marker.mtxLocal.translation = new ƒ.Vector3(this.currentWorldPosition.x, 0.01, this.currentWorldPosition.y);
                 this.marker.activate(true);
             };
             this.placeOnGrid = async (_event) => {
@@ -170,7 +175,7 @@ var Script;
                 // visually add building
                 let marker = await ƒ.Project.createGraphInstance(this.selectedBuilding.graph);
                 Script.viewport.getBranch().appendChild(marker);
-                marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x + this.selectedBuilding.size / 2, 0, this.currentPosition.y + this.selectedBuilding.size / 2);
+                marker.mtxLocal.translation = new ƒ.Vector3(this.currentWorldPosition.x + this.selectedBuilding.size / 2, 0, this.currentWorldPosition.y + this.selectedBuilding.size / 2);
             };
             if (ƒ.Project.mode === ƒ.MODE.EDITOR)
                 return;
@@ -228,6 +233,7 @@ var Script;
                 this.changeTileColor(ƒ.Color.CSS("white"));
             }
             this.currentPosition = _startPos.clone;
+            this.currentWorldPosition = this.grid.tilePosToWorldPos(this.currentPosition);
             this.currentPositionOccupied = occupied;
             return true;
         }
@@ -235,7 +241,7 @@ var Script;
             let pos = ƒ.Recycler.get(ƒ.Vector2);
             for (let x = _startPos.x; x < _startPos.x + this.selectedBuilding.size; x++) {
                 for (let y = _startPos.y; y < _startPos.y + this.selectedBuilding.size; y++) {
-                    let tile = this.grid.getTile(pos.set(x, y));
+                    let tile = this.grid.getTile(pos.set(x, y), false);
                     callback(tile, pos);
                 }
             }
@@ -246,7 +252,7 @@ var Script;
         }
         tilePositionFromMouseEvent(_event) {
             let pos = Script.getPlanePositionFromMouseEvent(_event);
-            let tilePos = this.grid.getTilePosition(new ƒ.Vector2(pos.x, pos.z));
+            let tilePos = this.grid.worldPosToTilePos(new ƒ.Vector2(pos.x, pos.z));
             return tilePos;
         }
         selectBuilding(_build) {
@@ -266,7 +272,7 @@ var Script;
         if (ƒ.Project.mode === ƒ.MODE.EDITOR)
             return;
         const uis = new Map([
-            ["build", new Script.GridBuilder(new Script.Grid(new ƒ.Vector2(21, 21)))],
+            ["build", new Script.GridBuilder(new Script.Grid(new ƒ.Vector2(44, 44)))],
             ["close", new PickController()],
         ]);
         let activeUI = uis.get("close");
@@ -528,6 +534,7 @@ var Script;
             start(_e) {
                 this.#animations.set(NonJobAnimations.WALK, this.animWalk);
                 this.#animations.set(Script.JobProviderType.NONE, this.animIdle);
+                this.#animations.set(Script.JobProviderType.STORE_RESOURCE, this.animIdle);
                 this.#animations.set(Script.JobProviderType.GATHER_FOOD, this.animGatherFood);
                 this.#animations.set(Script.JobProviderType.GATHER_STONE, this.animGatherStone);
                 this.#animations.set(Script.JobProviderType.BUILD, this.animBuild);

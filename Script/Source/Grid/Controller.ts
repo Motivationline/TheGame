@@ -9,6 +9,7 @@ namespace Script {
         selectedBuilding: Build;
         marker: ƒ.Node;
         currentPosition: ƒ.Vector2;
+        currentWorldPosition: ƒ.Vector2;
         currentPositionOccupied: boolean;
 
         constructor(public grid: Grid = new Grid(new ƒ.Vector2(10, 10))) {
@@ -60,7 +61,7 @@ namespace Script {
             let tilePos = this.tilePositionFromMouseEvent(_event);
             let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
             if (newPosInGrid === false) return;
-            this.marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x, 0.01, this.currentPosition.y);
+            this.marker.mtxLocal.translation = new ƒ.Vector3(this.currentWorldPosition.x, 0.01, this.currentWorldPosition.y);
             this.marker.activate(true);
         }
 
@@ -79,7 +80,7 @@ namespace Script {
             // visually add building
             let marker = await ƒ.Project.createGraphInstance(this.selectedBuilding.graph);
             viewport.getBranch().appendChild(marker);
-            marker.mtxLocal.translation = new ƒ.Vector3(this.currentPosition.x + this.selectedBuilding.size / 2, 0, this.currentPosition.y + this.selectedBuilding.size / 2);
+            marker.mtxLocal.translation = new ƒ.Vector3(this.currentWorldPosition.x + this.selectedBuilding.size / 2, 0, this.currentWorldPosition.y + this.selectedBuilding.size / 2);
         }
 
         private checkAndSetCurrentPosition(_startPos: ƒ.Vector2): boolean {
@@ -100,6 +101,7 @@ namespace Script {
                 this.changeTileColor(ƒ.Color.CSS("white"));
             }
             this.currentPosition = _startPos.clone;
+            this.currentWorldPosition = this.grid.tilePosToWorldPos(this.currentPosition);
             this.currentPositionOccupied = occupied;
             return true;
         }
@@ -108,7 +110,7 @@ namespace Script {
             let pos = ƒ.Recycler.get(ƒ.Vector2);
             for (let x: number = _startPos.x; x < _startPos.x + this.selectedBuilding.size; x++) {
                 for (let y: number = _startPos.y; y < _startPos.y + this.selectedBuilding.size; y++) {
-                    let tile = this.grid.getTile(pos.set(x, y));
+                    let tile = this.grid.getTile(pos.set(x, y), false);
                     callback(tile, pos);
                 }
             }
@@ -119,9 +121,9 @@ namespace Script {
             this.marker.getComponent(ƒ.ComponentMaterial).clrPrimary = _color;
         }
 
-        private tilePositionFromMouseEvent(_event: MouseEvent) {
+        private tilePositionFromMouseEvent(_event: MouseEvent): ƒ.Vector2 {
             let pos = getPlanePositionFromMouseEvent(_event);
-            let tilePos = this.grid.getTilePosition(new ƒ.Vector2(pos.x, pos.z));
+            let tilePos = this.grid.worldPosToTilePos(new ƒ.Vector2(pos.x, pos.z));
             return tilePos;
         }
 
