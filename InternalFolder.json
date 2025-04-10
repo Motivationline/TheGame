@@ -55,6 +55,34 @@
         "entries": [
           {
             "idResource": "Graph|2025-04-09T07:19:42.868Z|15220"
+          },
+          {
+            "name": "Eumling_GLB",
+            "entries": [
+              {
+                "idResource": "GraphGLTF|2025-04-10T09:01:35.641Z|88483"
+              },
+              {
+                "name": "Animations",
+                "entries": [
+                  {
+                    "idResource": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132"
+                  },
+                  {
+                    "idResource": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782"
+                  },
+                  {
+                    "idResource": "AnimationGLTF|2025-04-10T09:01:35.652Z|54586"
+                  },
+                  {
+                    "idResource": "AnimationGLTF|2025-04-10T09:01:35.658Z|72405"
+                  },
+                  {
+                    "idResource": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534"
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
