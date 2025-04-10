@@ -138,6 +138,20 @@
                     "idResource": "Graph|2025-04-10T13:17:41.049Z|34656"
                   }
                 ]
+              },
+              {
+                "name": "WholeGround",
+                "entries": [
+                  {
+                    "idResource": "Graph|2025-04-10T14:38:41.757Z|62271"
+                  },
+                  {
+                    "idResource": "Material|2025-04-10T14:39:54.061Z|50893"
+                  },
+                  {
+                    "idResource": "TextureImage|2025-04-10T14:40:17.873Z|95219"
+                  }
+                ]
               }
             ]
           }
@@ -145,6 +159,9 @@
       },
       {
         "idResource": "Graph|2025-04-10T08:33:45.659Z|85930"
+      },
+      {
+        "idResource": "Graph|2025-04-10T14:37:29.148Z|37884"
       }
     ]
   }
