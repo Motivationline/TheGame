@@ -30,6 +30,7 @@ namespace Script {
         start(_e: CustomEvent<UpdateEvent>): void {
             this.#animations.set(NonJobAnimations.WALK, this.animWalk);
             this.#animations.set(JobProviderType.NONE, this.animIdle);
+            this.#animations.set(JobProviderType.STORE_RESOURCE, this.animIdle);
             this.#animations.set(JobProviderType.GATHER_FOOD, this.animGatherFood);
             this.#animations.set(JobProviderType.GATHER_STONE, this.animGatherStone);
             this.#animations.set(JobProviderType.BUILD, this.animBuild);

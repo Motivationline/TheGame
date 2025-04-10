@@ -13,7 +13,7 @@ namespace Script {
         if (ƒ.Project.mode === ƒ.MODE.EDITOR) return;
 
         const uis = new Map<string, ToggleableUI>([
-            ["build", new GridBuilder(new Grid(new ƒ.Vector2(21, 21)))],
+            ["build", new GridBuilder(new Grid(new ƒ.Vector2(44, 44)))],
             ["close", new PickController()],
         ])
         let activeUI: ToggleableUI = uis.get("close");
