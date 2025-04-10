@@ -506,6 +506,12 @@
             "deserializeFromSource": true,
             "idSource": "Graph|2025-04-09T07:19:42.868Z|15220"
           }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-10T08:33:45.659Z|85930"
+          }
         }
       ],
       "idResource": "Graph|2025-03-05T11:38:04.024Z|25869",
@@ -683,6 +689,156 @@
       "idResource": "GraphGLTF|2025-04-09T12:26:35.751Z|49623",
       "type": "GraphGLTF",
       "url": "Assets\\Environment\\Ground\\Blumenwiese_Tile.glb"
+    }
+  },
+  "Graph|2025-04-10T08:33:45.659Z|85930": {
+    "ƒ.Graph": {
+      "name": "Map",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "Sand",
+            "active": true,
+            "components": {
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[0.5, 0, 0.5]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ]
+            },
+            "children": [
+              {
+                "ƒ.GraphInstance": {
+                  "deserializeFromSource": true,
+                  "idSource": "GraphGLTF|2025-04-09T12:26:24.730Z|28009"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "ƒ.Node": {
+            "name": "Sand",
+            "active": true,
+            "components": {
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[1.5, 0, 1.5]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ]
+            },
+            "children": [
+              {
+                "ƒ.GraphInstance": {
+                  "deserializeFromSource": true,
+                  "idSource": "GraphGLTF|2025-04-09T12:26:24.730Z|28009"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-10T08:33:45.659Z|85930",
+      "type": "Graph"
+    }
+  },
+  "Graph|2025-04-10T08:37:14.623Z|16480": {
+    "ƒ.Graph": {
+      "name": "Sand",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0.5, 0, 0.5]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-09T12:26:24.730Z|28009"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-10T08:37:14.623Z|16480",
+      "type": "Graph"
+    }
+  },
+  "Graph|2025-04-10T09:44:09.714Z|76594": {
+    "ƒ.Graph": {
+      "name": "Forest",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0.5, 0, 0.5]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-09T12:26:28.790Z|34974"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-10T09:44:09.714Z|76594",
+      "type": "Graph"
     }
   }
 }
