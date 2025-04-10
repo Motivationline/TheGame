@@ -65911,16 +65911,6 @@
       "type": "Graph"
     }
   },
-  "Graph|2025-04-10T14:37:29.148Z|37884": {
-    "ƒ.Graph": {
-      "name": "MapV2",
-      "active": true,
-      "components": {},
-      "children": [],
-      "idResource": "Graph|2025-04-10T14:37:29.148Z|37884",
-      "type": "Graph"
-    }
-  },
   "Material|2025-04-10T14:39:54.061Z|50893": {
     "ƒ.Material": {
       "name": "ShaderPhongTextured",
