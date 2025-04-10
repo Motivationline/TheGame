@@ -118,14 +118,17 @@ declare namespace Script {
         NONE = 4
     }
     abstract class JobProvider extends UpdateScriptComponent {
+        #private;
         static JobProviders: JobProvider[];
         protected _jobType: JobProviderType;
         jobDuration: number;
+        cooldown: number;
         start(_e: CustomEvent<UpdateEvent>): void;
         remove(_e: CustomEvent): void;
         jobStart(): void;
         jobFinish(): void;
         get jobType(): JobProviderType;
+        update(_e: CustomEvent<UpdateEvent>): void;
     }
     class JobProviderGatherFood extends JobProvider {
         _jobType: JobProviderType;
