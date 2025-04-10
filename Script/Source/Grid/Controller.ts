@@ -17,14 +17,14 @@ namespace Script {
             this.wrapper = document.getElementById("build-menu");
             this.buildings = document.getElementById("build-menu-buildings");
         }
-        
+
         async enable(): Promise<void> {
             this.wrapper.classList.remove("hidden");
             this.selectedBuilding = undefined;
             this.currentPosition = undefined;
             this.canvas.addEventListener("mousemove", this.highlightGrid);
             this.canvas.addEventListener("mouseup", this.placeOnGrid);
-            
+
             if (!this.marker) {
                 this.generateBuildingButtons();
                 let graph = <ƒ.Graph>ƒ.Project.getResourcesByName("Tile")[0];
@@ -65,6 +65,7 @@ namespace Script {
         }
 
         private placeOnGrid = async (_event: MouseEvent) => {
+            if (_event.button !== 0) return;
             if (!this.selectedBuilding) return;
             console.log("place on grid");
             let tilePos = this.tilePositionFromMouseEvent(_event);

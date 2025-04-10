@@ -1,11 +1,17 @@
 namespace Script {
     import ƒ = FudgeCore;
+    @ƒ.serialize
     export class JobTaker extends UpdateScriptComponent {
         #job: JobProviderType = JobProviderType.GATHER_FOOD;
+        #currentJob: JobProviderType = JobProviderType.NONE;
         #progress: number = 0;
         #executableJobs: Map<JobProviderType, Function>;
         #target: JobProvider;
+        #animator: JobAnimation;
+        @ƒ.serialize(Number)
         speed: number = 1;
+
+
         constructor() {
             super();
             if (ƒ.Project.mode == ƒ.MODE.EDITOR)
@@ -35,20 +41,22 @@ namespace Script {
             return foundProviders[0];
         }
 
+        start(_e: CustomEvent<UpdateEvent>): void {
+            this.#animator = this.node.getComponent(JobAnimation);
+        }
+
         update(_e: CustomEvent<UpdateEvent>): void {
             this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
         }
 
         private gatherResource = (deltaTime: number) => {
-            console.log(this.#progress);
             switch (this.#progress) {
                 case 0: {
                     // look for target
-                    const target = JobTaker.findClosestJobProvider(this.#job, this.node.mtxWorld.translation);
+                    this.#currentJob = JobProviderType.NONE;
+                    const target = this.findAndSetTargetForJob(this.#job);
                     if (target) {
                         this.#progress++
-                        this.#target = target;
-                        this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);
                     }
                     break;
                 }
@@ -58,27 +66,31 @@ namespace Script {
                     let reachedTarget = this.moveToTarget(deltaTime);
                     if (reachedTarget) {
                         this.#progress++;
-                        new ƒ.Timer(ƒ.Time.game, this.#progress === 2 ? 2000 : 100, 1, ()=>{this.#progress++});
+                        this.#target.jobStart();
+                        new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
+                            this.#progress++;
+                            this.#target.jobFinish();
+                        });
                     }
                     break;
                 }
                 case 2: {
                     // at gathering site
                     // play animation or some junk
+                    this.#animator.playAnimation(this.#currentJob);
                     break;
                 }
                 case 3: {
                     // ready to find the place to drop stuff off
-                    const target = JobTaker.findClosestJobProvider(JobProviderType.STORE_RESOURCE, this.node.mtxWorld.translation);
-                    if(target) {
+                    const target = this.findAndSetTargetForJob(JobProviderType.STORE_RESOURCE);
+                    if (target) {
                         this.#progress++;
-                        this.#target = target;
-                        this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);
                     }
                     break;
                 }
                 case 5: {
                     // at deploy site
+                    this.#animator.playAnimation(this.#currentJob);
                     break;
                 }
                 case 6: {
@@ -94,6 +106,7 @@ namespace Script {
 
         #prevDistance: number = Infinity;
         private moveToTarget(deltaTime: number): boolean {
+            this.#animator.playAnimation(NonJobAnimations.WALK);
             let distance = this.node.mtxWorld.translation.getDistance(this.#target.node.mtxWorld.translation);
             if (distance > this.#prevDistance) {
                 // target reached
@@ -103,8 +116,19 @@ namespace Script {
             }
             this.#prevDistance = distance;
             // move to target
+            deltaTime = Math.min(1000, deltaTime); // limit delta time to 1 second max to prevent lag causing super big jumps
             this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
             return false;
+        }
+        
+        private findAndSetTargetForJob(_job: JobProviderType): JobProvider | undefined {
+            this.#animator.playAnimation(JobProviderType.NONE);
+            const target = JobTaker.findClosestJobProvider(_job, this.node.mtxWorld.translation);
+            if (!target) return undefined;
+            this.#target = target;
+            this.#currentJob = _job;
+            this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);
+            return target;
         }
     }
 }

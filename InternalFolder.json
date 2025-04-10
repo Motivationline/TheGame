@@ -60,7 +60,7 @@
             "name": "Eumling_GLB",
             "entries": [
               {
-                "idResource": "GraphGLTF|2025-04-10T09:01:35.641Z|88483"
+                "idResource": "GraphGLTF|2025-04-10T11:33:30.270Z|12636"
               },
               {
                 "name": "Animations",
@@ -72,13 +72,13 @@
                     "idResource": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782"
                   },
                   {
-                    "idResource": "AnimationGLTF|2025-04-10T09:01:35.652Z|54586"
-                  },
-                  {
-                    "idResource": "AnimationGLTF|2025-04-10T09:01:35.658Z|72405"
-                  },
-                  {
                     "idResource": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534"
+                  },
+                  {
+                    "idResource": "AnimationGLTF|2025-04-10T11:33:30.282Z|80849"
+                  },
+                  {
+                    "idResource": "AnimationGLTF|2025-04-10T11:33:30.288Z|43589"
                   }
                 ]
               }
@@ -100,9 +100,6 @@
                 "entries": [
                   {
                     "idResource": "GraphGLTF|2025-04-09T12:26:24.730Z|28009"
-                  },
-                  {
-                    "idResource": "Graph|2025-04-10T08:33:45.659Z|85930"
                   },
                   {
                     "idResource": "Graph|2025-04-10T08:37:14.623Z|16480"

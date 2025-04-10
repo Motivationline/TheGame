@@ -94,7 +94,8 @@
           {
             "Script.JobProviderGatherFood": {
               "active": true,
-              "jobType": 1
+              "_jobType": 1,
+              "jobDuration": 6249
             }
           }
         ]
@@ -218,7 +219,8 @@
           {
             "Script.JobProviderStoreResource": {
               "active": true,
-              "jobType": 2
+              "_jobType": 2,
+              "jobDuration": 200
             }
           }
         ]
@@ -576,6 +578,33 @@
       "type": "Graph"
     }
   },
+  "AnimationGLTF|2025-04-10T09:01:35.642Z|75132": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+      "name": "Idle",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-10T09:01:35.649Z|00782": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782",
+      "name": "WalkCycle",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-10T09:01:35.663Z|98534": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534",
+      "name": "WoodChuckerSmoothV2",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
+  },
   "Graph|2025-04-09T07:19:42.868Z|15220": {
     "ƒ.Graph": {
       "name": "Eumling",
@@ -598,52 +627,37 @@
         "JobTaker": [
           {
             "Script.JobTaker": {
-              "active": true
+              "active": true,
+              "speed": 1
+            }
+          }
+        ],
+        "JobAnimation": [
+          {
+            "Script.JobAnimation": {
+              "active": true,
+              "animIdle": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+              "animWalk": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782",
+              "animGatherFood": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534",
+              "animGatherStone": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534"
+            }
+          }
+        ],
+        "PickSphere": [
+          {
+            "Script.PickSphere": {
+              "active": true,
+              "radius": 0.5000000000000001,
+              "offset": "[0, 0.5, 0]"
             }
           }
         ]
       },
       "children": [
         {
-          "ƒ.Node": {
-            "name": "VisibleParts",
-            "active": true,
-            "components": {
-              "ComponentMesh": [
-                {
-                  "ƒ.ComponentMesh": {
-                    "idMesh": "MeshCube|2025-04-08T06:37:52.687Z|13643",
-                    "pivot": {
-                      "translation": "[0, 0.5, 0]",
-                      "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    }
-                  }
-                }
-              ],
-              "ComponentMaterial": [
-                {
-                  "ƒ.ComponentMaterial": {
-                    "sortForAlpha": false,
-                    "clrPrimary": "[1, 1, 1, 1]",
-                    "clrSecondary": "[1, 1, 1, 1]",
-                    "pivot": {
-                      "translation": "[0, 0]",
-                      "rotation": 0,
-                      "scaling": "[1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    },
-                    "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
-                  }
-                }
-              ]
-            },
-            "children": []
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-10T11:33:30.270Z|12636"
           }
         }
       ],
@@ -839,6 +853,50 @@
       ],
       "idResource": "Graph|2025-04-10T09:44:09.714Z|76594",
       "type": "Graph"
+    }
+  },
+  "GraphGLTF|2025-04-10T11:33:30.270Z|12636": {
+    "ƒ.GraphGLTF": {
+      "name": "Eumling_Scene",
+      "active": true,
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": false
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-10T11:33:30.270Z|12636",
+      "type": "GraphGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb"
+    }
+  },
+  "AnimationGLTF|2025-04-10T11:33:30.282Z|80849": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T11:33:30.282Z|80849",
+      "name": "WalkCycleSad",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-10T11:33:30.288Z|43589": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T11:33:30.288Z|43589",
+      "name": "WalkCycleVar1",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
     }
   }
 }

@@ -10,11 +10,14 @@ namespace Script {
         BUILD,
         NONE,
     }
+
     @ƒ.serialize
     export abstract class JobProvider extends UpdateScriptComponent {
         static JobProviders: JobProvider[] = [];
         @ƒ.serialize(JobProviderType)
-        jobType: JobProviderType; 
+        protected _jobType: JobProviderType;
+        @ƒ.serialize(Number)
+        jobDuration: number = 500;
         start(_e: CustomEvent<UpdateEvent>): void {
             JobProvider.JobProviders.push(this);
         }
@@ -22,18 +25,26 @@ namespace Script {
             let index = JobProvider.JobProviders.indexOf(this);
             JobProvider.JobProviders.splice(index, 1);
         }
+        jobStart(): void {}
+        jobFinish(): void {}
+        get jobType(): JobProviderType {
+            return this._jobType;
+        }
     }
 
     export class JobProviderGatherFood extends JobProvider {
-        jobType: JobProviderType = JobProviderType.GATHER_FOOD;
+        _jobType: JobProviderType = JobProviderType.GATHER_FOOD;
+        jobDuration: number = 2000;
     }
     export class JobProviderGatherStone extends JobProvider {
-        jobType: JobProviderType = JobProviderType.GATHER_STONE;
+        _jobType: JobProviderType = JobProviderType.GATHER_STONE;
+        jobDuration: number = 2000;
     }
     export class JobProviderStoreResource extends JobProvider {
-        jobType: JobProviderType = JobProviderType.STORE_RESOURCE;
+        jobDuration: number = 2000;
+        _jobType: JobProviderType = JobProviderType.STORE_RESOURCE;
     }
     export class JobProviderBuild extends JobProvider {
-        jobType: JobProviderType = JobProviderType.BUILD;
+        _jobType: JobProviderType = JobProviderType.BUILD;
     }
 }

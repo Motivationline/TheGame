@@ -14,10 +14,10 @@ namespace Script {
 
         const uis = new Map<string, ToggleableUI>([
             ["build", new GridBuilder(new Grid(new ƒ.Vector2(21, 21)))],
-            ["move", new CameraController()],
+            ["close", new PickController()],
         ])
-        let activeUI: ToggleableUI = uis.get("move");
-        activeUI.enable();
+        let activeUI: ToggleableUI = uis.get("close");
+        activeUI?.enable();
 
         document.querySelectorAll("button[data-target]").forEach((btn) => {
             btn.addEventListener("click", () => {
@@ -29,32 +29,30 @@ namespace Script {
             })
         });
 
+        new CameraController().enable();
+
     }
 
     class CameraController implements ToggleableUI {
-        wrapper: HTMLElement;
         canvas = document.querySelector("canvas");
         camera = findFirstCameraInGraph(viewport.getBranch());
         currentZoom: number = 0;
         zoomFactor: number = 10;
 
-        constructor() {
-            this.wrapper = document.getElementById("move-menu");
-        }
 
         enable() {
-            this.wrapper.classList.remove("hidden");
             this.canvas.addEventListener("wheel", this.zoom);
             this.canvas.addEventListener("mousedown", this.mouseEvent);
             this.canvas.addEventListener("mouseup", this.mouseEvent);
             this.canvas.addEventListener("mousemove", this.mouseEvent);
+            this.canvas.addEventListener("contextmenu", this.preventDefault);
         };
         disable() {
-            this.wrapper.classList.add("hidden");
             this.canvas.removeEventListener("wheel", this.zoom);
             this.canvas.removeEventListener("mousedown", this.mouseEvent);
             this.canvas.removeEventListener("mouseup", this.mouseEvent);
             this.canvas.removeEventListener("mousemove", this.mouseEvent);
+            this.canvas.removeEventListener("contextmenu", this.preventDefault);
         };
 
         private zoom = (_event: WheelEvent) => {
@@ -73,11 +71,13 @@ namespace Script {
         private mouseEvent = (_event: MouseEvent) => {
             switch (_event.type) {
                 case "mousedown": {
+                    if (_event.button !== 2) return;
                     this.moving = true;
                     this.prevPosition = getPlanePositionFromMouseEvent(_event);
                     break;
                 }
                 case "mouseup": {
+                    if (_event.button !== 2) return;
                     this.moving = false;
                     break;
                 }
@@ -87,13 +87,43 @@ namespace Script {
                     let diff = pos.clone.subtract(this.prevPosition);
                     // console.log(_event.movementX, _event.movementY, pos, this.prevPosition, diff);
                     this.camera.node.mtxLocal.translate(diff.negate(), false);
-                    requestAnimationFrame(()=>{
+                    requestAnimationFrame(() => {
                         this.prevPosition = getPlanePositionFromMouseEvent(_event);
                     })
                     // console.log(this.camera.node.mtxLocal.translation);
                     break;
                 }
             }
+        }
+
+        private preventDefault = (_e: Event) => {
+            _e.preventDefault();
+        }
+    }
+
+    class PickController implements ToggleableUI {
+        canvas = document.querySelector("canvas");
+        wrapper = document.getElementById("main-menu");
+
+        enable() {
+            this.wrapper.classList.remove("hidden");
+            this.canvas.addEventListener("click", this.click);
+        }
+
+        disable() {
+            this.wrapper.classList.add("hidden");
+            this.canvas.removeEventListener("click", this.click);
+        }
+
+        private click = (_event: MouseEvent) => {
+            let picks = this.findAllPickedObjectsUsingPickSphere({ x: _event.clientX, y: _event.clientY });
+            console.log(picks);
+        }
+        private findAllPickedObjectsUsingPickSphere(_pointer: { x: number, y: number }): ƒ.Node[] {
+            const ray = viewport.getRayFromClient(new ƒ.Vector2(_pointer.x, _pointer.y));
+            const picks = PickSphere.pick(ray, { sortBy: "distanceToRayOrigin" });
+
+            return picks.map((p) => p.node);
         }
     }
 }

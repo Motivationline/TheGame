@@ -91,6 +91,23 @@ declare namespace Script {
     }
 }
 declare namespace Script {
+    import ƒ = FudgeCore;
+    type AnimationType = JobProviderType | NonJobAnimations;
+    enum NonJobAnimations {
+        WALK = "walk"
+    }
+    class JobAnimation extends UpdateScriptComponent {
+        #private;
+        animIdle: ƒ.Animation;
+        animWalk: ƒ.Animation;
+        animGatherFood: ƒ.Animation;
+        animGatherStone: ƒ.Animation;
+        animBuild: ƒ.Animation;
+        start(_e: CustomEvent<UpdateEvent>): void;
+        playAnimation(anim: AnimationType): void;
+    }
+}
+declare namespace Script {
     enum JobProviderType {
         GATHER_STONE = 0,
         GATHER_FOOD = 1,
@@ -100,21 +117,28 @@ declare namespace Script {
     }
     abstract class JobProvider extends UpdateScriptComponent {
         static JobProviders: JobProvider[];
-        jobType: JobProviderType;
+        protected _jobType: JobProviderType;
+        jobDuration: number;
         start(_e: CustomEvent<UpdateEvent>): void;
         remove(_e: CustomEvent): void;
+        jobStart(): void;
+        jobFinish(): void;
+        get jobType(): JobProviderType;
     }
     class JobProviderGatherFood extends JobProvider {
-        jobType: JobProviderType;
+        _jobType: JobProviderType;
+        jobDuration: number;
     }
     class JobProviderGatherStone extends JobProvider {
-        jobType: JobProviderType;
+        _jobType: JobProviderType;
+        jobDuration: number;
     }
     class JobProviderStoreResource extends JobProvider {
-        jobType: JobProviderType;
+        jobDuration: number;
+        _jobType: JobProviderType;
     }
     class JobProviderBuild extends JobProvider {
-        jobType: JobProviderType;
+        _jobType: JobProviderType;
     }
 }
 declare namespace Script {
@@ -125,11 +149,40 @@ declare namespace Script {
         constructor();
         set job(_job: JobProviderType);
         static findClosestJobProvider(_job: JobProviderType, _location: ƒ.Vector3): JobProvider | undefined;
+        start(_e: CustomEvent<UpdateEvent>): void;
         update(_e: CustomEvent<UpdateEvent>): void;
         private gatherResource;
         private build;
         private moveToTarget;
+        private findAndSetTargetForJob;
     }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    export class PickSphere extends ƒ.Component {
+        #private;
+        static readonly iSubclass: number;
+        constructor();
+        get radius(): number;
+        set radius(_r: number);
+        get radiusSquared(): number;
+        offset: ƒ.Vector3;
+        get mtxPick(): ƒ.Matrix4x4;
+        drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void;
+        /**
+         * finds all pickSpheres within the given ray
+         * @param ray the ray to check against
+         * @param options options
+         */
+        static pick(ray: ƒ.Ray, options?: Partial<PickSpherePickOptions>): PickSphere[];
+        private static get defaultOptions();
+    }
+    interface PickSpherePickOptions {
+        /** Sets by what metric to sort the results. Unsorted if undefined */
+        sortBy?: "distanceToRay" | "distanceToRayOrigin";
+        branch: ƒ.Node;
+    }
+    export {};
 }
 declare namespace Script {
     import ƒ = FudgeCore;
