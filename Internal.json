@@ -684,5 +684,76 @@
       "type": "GraphGLTF",
       "url": "Assets\\Environment\\Ground\\Blumenwiese_Tile.glb"
     }
+  },
+  "GraphGLTF|2025-04-10T09:01:35.641Z|88483": {
+    "ƒ.GraphGLTF": {
+      "name": "Eumling_Scene",
+      "active": true,
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": true
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-10T09:01:35.641Z|88483",
+      "type": "GraphGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb"
+    }
+  },
+  "AnimationGLTF|2025-04-10T09:01:35.642Z|75132": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+      "name": "Idle",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-10T09:01:35.649Z|00782": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782",
+      "name": "WalkCycle",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-10T09:01:35.652Z|54586": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T09:01:35.652Z|54586",
+      "name": "WalkCycleSad",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-10T09:01:35.658Z|72405": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T09:01:35.658Z|72405",
+      "name": "WalkCycleVar1",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-10T09:01:35.663Z|98534": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534",
+      "name": "WoodChuckerSmoothV2",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
+    }
   }
 }
