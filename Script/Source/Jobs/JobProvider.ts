@@ -56,6 +56,7 @@ namespace Script {
     export class JobProviderStoreResource extends JobProvider {
         jobDuration: number = 2000;
         _jobType: JobProviderType = JobProviderType.STORE_RESOURCE;
+        cooldown: number = 0;
     }
     export class JobProviderBuild extends JobProvider {
         _jobType: JobProviderType = JobProviderType.BUILD;

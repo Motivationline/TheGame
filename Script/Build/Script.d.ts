@@ -141,6 +141,7 @@ declare namespace Script {
     class JobProviderStoreResource extends JobProvider {
         jobDuration: number;
         _jobType: JobProviderType;
+        cooldown: number;
     }
     class JobProviderBuild extends JobProvider {
         _jobType: JobProviderType;

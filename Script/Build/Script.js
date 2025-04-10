@@ -655,6 +655,7 @@ var Script;
             super(...arguments);
             this.jobDuration = 2000;
             this._jobType = JobProviderType.STORE_RESOURCE;
+            this.cooldown = 0;
         }
     }
     Script.JobProviderStoreResource = JobProviderStoreResource;
