@@ -580,24 +580,31 @@ var Script;
         let __jobType_initializers = [];
         let _jobDuration_decorators;
         let _jobDuration_initializers = [];
+        let _cooldown_decorators;
+        let _cooldown_initializers = [];
         var JobProvider = class extends _classSuper {
             static { _classThis = this; }
             constructor() {
                 super(...arguments);
                 this._jobType = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, __jobType_initializers, void 0));
                 this.jobDuration = __runInitializers(this, _jobDuration_initializers, 500);
+                this.cooldown = __runInitializers(this, _cooldown_initializers, 30000);
+                this.#currentCooldown = 0;
             }
             static {
                 const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
                 __jobType_decorators = [ƒ.serialize(JobProviderType)];
                 _jobDuration_decorators = [ƒ.serialize(Number)];
+                _cooldown_decorators = [ƒ.serialize(Number)];
                 __esDecorate(null, null, __jobType_decorators, { kind: "field", name: "_jobType", static: false, private: false, access: { has: obj => "_jobType" in obj, get: obj => obj._jobType, set: (obj, value) => { obj._jobType = value; } }, metadata: _metadata }, __jobType_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _jobDuration_decorators, { kind: "field", name: "jobDuration", static: false, private: false, access: { has: obj => "jobDuration" in obj, get: obj => obj.jobDuration, set: (obj, value) => { obj.jobDuration = value; } }, metadata: _metadata }, _jobDuration_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _cooldown_decorators, { kind: "field", name: "cooldown", static: false, private: false, access: { has: obj => "cooldown" in obj, get: obj => obj.cooldown, set: (obj, value) => { obj.cooldown = value; } }, metadata: _metadata }, _cooldown_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 JobProvider = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
             }
             static { this.JobProviders = []; }
+            #currentCooldown;
             start(_e) {
                 JobProvider.JobProviders.push(this);
             }
@@ -606,9 +613,19 @@ var Script;
                 JobProvider.JobProviders.splice(index, 1);
             }
             jobStart() { }
-            jobFinish() { }
+            jobFinish() {
+                this.#currentCooldown = this.cooldown;
+            }
             get jobType() {
+                if (this.#currentCooldown > 0) {
+                    return JobProviderType.NONE;
+                }
                 return this._jobType;
+            }
+            update(_e) {
+                if (this.#currentCooldown > 0) {
+                    this.#currentCooldown -= _e.detail.deltaTime;
+                }
             }
             static {
                 __runInitializers(_classThis, _classExtraInitializers);
@@ -638,6 +655,7 @@ var Script;
             super(...arguments);
             this.jobDuration = 2000;
             this._jobType = JobProviderType.STORE_RESOURCE;
+            this.cooldown = 0;
         }
     }
     Script.JobProviderStoreResource = JobProviderStoreResource;

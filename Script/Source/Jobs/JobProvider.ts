@@ -18,6 +18,9 @@ namespace Script {
         protected _jobType: JobProviderType;
         @ƒ.serialize(Number)
         jobDuration: number = 500;
+        @ƒ.serialize(Number)
+        cooldown: number = 30000;
+        #currentCooldown = 0;
         start(_e: CustomEvent<UpdateEvent>): void {
             JobProvider.JobProviders.push(this);
         }
@@ -25,10 +28,20 @@ namespace Script {
             let index = JobProvider.JobProviders.indexOf(this);
             JobProvider.JobProviders.splice(index, 1);
         }
-        jobStart(): void {}
-        jobFinish(): void {}
+        jobStart(): void { }
+        jobFinish(): void {
+            this.#currentCooldown = this.cooldown;
+        }
         get jobType(): JobProviderType {
+            if (this.#currentCooldown > 0) {
+                return JobProviderType.NONE;
+            }
             return this._jobType;
+        }
+        update(_e: CustomEvent<UpdateEvent>): void {
+            if (this.#currentCooldown > 0) {
+                this.#currentCooldown -= _e.detail.deltaTime
+            }
         }
     }
 
@@ -43,6 +56,7 @@ namespace Script {
     export class JobProviderStoreResource extends JobProvider {
         jobDuration: number = 2000;
         _jobType: JobProviderType = JobProviderType.STORE_RESOURCE;
+        cooldown: number = 0;
     }
     export class JobProviderBuild extends JobProvider {
         _jobType: JobProviderType = JobProviderType.BUILD;
