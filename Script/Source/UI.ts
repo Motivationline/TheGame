@@ -8,29 +8,35 @@ namespace Script {
         enable: () => void;
         disable: () => void;
     }
-
+    let uis: Map<string, ToggleableUI>;
+    let activeUI: ToggleableUI;
     export function setupUI() {
         if (ƒ.Project.mode === ƒ.MODE.EDITOR) return;
 
-        const uis = new Map<string, ToggleableUI>([
+        uis = new Map<string, ToggleableUI>([
             ["build", new GridBuilder(new Grid(new ƒ.Vector2(44, 44)))],
             ["close", new PickController()],
+            ["job", new JobController()],
         ])
-        let activeUI: ToggleableUI = uis.get("close");
+        activeUI = uis.get("close");
         activeUI?.enable();
 
         document.querySelectorAll("button[data-target]").forEach((btn) => {
             btn.addEventListener("click", () => {
-                let nextUI = uis.get((<HTMLElement>btn).dataset.target);
-                if (!nextUI) return;
-                if (activeUI) activeUI.disable();
-                nextUI.enable();
-                activeUI = nextUI;
+                enableUI((<HTMLElement>btn).dataset.target);
             })
         });
 
         new CameraController().enable();
 
+    }
+
+    function enableUI(_type: string) {
+        let nextUI = uis.get(_type);
+        if (!nextUI) return;
+        if (activeUI) activeUI.disable();
+        nextUI.enable();
+        activeUI = nextUI;
     }
 
     class CameraController implements ToggleableUI {
@@ -101,6 +107,7 @@ namespace Script {
         }
     }
 
+    let selectedEumling: ƒ.Node;
     class PickController implements ToggleableUI {
         canvas = document.querySelector("canvas");
         wrapper = document.getElementById("main-menu");
@@ -117,7 +124,9 @@ namespace Script {
 
         private click = (_event: MouseEvent) => {
             let picks = this.findAllPickedObjectsUsingPickSphere({ x: _event.clientX, y: _event.clientY });
-            console.log(picks);
+            if (!picks.length) return;
+            selectedEumling = picks[0];
+            enableUI("job");
         }
         private findAllPickedObjectsUsingPickSphere(_pointer: { x: number, y: number }): ƒ.Node[] {
             const ray = viewport.getRayFromClient(new ƒ.Vector2(_pointer.x, _pointer.y));
@@ -125,6 +134,41 @@ namespace Script {
 
             return picks.map((p) => p.node);
         }
+    }
+
+    class JobController implements ToggleableUI {
+        dialog: HTMLDialogElement = <HTMLDialogElement>document.getElementById("job-dialog");
+        wrapper: HTMLDialogElement = <HTMLDialogElement>document.getElementById("job-wrapper");
+
+        enable(): void {
+            this.dialog.showPopover();
+            this.dialog.addEventListener("toggle", <EventListener>this.close);
+
+            let buttons: HTMLElement[] = [];
+            let keys = Object.keys(JobType).filter(k => isNaN(Number(k)));
+            for(let job of keys){
+                const btn = document.createElement("button");
+                btn.innerText = job;
+                btn.addEventListener("click", () => {
+                    selectedEumling.getComponent(JobTaker).job = JobType[job];
+                    enableUI("close");
+                })
+                buttons.push(btn);
+            }
+            this.wrapper.replaceChildren(...buttons);
+        }
+        close = (_e: ToggleEvent) => {
+            if(_e.newState === "closed"){
+                enableUI("close");
+            }
+        }
+        
+        disable = () => {
+            this.dialog.removeEventListener("toggle", <EventListener>this.close);
+            this.dialog.hidePopover();
+            
+        }
+
     }
 }
 

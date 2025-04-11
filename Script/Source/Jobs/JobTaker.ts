@@ -2,12 +2,13 @@ namespace Script {
     import ƒ = FudgeCore;
     @ƒ.serialize
     export class JobTaker extends UpdateScriptComponent {
-        #job: JobProviderType = JobProviderType.GATHER_FOOD;
-        #currentJob: JobProviderType = JobProviderType.NONE;
+        #job: JobType = JobType.NONE;
+        #currentJob: JobType = JobType.NONE;
         #progress: number = 0;
-        #executableJobs: Map<JobProviderType, Function>;
+        #executableJobs: Map<JobType, Function>;
         #target: JobProvider;
         #animator: JobAnimation;
+        #timers: ƒ.Timer[] = [];
         @ƒ.serialize(Number)
         speed: number = 1;
 
@@ -17,19 +18,22 @@ namespace Script {
             if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                 return;
 
-            this.#executableJobs = new Map<JobProviderType, Function>([
-                [JobProviderType.BUILD, this.build],
-                [JobProviderType.GATHER_FOOD, this.gatherResource],
-                [JobProviderType.GATHER_STONE, this.gatherResource],
+            this.#executableJobs = new Map<JobType, Function>([
+                [JobType.NONE, this.idle],
+                [JobType.BUILD, this.build],
+                [JobType.GATHER_FOOD, this.gatherResource],
+                [JobType.GATHER_STONE, this.gatherResource],
             ])
         }
 
-        set job(_job: JobProviderType) {
+        set job(_job: JobType) {
             this.#job = _job;
             this.#progress = 0;
+            this.#timers.forEach(t => t.clear());
+            this.#timers.length = 0;
         }
 
-        static findClosestJobProvider(_job: JobProviderType, _location: ƒ.Vector3): JobProvider | undefined {
+        static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined {
             const foundProviders: JobProvider[] = [];
             for (let provider of JobProvider.JobProviders) {
                 if (provider.jobType === _job) {
@@ -53,7 +57,7 @@ namespace Script {
             switch (this.#progress) {
                 case 0: {
                     // look for target
-                    this.#currentJob = JobProviderType.NONE;
+                    this.#currentJob = JobType.NONE;
                     const target = this.findAndSetTargetForJob(this.#job);
                     if (target) {
                         this.#progress++
@@ -82,7 +86,7 @@ namespace Script {
                 }
                 case 3: {
                     // ready to find the place to drop stuff off
-                    const target = this.findAndSetTargetForJob(JobProviderType.STORE_RESOURCE);
+                    const target = this.findAndSetTargetForJob(JobType.STORE_RESOURCE);
                     if (target) {
                         this.#progress++;
                     }
@@ -103,6 +107,44 @@ namespace Script {
         private build = () => {
 
         }
+        private idle = (deltaTime: number) => {
+            switch (this.#progress) {
+                case 0: {
+                    this.#animator.playAnimation(this.#job);
+                    this.#progress++;
+                    this.#timers.push(new ƒ.Timer(ƒ.Time.game, randomRange(1000, 5000), 1, () => {
+                        this.#progress = 2;
+                    }));
+                    break;
+                }
+                case 1: {
+                    // just idling around
+
+                    break;
+                }
+                case 2: {
+                    // create a random walk target
+                    const node = new ƒ.Node("walk_target");
+                    const jp = new JobProviderNone();
+                    node.addComponent(jp);
+                    node.addComponent(new ƒ.ComponentTransform);
+                    this.node.getParent().addChild(node);
+                    node.mtxLocal.translateX(Math.max(-20, Math.min(20, randomRange(-4, 4) + this.node.mtxWorld.translation.x)));
+                    node.mtxLocal.translateZ(Math.max(-20, Math.min(20, randomRange(-4, 4) + this.node.mtxWorld.translation.z)));
+                    this.#target = jp;
+                    this.node.mtxLocal.lookAt(node.mtxLocal.translation);
+                    this.#progress = 3;
+                    break;
+                }
+                case 3: {
+                    const reached = this.moveToTarget(deltaTime);
+                    if (reached) {
+                        this.#target.node.getParent().removeChild(this.#target.node);
+                        this.#progress = 0;
+                    }
+                }
+            }
+        }
 
         #prevDistance: number = Infinity;
         private moveToTarget(deltaTime: number): boolean {
@@ -120,9 +162,9 @@ namespace Script {
             this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
             return false;
         }
-        
-        private findAndSetTargetForJob(_job: JobProviderType): JobProvider | undefined {
-            this.#animator.playAnimation(JobProviderType.NONE);
+
+        private findAndSetTargetForJob(_job: JobType): JobProvider | undefined {
+            this.#animator.playAnimation(JobType.NONE);
             const target = JobTaker.findClosestJobProvider(_job, this.node.mtxWorld.translation);
             if (!target) return undefined;
             this.#target = target;

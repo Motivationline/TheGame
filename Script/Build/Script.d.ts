@@ -94,7 +94,7 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
-    type AnimationType = JobProviderType | NonJobAnimations;
+    type AnimationType = JobType | NonJobAnimations;
     enum NonJobAnimations {
         WALK = "walk"
     }
@@ -110,7 +110,7 @@ declare namespace Script {
     }
 }
 declare namespace Script {
-    enum JobProviderType {
+    enum JobType {
         GATHER_STONE = 0,
         GATHER_FOOD = 1,
         STORE_RESOURCE = 2,
@@ -120,31 +120,34 @@ declare namespace Script {
     abstract class JobProvider extends UpdateScriptComponent {
         #private;
         static JobProviders: JobProvider[];
-        protected _jobType: JobProviderType;
+        protected _jobType: JobType;
         jobDuration: number;
         cooldown: number;
         start(_e: CustomEvent<UpdateEvent>): void;
         remove(_e: CustomEvent): void;
         jobStart(): void;
         jobFinish(): void;
-        get jobType(): JobProviderType;
+        get jobType(): JobType;
         update(_e: CustomEvent<UpdateEvent>): void;
     }
+    class JobProviderNone extends JobProvider {
+        _jobType: JobType;
+    }
     class JobProviderGatherFood extends JobProvider {
-        _jobType: JobProviderType;
+        _jobType: JobType;
         jobDuration: number;
     }
     class JobProviderGatherStone extends JobProvider {
-        _jobType: JobProviderType;
+        _jobType: JobType;
         jobDuration: number;
     }
     class JobProviderStoreResource extends JobProvider {
         jobDuration: number;
-        _jobType: JobProviderType;
+        _jobType: JobType;
         cooldown: number;
     }
     class JobProviderBuild extends JobProvider {
-        _jobType: JobProviderType;
+        _jobType: JobType;
     }
 }
 declare namespace Script {
@@ -153,12 +156,13 @@ declare namespace Script {
         #private;
         speed: number;
         constructor();
-        set job(_job: JobProviderType);
-        static findClosestJobProvider(_job: JobProviderType, _location: ƒ.Vector3): JobProvider | undefined;
+        set job(_job: JobType);
+        static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined;
         start(_e: CustomEvent<UpdateEvent>): void;
         update(_e: CustomEvent<UpdateEvent>): void;
         private gatherResource;
         private build;
+        private idle;
         private moveToTarget;
         private findAndSetTargetForJob;
     }

@@ -27,16 +27,10 @@
 </head>
 
 <body>
-    <!--Dialog shown at startup only-->
-    <dialog>
-        <p>FUDGE Autoview</p>
-        <h1>Title (will be replaced by Autoview)</h1>
-        <p>click to start</p>
-    </dialog>
     <!--Canvas for FUDGE to render to-->
     <canvas class="fullscreen">
     </canvas>
-
+    
     <div class="overlay">
         <div id="build-menu" class="hidden">
             <button data-target="close">close</button>
@@ -47,5 +41,9 @@
             <button data-target="build">build</button>
         </div>
     </div>
+    <dialog id="job-dialog" popover>
+        <h1>Job Selection</h1>
+        <form method="dialog" id="job-wrapper"></form>
+    </dialog>
 </body>
 </html>

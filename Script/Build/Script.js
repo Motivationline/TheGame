@@ -268,29 +268,35 @@ var Script;
 /// <reference path="Grid/Controller.ts" />
 (function (Script) {
     var ƒ = FudgeCore;
+    let uis;
+    let activeUI;
     function setupUI() {
         if (ƒ.Project.mode === ƒ.MODE.EDITOR)
             return;
-        const uis = new Map([
+        uis = new Map([
             ["build", new Script.GridBuilder(new Script.Grid(new ƒ.Vector2(44, 44)))],
             ["close", new PickController()],
+            ["job", new JobController()],
         ]);
-        let activeUI = uis.get("close");
+        activeUI = uis.get("close");
         activeUI?.enable();
         document.querySelectorAll("button[data-target]").forEach((btn) => {
             btn.addEventListener("click", () => {
-                let nextUI = uis.get(btn.dataset.target);
-                if (!nextUI)
-                    return;
-                if (activeUI)
-                    activeUI.disable();
-                nextUI.enable();
-                activeUI = nextUI;
+                enableUI(btn.dataset.target);
             });
         });
         new CameraController().enable();
     }
     Script.setupUI = setupUI;
+    function enableUI(_type) {
+        let nextUI = uis.get(_type);
+        if (!nextUI)
+            return;
+        if (activeUI)
+            activeUI.disable();
+        nextUI.enable();
+        activeUI = nextUI;
+    }
     class CameraController {
         constructor() {
             this.canvas = document.querySelector("canvas");
@@ -357,13 +363,17 @@ var Script;
         }
         ;
     }
+    let selectedEumling;
     class PickController {
         constructor() {
             this.canvas = document.querySelector("canvas");
             this.wrapper = document.getElementById("main-menu");
             this.click = (_event) => {
                 let picks = this.findAllPickedObjectsUsingPickSphere({ x: _event.clientX, y: _event.clientY });
-                console.log(picks);
+                if (!picks.length)
+                    return;
+                selectedEumling = picks[0];
+                enableUI("job");
             };
         }
         enable() {
@@ -378,6 +388,37 @@ var Script;
             const ray = Script.viewport.getRayFromClient(new ƒ.Vector2(_pointer.x, _pointer.y));
             const picks = Script.PickSphere.pick(ray, { sortBy: "distanceToRayOrigin" });
             return picks.map((p) => p.node);
+        }
+    }
+    class JobController {
+        constructor() {
+            this.dialog = document.getElementById("job-dialog");
+            this.wrapper = document.getElementById("job-wrapper");
+            this.close = (_e) => {
+                if (_e.newState === "closed") {
+                    enableUI("close");
+                }
+            };
+            this.disable = () => {
+                this.dialog.removeEventListener("toggle", this.close);
+                this.dialog.hidePopover();
+            };
+        }
+        enable() {
+            this.dialog.showPopover();
+            this.dialog.addEventListener("toggle", this.close);
+            let buttons = [];
+            let keys = Object.keys(Script.JobType).filter(k => isNaN(Number(k)));
+            for (let job of keys) {
+                const btn = document.createElement("button");
+                btn.innerText = job;
+                btn.addEventListener("click", () => {
+                    selectedEumling.getComponent(Script.JobTaker).job = Script.JobType[job];
+                    enableUI("close");
+                });
+                buttons.push(btn);
+            }
+            this.wrapper.replaceChildren(...buttons);
         }
     }
 })(Script || (Script = {}));
@@ -533,11 +574,11 @@ var Script;
             #animator;
             start(_e) {
                 this.#animations.set(NonJobAnimations.WALK, this.animWalk);
-                this.#animations.set(Script.JobProviderType.NONE, this.animIdle);
-                this.#animations.set(Script.JobProviderType.STORE_RESOURCE, this.animIdle);
-                this.#animations.set(Script.JobProviderType.GATHER_FOOD, this.animGatherFood);
-                this.#animations.set(Script.JobProviderType.GATHER_STONE, this.animGatherStone);
-                this.#animations.set(Script.JobProviderType.BUILD, this.animBuild);
+                this.#animations.set(Script.JobType.NONE, this.animIdle);
+                this.#animations.set(Script.JobType.STORE_RESOURCE, this.animIdle);
+                this.#animations.set(Script.JobType.GATHER_FOOD, this.animGatherFood);
+                this.#animations.set(Script.JobType.GATHER_STONE, this.animGatherStone);
+                this.#animations.set(Script.JobType.BUILD, this.animBuild);
                 this.#animator = this.node.getChild(0).getComponent(ƒ.ComponentAnimation);
             }
             playAnimation(anim) {
@@ -560,14 +601,14 @@ var Script;
 /// <reference path="../Plugins/UpdateScriptComponent.ts" />
 (function (Script) {
     var ƒ = FudgeCore;
-    let JobProviderType;
-    (function (JobProviderType) {
-        JobProviderType[JobProviderType["GATHER_STONE"] = 0] = "GATHER_STONE";
-        JobProviderType[JobProviderType["GATHER_FOOD"] = 1] = "GATHER_FOOD";
-        JobProviderType[JobProviderType["STORE_RESOURCE"] = 2] = "STORE_RESOURCE";
-        JobProviderType[JobProviderType["BUILD"] = 3] = "BUILD";
-        JobProviderType[JobProviderType["NONE"] = 4] = "NONE";
-    })(JobProviderType = Script.JobProviderType || (Script.JobProviderType = {}));
+    let JobType;
+    (function (JobType) {
+        JobType[JobType["GATHER_STONE"] = 0] = "GATHER_STONE";
+        JobType[JobType["GATHER_FOOD"] = 1] = "GATHER_FOOD";
+        JobType[JobType["STORE_RESOURCE"] = 2] = "STORE_RESOURCE";
+        JobType[JobType["BUILD"] = 3] = "BUILD";
+        JobType[JobType["NONE"] = 4] = "NONE";
+    })(JobType = Script.JobType || (Script.JobType = {}));
     let JobProvider = (() => {
         var _a;
         let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
@@ -593,7 +634,7 @@ var Script;
             }
             static {
                 const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
-                __jobType_decorators = [ƒ.serialize(JobProviderType)];
+                __jobType_decorators = [ƒ.serialize(JobType)];
                 _jobDuration_decorators = [ƒ.serialize(Number)];
                 _cooldown_decorators = [ƒ.serialize(Number)];
                 __esDecorate(null, null, __jobType_decorators, { kind: "field", name: "_jobType", static: false, private: false, access: { has: obj => "_jobType" in obj, get: obj => obj._jobType, set: (obj, value) => { obj._jobType = value; } }, metadata: _metadata }, __jobType_initializers, _instanceExtraInitializers);
@@ -618,7 +659,7 @@ var Script;
             }
             get jobType() {
                 if (this.#currentCooldown > 0) {
-                    return JobProviderType.NONE;
+                    return JobType.NONE;
                 }
                 return this._jobType;
             }
@@ -634,10 +675,17 @@ var Script;
         return JobProvider = _classThis;
     })();
     Script.JobProvider = JobProvider;
+    class JobProviderNone extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this._jobType = JobType.NONE;
+        }
+    }
+    Script.JobProviderNone = JobProviderNone;
     class JobProviderGatherFood extends JobProvider {
         constructor() {
             super(...arguments);
-            this._jobType = JobProviderType.GATHER_FOOD;
+            this._jobType = JobType.GATHER_FOOD;
             this.jobDuration = 2000;
         }
     }
@@ -645,7 +693,7 @@ var Script;
     class JobProviderGatherStone extends JobProvider {
         constructor() {
             super(...arguments);
-            this._jobType = JobProviderType.GATHER_STONE;
+            this._jobType = JobType.GATHER_STONE;
             this.jobDuration = 2000;
         }
     }
@@ -654,7 +702,7 @@ var Script;
         constructor() {
             super(...arguments);
             this.jobDuration = 2000;
-            this._jobType = JobProviderType.STORE_RESOURCE;
+            this._jobType = JobType.STORE_RESOURCE;
             this.cooldown = 0;
         }
     }
@@ -662,7 +710,7 @@ var Script;
     class JobProviderBuild extends JobProvider {
         constructor() {
             super(...arguments);
-            this._jobType = JobProviderType.BUILD;
+            this._jobType = JobType.BUILD;
         }
     }
     Script.JobProviderBuild = JobProviderBuild;
@@ -697,17 +745,19 @@ var Script;
             #executableJobs;
             #target;
             #animator;
+            #timers;
             constructor() {
                 super();
-                this.#job = (__runInitializers(this, _instanceExtraInitializers), Script.JobProviderType.GATHER_FOOD);
-                this.#currentJob = Script.JobProviderType.NONE;
+                this.#job = (__runInitializers(this, _instanceExtraInitializers), Script.JobType.NONE);
+                this.#currentJob = Script.JobType.NONE;
                 this.#progress = 0;
+                this.#timers = [];
                 this.speed = __runInitializers(this, _speed_initializers, 1);
                 this.gatherResource = (deltaTime) => {
                     switch (this.#progress) {
                         case 0: {
                             // look for target
-                            this.#currentJob = Script.JobProviderType.NONE;
+                            this.#currentJob = Script.JobType.NONE;
                             const target = this.findAndSetTargetForJob(this.#job);
                             if (target) {
                                 this.#progress++;
@@ -736,7 +786,7 @@ var Script;
                         }
                         case 3: {
                             // ready to find the place to drop stuff off
-                            const target = this.findAndSetTargetForJob(Script.JobProviderType.STORE_RESOURCE);
+                            const target = this.findAndSetTargetForJob(Script.JobType.STORE_RESOURCE);
                             if (target) {
                                 this.#progress++;
                             }
@@ -756,18 +806,58 @@ var Script;
                 };
                 this.build = () => {
                 };
+                this.idle = (deltaTime) => {
+                    switch (this.#progress) {
+                        case 0: {
+                            this.#animator.playAnimation(this.#job);
+                            this.#progress++;
+                            this.#timers.push(new ƒ.Timer(ƒ.Time.game, Script.randomRange(1000, 5000), 1, () => {
+                                this.#progress = 2;
+                            }));
+                            break;
+                        }
+                        case 1: {
+                            // just idling around
+                            break;
+                        }
+                        case 2: {
+                            // create a random walk target
+                            const node = new ƒ.Node("walk_target");
+                            const jp = new Script.JobProviderNone();
+                            node.addComponent(jp);
+                            node.addComponent(new ƒ.ComponentTransform);
+                            this.node.getParent().addChild(node);
+                            node.mtxLocal.translateX(Math.max(-20, Math.min(20, Script.randomRange(-4, 4) + this.node.mtxWorld.translation.x)));
+                            node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Script.randomRange(-4, 4) + this.node.mtxWorld.translation.z)));
+                            this.#target = jp;
+                            this.node.mtxLocal.lookAt(node.mtxLocal.translation);
+                            this.#progress = 3;
+                            break;
+                        }
+                        case 3: {
+                            const reached = this.moveToTarget(deltaTime);
+                            if (reached) {
+                                this.#target.node.getParent().removeChild(this.#target.node);
+                                this.#progress = 0;
+                            }
+                        }
+                    }
+                };
                 this.#prevDistance = Infinity;
                 if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                     return;
                 this.#executableJobs = new Map([
-                    [Script.JobProviderType.BUILD, this.build],
-                    [Script.JobProviderType.GATHER_FOOD, this.gatherResource],
-                    [Script.JobProviderType.GATHER_STONE, this.gatherResource],
+                    [Script.JobType.NONE, this.idle],
+                    [Script.JobType.BUILD, this.build],
+                    [Script.JobType.GATHER_FOOD, this.gatherResource],
+                    [Script.JobType.GATHER_STONE, this.gatherResource],
                 ]);
             }
             set job(_job) {
                 this.#job = _job;
                 this.#progress = 0;
+                this.#timers.forEach(t => t.clear());
+                this.#timers.length = 0;
             }
             static findClosestJobProvider(_job, _location) {
                 const foundProviders = [];
@@ -804,7 +894,7 @@ var Script;
                 return false;
             }
             findAndSetTargetForJob(_job) {
-                this.#animator.playAnimation(Script.JobProviderType.NONE);
+                this.#animator.playAnimation(Script.JobType.NONE);
                 const target = JobTaker.findClosestJobProvider(_job, this.node.mtxWorld.translation);
                 if (!target)
                     return undefined;
