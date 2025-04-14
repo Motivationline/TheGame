@@ -43,21 +43,6 @@
       "name": "Building1x1",
       "active": true,
       "components": {
-        "ComponentMesh": [
-          {
-            "ƒ.ComponentMesh": {
-              "idMesh": "MeshCube|2025-04-08T06:37:52.687Z|13643",
-              "pivot": {
-                "translation": "[0, 0.25, 0]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 0.5, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ],
         "ComponentTransform": [
           {
             "ƒ.ComponentTransform": {
@@ -72,24 +57,6 @@
             }
           }
         ],
-        "ComponentMaterial": [
-          {
-            "ƒ.ComponentMaterial": {
-              "sortForAlpha": false,
-              "clrPrimary": "[1, 1, 1, 1]",
-              "clrSecondary": "[1, 1, 1, 1]",
-              "pivot": {
-                "translation": "[0, 0]",
-                "rotation": 0,
-                "scaling": "[1, 1]"
-              },
-              "Component": {
-                "active": true
-              },
-              "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
-            }
-          }
-        ],
         "JobProviderGatherFood": [
           {
             "Script.JobProviderGatherFood": {
@@ -101,7 +68,14 @@
           }
         ]
       },
-      "children": [],
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446"
+          }
+        }
+      ],
       "idResource": "Graph|2025-04-08T06:37:31.827Z|46952",
       "type": "Graph"
     }
@@ -380,7 +354,7 @@
                     "active": true,
                     "graph": "Graph|2025-04-08T06:37:31.827Z|46952",
                     "size": 1,
-                    "name": "1x1"
+                    "name": "Gather Indicator"
                   }
                 },
                 {
@@ -961,6 +935,83 @@
         }
       ],
       "idResource": "Graph|2025-04-14T09:11:00.811Z|87072",
+      "type": "Graph"
+    }
+  },
+  "GraphGLTF|2025-04-14T09:24:07.316Z|19446": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-14T09:24:07.316Z|46617",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": true
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446",
+      "type": "GraphGLTF",
+      "url": "Assets\\Indicator\\Gather_indicator.glb"
+    }
+  },
+  "AnimationGLTF|2025-04-14T09:24:07.316Z|46617": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-14T09:24:07.316Z|46617",
+      "name": "Idle",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Indicator\\Gather_indicator.glb",
+      "events": {}
+    }
+  },
+  "Graph|2025-04-14T09:26:15.653Z|33120": {
+    "ƒ.Graph": {
+      "name": "Indicator",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "JobProvider": [
+          {
+            "Script.JobProvider": {
+              "active": true,
+              "_jobType": 1,
+              "jobDuration": 500,
+              "cooldown": 30000
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-14T09:26:15.653Z|33120",
       "type": "Graph"
     }
   }

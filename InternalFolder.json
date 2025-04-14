@@ -47,6 +47,20 @@
                 "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801"
               }
             ]
+          },
+          {
+            "name": "Indicator",
+            "entries": [
+              {
+                "idResource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446"
+              },
+              {
+                "idResource": "AnimationGLTF|2025-04-14T09:24:07.316Z|46617"
+              },
+              {
+                "idResource": "Graph|2025-04-14T09:26:15.653Z|33120"
+              }
+            ]
           }
         ]
       },
