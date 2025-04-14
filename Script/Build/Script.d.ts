@@ -8,6 +8,18 @@ declare namespace Script {
     }
 }
 declare namespace Script {
+    class Data {
+        #private;
+        static eumlingLimit: number;
+        static gatherBonusFood: number;
+        static gatherBonusStone: number;
+        static set food(_food: number);
+        static set stone(_stone: number);
+        static get food(): number;
+        static get stone(): number;
+    }
+}
+declare namespace Script {
     import ƒ = FudgeCore;
     interface Tile {
         type: string;
@@ -53,32 +65,6 @@ declare namespace Script {
     }
 }
 declare namespace Script {
-    interface ToggleableUI {
-        enable: () => void;
-        disable: () => void;
-    }
-    function setupUI(): void;
-}
-declare namespace Script {
-    import ƒ = FudgeCore;
-    interface Build {
-        graph: ƒ.Graph;
-        size: number;
-        name: string;
-    }
-}
-declare namespace Script {
-    import ƒ = FudgeCore;
-    class Building extends ƒ.Component implements Build {
-        static all: Build[];
-        get isSingleton(): boolean;
-        graph: ƒ.Graph;
-        size: number;
-        name: string;
-        constructor();
-    }
-}
-declare namespace Script {
     import ƒ = FudgeCore;
     interface UpdateEvent {
         deltaTime: number;
@@ -90,23 +76,6 @@ declare namespace Script {
         start?(_e: CustomEvent<UpdateEvent>): void;
         update?(_e: CustomEvent<UpdateEvent>): void;
         remove?(_e: CustomEvent): void;
-    }
-}
-declare namespace Script {
-    import ƒ = FudgeCore;
-    type AnimationType = JobType | NonJobAnimations;
-    enum NonJobAnimations {
-        WALK = "walk"
-    }
-    class JobAnimation extends UpdateScriptComponent {
-        #private;
-        animIdle: ƒ.Animation;
-        animWalk: ƒ.Animation;
-        animGatherFood: ƒ.Animation;
-        animGatherStone: ƒ.Animation;
-        animBuild: ƒ.Animation;
-        start(_e: CustomEvent<UpdateEvent>): void;
-        playAnimation(anim: AnimationType): void;
     }
 }
 declare namespace Script {
@@ -148,6 +117,55 @@ declare namespace Script {
     }
     class JobProviderBuild extends JobProvider {
         _jobType: JobType;
+    }
+}
+declare namespace Script {
+    const availableJobs: Set<JobType>;
+    interface ToggleableUI {
+        enable: () => void;
+        disable: () => void;
+    }
+    function setupUI(): void;
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    interface Build {
+        graph: ƒ.Graph;
+        size: number;
+        name: string;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    class Building extends ƒ.Component implements Build {
+        static all: Build[];
+        get isSingleton(): boolean;
+        graph: ƒ.Graph;
+        size: number;
+        name: string;
+        constructor();
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    type AnimationType = JobType | NonJobAnimations;
+    enum NonJobAnimations {
+        WALK = "walk"
+    }
+    class JobAnimation extends UpdateScriptComponent {
+        #private;
+        modelBase: ƒ.Graph;
+        modelMine: ƒ.Graph;
+        modelBuild: ƒ.Graph;
+        modelFood: ƒ.Graph;
+        animIdle: ƒ.Animation;
+        animWalk: ƒ.Animation;
+        animGatherFood: ƒ.Animation;
+        animGatherStone: ƒ.Animation;
+        animBuild: ƒ.Animation;
+        start(_e: CustomEvent<UpdateEvent>): Promise<void>;
+        playAnimation(anim: AnimationType): void;
+        setModel(model: JobType): void;
     }
 }
 declare namespace Script {

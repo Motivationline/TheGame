@@ -1,8 +1,11 @@
 /// <reference path="Grid/Controller.ts" />
+/// <reference path="Jobs/JobProvider.ts" />
 
 
 namespace Script {
     import ƒ = FudgeCore;
+
+    export const availableJobs: Set<JobType> = new Set([JobType.NONE, JobType.GATHER_FOOD, JobType.GATHER_STONE]);
 
     export interface ToggleableUI {
         enable: () => void;
@@ -145,12 +148,12 @@ namespace Script {
             this.dialog.addEventListener("toggle", <EventListener>this.close);
 
             let buttons: HTMLElement[] = [];
-            let keys = Object.keys(JobType).filter(k => isNaN(Number(k)));
+            let keys = availableJobs.values();
             for(let job of keys){
                 const btn = document.createElement("button");
-                btn.innerText = job;
+                btn.innerText = JobType[job];
                 btn.addEventListener("click", () => {
-                    selectedEumling.getComponent(JobTaker).job = JobType[job];
+                    selectedEumling.getComponent(JobTaker).job = job;
                     enableUI("close");
                 })
                 buttons.push(btn);

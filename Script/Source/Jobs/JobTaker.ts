@@ -28,6 +28,8 @@ namespace Script {
 
         set job(_job: JobType) {
             this.#job = _job;
+            this.#animator.setModel(this.#job);
+            this.#animator.playAnimation(JobType.NONE);
             this.#progress = 0;
             this.#timers.forEach(t => t.clear());
             this.#timers.length = 0;
@@ -99,6 +101,11 @@ namespace Script {
                 }
                 case 6: {
                     // dropped off the resources
+                    if (this.#job === JobType.GATHER_FOOD) {
+                        Data.food += Math.max(1, Math.floor(1 * Data.gatherBonusFood));
+                    } else if (this.#job === JobType.GATHER_STONE) {
+                        Data.stone += Math.max(1, Math.floor(1 * Data.gatherBonusStone));
+                    }
                     this.#progress = 0;
                     break;
                 }

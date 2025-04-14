@@ -72,6 +72,31 @@ var Script;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
+    class Data {
+        static #stone = 0;
+        static #food = 0;
+        static { this.eumlingLimit = 0; }
+        static { this.gatherBonusFood = 1; }
+        static { this.gatherBonusStone = 1; }
+        static set food(_food) {
+            this.#food = _food;
+            document.getElementById("resource-food").innerText = this.#food.toString();
+        }
+        static set stone(_stone) {
+            this.#stone = _stone;
+            document.getElementById("resource-stone").innerText = this.#stone.toString();
+        }
+        static get food() {
+            return this.#food;
+        }
+        static get stone() {
+            return this.#stone;
+        }
+    }
+    Script.Data = Data;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
     var ƒ = FudgeCore;
     class Grid {
         #size;
@@ -131,6 +156,9 @@ var Script;
     }
     document.addEventListener("click", startViewport, { once: true });
     async function startViewport() {
+        if (ƒ.Project.mode !== ƒ.MODE.RUNTIME)
+            return;
+        document.getElementById("click-start").innerText = "Loading...";
         await ƒ.Project.loadResourcesFromHTML();
         let graphId /* : string */ = document.head.querySelector("meta[autoView]").getAttribute("autoView");
         let graph = ƒ.Project.resources[graphId];
@@ -138,6 +166,7 @@ var Script;
         let camera = Script.findFirstCameraInGraph(graph);
         Script.viewport.initialize("game", graph, camera, canvas);
         canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: Script.viewport }));
+        document.getElementById("click-start").remove();
         Script.setupUI();
     }
 })(Script || (Script = {}));
@@ -263,11 +292,171 @@ var Script;
     }
     Script.GridBuilder = GridBuilder;
 })(Script || (Script = {}));
-/// <reference path="Grid/Controller.ts" />
 var Script;
-/// <reference path="Grid/Controller.ts" />
 (function (Script) {
     var ƒ = FudgeCore;
+    class UpdateScriptComponent extends ƒ.Component {
+        constructor() {
+            super();
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            this.addEventListener("preupdate", this.prestart, { once: true });
+            this.addEventListener("update", this.start, { once: true });
+            this.addEventListener("update", this.update);
+            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.remove);
+            this.addEventListener("componentDeactivate" /* ƒ.EVENT.COMPONENT_DEACTIVATE */, this.remove);
+        }
+        // runs updates of all updateable components
+        static updateAllInBranch(_branch) {
+            let event = new CustomEvent("update", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
+            let preEvent = new CustomEvent("preupdate", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
+            for (let node of _branch) {
+                for (let component of node.getAllComponents()) {
+                    if (component instanceof UpdateScriptComponent) {
+                        if (component.active)
+                            component.dispatchEvent(preEvent);
+                    }
+                }
+            }
+            for (let node of _branch) {
+                for (let component of node.getAllComponents()) {
+                    if (component instanceof UpdateScriptComponent) {
+                        if (component.active)
+                            component.dispatchEvent(event);
+                    }
+                }
+            }
+        }
+    }
+    Script.UpdateScriptComponent = UpdateScriptComponent;
+})(Script || (Script = {}));
+/// <reference path="../Plugins/UpdateScriptComponent.ts" />
+var Script;
+/// <reference path="../Plugins/UpdateScriptComponent.ts" />
+(function (Script) {
+    var ƒ = FudgeCore;
+    let JobType;
+    (function (JobType) {
+        JobType[JobType["GATHER_STONE"] = 0] = "GATHER_STONE";
+        JobType[JobType["GATHER_FOOD"] = 1] = "GATHER_FOOD";
+        JobType[JobType["STORE_RESOURCE"] = 2] = "STORE_RESOURCE";
+        JobType[JobType["BUILD"] = 3] = "BUILD";
+        JobType[JobType["NONE"] = 4] = "NONE";
+    })(JobType = Script.JobType || (Script.JobType = {}));
+    let JobProvider = (() => {
+        var _a;
+        let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
+        let _classDescriptor;
+        let _classExtraInitializers = [];
+        let _classThis;
+        let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
+        let __jobType_decorators;
+        let __jobType_initializers = [];
+        let _jobDuration_decorators;
+        let _jobDuration_initializers = [];
+        let _cooldown_decorators;
+        let _cooldown_initializers = [];
+        var JobProvider = class extends _classSuper {
+            static { _classThis = this; }
+            constructor() {
+                super(...arguments);
+                this._jobType = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, __jobType_initializers, void 0));
+                this.jobDuration = __runInitializers(this, _jobDuration_initializers, 500);
+                this.cooldown = __runInitializers(this, _cooldown_initializers, 30000);
+                this.#currentCooldown = 0;
+            }
+            static {
+                const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+                __jobType_decorators = [ƒ.serialize(JobType)];
+                _jobDuration_decorators = [ƒ.serialize(Number)];
+                _cooldown_decorators = [ƒ.serialize(Number)];
+                __esDecorate(null, null, __jobType_decorators, { kind: "field", name: "_jobType", static: false, private: false, access: { has: obj => "_jobType" in obj, get: obj => obj._jobType, set: (obj, value) => { obj._jobType = value; } }, metadata: _metadata }, __jobType_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _jobDuration_decorators, { kind: "field", name: "jobDuration", static: false, private: false, access: { has: obj => "jobDuration" in obj, get: obj => obj.jobDuration, set: (obj, value) => { obj.jobDuration = value; } }, metadata: _metadata }, _jobDuration_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _cooldown_decorators, { kind: "field", name: "cooldown", static: false, private: false, access: { has: obj => "cooldown" in obj, get: obj => obj.cooldown, set: (obj, value) => { obj.cooldown = value; } }, metadata: _metadata }, _cooldown_initializers, _instanceExtraInitializers);
+                __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+                JobProvider = _classThis = _classDescriptor.value;
+                if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            }
+            static { this.JobProviders = []; }
+            #currentCooldown;
+            start(_e) {
+                JobProvider.JobProviders.push(this);
+            }
+            remove(_e) {
+                let index = JobProvider.JobProviders.indexOf(this);
+                JobProvider.JobProviders.splice(index, 1);
+            }
+            jobStart() { }
+            jobFinish() {
+                this.#currentCooldown = this.cooldown;
+            }
+            get jobType() {
+                if (this.#currentCooldown > 0) {
+                    return JobType.NONE;
+                }
+                return this._jobType;
+            }
+            update(_e) {
+                if (this.#currentCooldown > 0) {
+                    this.#currentCooldown -= _e.detail.deltaTime;
+                }
+            }
+            static {
+                __runInitializers(_classThis, _classExtraInitializers);
+            }
+        };
+        return JobProvider = _classThis;
+    })();
+    Script.JobProvider = JobProvider;
+    class JobProviderNone extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this._jobType = JobType.NONE;
+        }
+    }
+    Script.JobProviderNone = JobProviderNone;
+    class JobProviderGatherFood extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this._jobType = JobType.GATHER_FOOD;
+            this.jobDuration = 2000;
+        }
+    }
+    Script.JobProviderGatherFood = JobProviderGatherFood;
+    class JobProviderGatherStone extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this._jobType = JobType.GATHER_STONE;
+            this.jobDuration = 2000;
+        }
+    }
+    Script.JobProviderGatherStone = JobProviderGatherStone;
+    class JobProviderStoreResource extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this.jobDuration = 2000;
+            this._jobType = JobType.STORE_RESOURCE;
+            this.cooldown = 0;
+        }
+    }
+    Script.JobProviderStoreResource = JobProviderStoreResource;
+    class JobProviderBuild extends JobProvider {
+        constructor() {
+            super(...arguments);
+            this._jobType = JobType.BUILD;
+        }
+    }
+    Script.JobProviderBuild = JobProviderBuild;
+})(Script || (Script = {}));
+/// <reference path="Grid/Controller.ts" />
+/// <reference path="Jobs/JobProvider.ts" />
+var Script;
+/// <reference path="Grid/Controller.ts" />
+/// <reference path="Jobs/JobProvider.ts" />
+(function (Script) {
+    var ƒ = FudgeCore;
+    Script.availableJobs = new Set([Script.JobType.NONE, Script.JobType.GATHER_FOOD, Script.JobType.GATHER_STONE]);
     let uis;
     let activeUI;
     function setupUI() {
@@ -408,12 +597,12 @@ var Script;
             this.dialog.showPopover();
             this.dialog.addEventListener("toggle", this.close);
             let buttons = [];
-            let keys = Object.keys(Script.JobType).filter(k => isNaN(Number(k)));
+            let keys = Script.availableJobs.values();
             for (let job of keys) {
                 const btn = document.createElement("button");
-                btn.innerText = job;
+                btn.innerText = Script.JobType[job];
                 btn.addEventListener("click", () => {
-                    selectedEumling.getComponent(Script.JobTaker).job = Script.JobType[job];
+                    selectedEumling.getComponent(Script.JobTaker).job = job;
                     enableUI("close");
                 });
                 buttons.push(btn);
@@ -476,44 +665,6 @@ var Script;
     })();
     Script.Building = Building;
 })(Script || (Script = {}));
-var Script;
-(function (Script) {
-    var ƒ = FudgeCore;
-    class UpdateScriptComponent extends ƒ.Component {
-        constructor() {
-            super();
-            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
-                return;
-            this.addEventListener("preupdate", this.prestart, { once: true });
-            this.addEventListener("update", this.start, { once: true });
-            this.addEventListener("update", this.update);
-            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.remove);
-            this.addEventListener("componentDeactivate" /* ƒ.EVENT.COMPONENT_DEACTIVATE */, this.remove);
-        }
-        // runs updates of all updateable components
-        static updateAllInBranch(_branch) {
-            let event = new CustomEvent("update", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
-            let preEvent = new CustomEvent("preupdate", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
-            for (let node of _branch) {
-                for (let component of node.getAllComponents()) {
-                    if (component instanceof UpdateScriptComponent) {
-                        if (component.active)
-                            component.dispatchEvent(preEvent);
-                    }
-                }
-            }
-            for (let node of _branch) {
-                for (let component of node.getAllComponents()) {
-                    if (component instanceof UpdateScriptComponent) {
-                        if (component.active)
-                            component.dispatchEvent(event);
-                    }
-                }
-            }
-        }
-    }
-    Script.UpdateScriptComponent = UpdateScriptComponent;
-})(Script || (Script = {}));
 /// <reference path="../Plugins/UpdateScriptComponent.ts" />
 var Script;
 /// <reference path="../Plugins/UpdateScriptComponent.ts" />
@@ -531,6 +682,14 @@ var Script;
         let _classThis;
         let _classSuper = Script.UpdateScriptComponent;
         let _instanceExtraInitializers = [];
+        let _modelBase_decorators;
+        let _modelBase_initializers = [];
+        let _modelMine_decorators;
+        let _modelMine_initializers = [];
+        let _modelBuild_decorators;
+        let _modelBuild_initializers = [];
+        let _modelFood_decorators;
+        let _modelFood_initializers = [];
         let _animIdle_decorators;
         let _animIdle_initializers = [];
         let _animWalk_decorators;
@@ -546,6 +705,11 @@ var Script;
             constructor() {
                 super(...arguments);
                 this.#animations = (__runInitializers(this, _instanceExtraInitializers), new Map());
+                this.#models = new Map();
+                this.modelBase = __runInitializers(this, _modelBase_initializers, void 0);
+                this.modelMine = __runInitializers(this, _modelMine_initializers, void 0);
+                this.modelBuild = __runInitializers(this, _modelBuild_initializers, void 0);
+                this.modelFood = __runInitializers(this, _modelFood_initializers, void 0);
                 this.animIdle = __runInitializers(this, _animIdle_initializers, void 0);
                 this.animWalk = __runInitializers(this, _animWalk_initializers, void 0);
                 this.animGatherFood = __runInitializers(this, _animGatherFood_initializers, void 0);
@@ -554,11 +718,19 @@ var Script;
             }
             static {
                 const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+                _modelBase_decorators = [ƒ.serialize(ƒ.Graph)];
+                _modelMine_decorators = [ƒ.serialize(ƒ.Graph)];
+                _modelBuild_decorators = [ƒ.serialize(ƒ.Graph)];
+                _modelFood_decorators = [ƒ.serialize(ƒ.Graph)];
                 _animIdle_decorators = [ƒ.serialize(ƒ.Animation)];
                 _animWalk_decorators = [ƒ.serialize(ƒ.Animation)];
                 _animGatherFood_decorators = [ƒ.serialize(ƒ.Animation)];
                 _animGatherStone_decorators = [ƒ.serialize(ƒ.Animation)];
                 _animBuild_decorators = [ƒ.serialize(ƒ.Animation)];
+                __esDecorate(null, null, _modelBase_decorators, { kind: "field", name: "modelBase", static: false, private: false, access: { has: obj => "modelBase" in obj, get: obj => obj.modelBase, set: (obj, value) => { obj.modelBase = value; } }, metadata: _metadata }, _modelBase_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _modelMine_decorators, { kind: "field", name: "modelMine", static: false, private: false, access: { has: obj => "modelMine" in obj, get: obj => obj.modelMine, set: (obj, value) => { obj.modelMine = value; } }, metadata: _metadata }, _modelMine_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _modelBuild_decorators, { kind: "field", name: "modelBuild", static: false, private: false, access: { has: obj => "modelBuild" in obj, get: obj => obj.modelBuild, set: (obj, value) => { obj.modelBuild = value; } }, metadata: _metadata }, _modelBuild_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _modelFood_decorators, { kind: "field", name: "modelFood", static: false, private: false, access: { has: obj => "modelFood" in obj, get: obj => obj.modelFood, set: (obj, value) => { obj.modelFood = value; } }, metadata: _metadata }, _modelFood_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _animIdle_decorators, { kind: "field", name: "animIdle", static: false, private: false, access: { has: obj => "animIdle" in obj, get: obj => obj.animIdle, set: (obj, value) => { obj.animIdle = value; } }, metadata: _metadata }, _animIdle_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _animWalk_decorators, { kind: "field", name: "animWalk", static: false, private: false, access: { has: obj => "animWalk" in obj, get: obj => obj.animWalk, set: (obj, value) => { obj.animWalk = value; } }, metadata: _metadata }, _animWalk_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _animGatherFood_decorators, { kind: "field", name: "animGatherFood", static: false, private: false, access: { has: obj => "animGatherFood" in obj, get: obj => obj.animGatherFood, set: (obj, value) => { obj.animGatherFood = value; } }, metadata: _metadata }, _animGatherFood_initializers, _instanceExtraInitializers);
@@ -570,18 +742,30 @@ var Script;
                 __runInitializers(_classThis, _classExtraInitializers);
             }
             #animations;
+            #models;
             #currentAnimation;
             #animator;
-            start(_e) {
+            async start(_e) {
                 this.#animations.set(NonJobAnimations.WALK, this.animWalk);
                 this.#animations.set(Script.JobType.NONE, this.animIdle);
                 this.#animations.set(Script.JobType.STORE_RESOURCE, this.animIdle);
                 this.#animations.set(Script.JobType.GATHER_FOOD, this.animGatherFood);
                 this.#animations.set(Script.JobType.GATHER_STONE, this.animGatherStone);
                 this.#animations.set(Script.JobType.BUILD, this.animBuild);
-                this.#animator = this.node.getChild(0).getComponent(ƒ.ComponentAnimation);
+                if (this.modelBase)
+                    this.#models.set(Script.JobType.NONE, await ƒ.Project.createGraphInstance(this.modelBase));
+                if (this.modelBuild)
+                    this.#models.set(Script.JobType.BUILD, await ƒ.Project.createGraphInstance(this.modelBuild));
+                if (this.modelFood)
+                    this.#models.set(Script.JobType.GATHER_FOOD, await ƒ.Project.createGraphInstance(this.modelFood));
+                if (this.modelMine)
+                    this.#models.set(Script.JobType.GATHER_STONE, await ƒ.Project.createGraphInstance(this.modelMine));
+                this.setModel(Script.JobType.NONE);
+                this.playAnimation(Script.JobType.NONE);
             }
             playAnimation(anim) {
+                if (!this.#animator)
+                    return;
                 if (anim === this.#currentAnimation)
                     return;
                 let animationToPlay = this.#animations.get(anim);
@@ -591,129 +775,20 @@ var Script;
                 this.#animator.jumpTo(0);
                 this.#currentAnimation = anim;
             }
+            setModel(model) {
+                let modelToPlace = this.#models.get(model);
+                if (!modelToPlace)
+                    return;
+                this.node.removeAllChildren();
+                this.node.appendChild(modelToPlace);
+                this.#animator = modelToPlace.getComponent(ƒ.ComponentAnimation);
+                this.#animator.playmode = ƒ.ANIMATION_PLAYMODE.LOOP;
+                this.#animator.activate(true);
+            }
         };
         return JobAnimation = _classThis;
     })();
     Script.JobAnimation = JobAnimation;
-})(Script || (Script = {}));
-/// <reference path="../Plugins/UpdateScriptComponent.ts" />
-var Script;
-/// <reference path="../Plugins/UpdateScriptComponent.ts" />
-(function (Script) {
-    var ƒ = FudgeCore;
-    let JobType;
-    (function (JobType) {
-        JobType[JobType["GATHER_STONE"] = 0] = "GATHER_STONE";
-        JobType[JobType["GATHER_FOOD"] = 1] = "GATHER_FOOD";
-        JobType[JobType["STORE_RESOURCE"] = 2] = "STORE_RESOURCE";
-        JobType[JobType["BUILD"] = 3] = "BUILD";
-        JobType[JobType["NONE"] = 4] = "NONE";
-    })(JobType = Script.JobType || (Script.JobType = {}));
-    let JobProvider = (() => {
-        var _a;
-        let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
-        let _classDescriptor;
-        let _classExtraInitializers = [];
-        let _classThis;
-        let _classSuper = Script.UpdateScriptComponent;
-        let _instanceExtraInitializers = [];
-        let __jobType_decorators;
-        let __jobType_initializers = [];
-        let _jobDuration_decorators;
-        let _jobDuration_initializers = [];
-        let _cooldown_decorators;
-        let _cooldown_initializers = [];
-        var JobProvider = class extends _classSuper {
-            static { _classThis = this; }
-            constructor() {
-                super(...arguments);
-                this._jobType = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, __jobType_initializers, void 0));
-                this.jobDuration = __runInitializers(this, _jobDuration_initializers, 500);
-                this.cooldown = __runInitializers(this, _cooldown_initializers, 30000);
-                this.#currentCooldown = 0;
-            }
-            static {
-                const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
-                __jobType_decorators = [ƒ.serialize(JobType)];
-                _jobDuration_decorators = [ƒ.serialize(Number)];
-                _cooldown_decorators = [ƒ.serialize(Number)];
-                __esDecorate(null, null, __jobType_decorators, { kind: "field", name: "_jobType", static: false, private: false, access: { has: obj => "_jobType" in obj, get: obj => obj._jobType, set: (obj, value) => { obj._jobType = value; } }, metadata: _metadata }, __jobType_initializers, _instanceExtraInitializers);
-                __esDecorate(null, null, _jobDuration_decorators, { kind: "field", name: "jobDuration", static: false, private: false, access: { has: obj => "jobDuration" in obj, get: obj => obj.jobDuration, set: (obj, value) => { obj.jobDuration = value; } }, metadata: _metadata }, _jobDuration_initializers, _instanceExtraInitializers);
-                __esDecorate(null, null, _cooldown_decorators, { kind: "field", name: "cooldown", static: false, private: false, access: { has: obj => "cooldown" in obj, get: obj => obj.cooldown, set: (obj, value) => { obj.cooldown = value; } }, metadata: _metadata }, _cooldown_initializers, _instanceExtraInitializers);
-                __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-                JobProvider = _classThis = _classDescriptor.value;
-                if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
-            }
-            static { this.JobProviders = []; }
-            #currentCooldown;
-            start(_e) {
-                JobProvider.JobProviders.push(this);
-            }
-            remove(_e) {
-                let index = JobProvider.JobProviders.indexOf(this);
-                JobProvider.JobProviders.splice(index, 1);
-            }
-            jobStart() { }
-            jobFinish() {
-                this.#currentCooldown = this.cooldown;
-            }
-            get jobType() {
-                if (this.#currentCooldown > 0) {
-                    return JobType.NONE;
-                }
-                return this._jobType;
-            }
-            update(_e) {
-                if (this.#currentCooldown > 0) {
-                    this.#currentCooldown -= _e.detail.deltaTime;
-                }
-            }
-            static {
-                __runInitializers(_classThis, _classExtraInitializers);
-            }
-        };
-        return JobProvider = _classThis;
-    })();
-    Script.JobProvider = JobProvider;
-    class JobProviderNone extends JobProvider {
-        constructor() {
-            super(...arguments);
-            this._jobType = JobType.NONE;
-        }
-    }
-    Script.JobProviderNone = JobProviderNone;
-    class JobProviderGatherFood extends JobProvider {
-        constructor() {
-            super(...arguments);
-            this._jobType = JobType.GATHER_FOOD;
-            this.jobDuration = 2000;
-        }
-    }
-    Script.JobProviderGatherFood = JobProviderGatherFood;
-    class JobProviderGatherStone extends JobProvider {
-        constructor() {
-            super(...arguments);
-            this._jobType = JobType.GATHER_STONE;
-            this.jobDuration = 2000;
-        }
-    }
-    Script.JobProviderGatherStone = JobProviderGatherStone;
-    class JobProviderStoreResource extends JobProvider {
-        constructor() {
-            super(...arguments);
-            this.jobDuration = 2000;
-            this._jobType = JobType.STORE_RESOURCE;
-            this.cooldown = 0;
-        }
-    }
-    Script.JobProviderStoreResource = JobProviderStoreResource;
-    class JobProviderBuild extends JobProvider {
-        constructor() {
-            super(...arguments);
-            this._jobType = JobType.BUILD;
-        }
-    }
-    Script.JobProviderBuild = JobProviderBuild;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
@@ -799,6 +874,12 @@ var Script;
                         }
                         case 6: {
                             // dropped off the resources
+                            if (this.#job === Script.JobType.GATHER_FOOD) {
+                                Script.Data.food += Math.max(1, Math.floor(1 * Script.Data.gatherBonusFood));
+                            }
+                            else if (this.#job === Script.JobType.GATHER_STONE) {
+                                Script.Data.stone += Math.max(1, Math.floor(1 * Script.Data.gatherBonusStone));
+                            }
                             this.#progress = 0;
                             break;
                         }
@@ -855,6 +936,8 @@ var Script;
             }
             set job(_job) {
                 this.#job = _job;
+                this.#animator.setModel(this.#job);
+                this.#animator.playAnimation(Script.JobType.NONE);
                 this.#progress = 0;
                 this.#timers.forEach(t => t.clear());
                 this.#timers.length = 0;

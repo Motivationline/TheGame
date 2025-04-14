@@ -32,3 +32,18 @@ div.overlay > * {
 .hidden {
   display: none;
 }
+
+#click-start {
+  background-color: white;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+}
+
+#resources {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+  background-color: white;
+}

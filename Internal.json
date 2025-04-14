@@ -555,6 +555,58 @@
       "events": {}
     }
   },
+  "GraphGLTF|2025-04-10T11:33:30.270Z|12636": {
+    "ƒ.GraphGLTF": {
+      "name": "Eumling_Scene",
+      "active": true,
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": false
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-10T11:33:30.270Z|12636",
+      "type": "GraphGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb"
+    }
+  },
+  "GraphGLTF|2025-04-14T07:19:34.018Z|55474": {
+    "ƒ.GraphGLTF": {
+      "name": "Eumling_Scene",
+      "active": true,
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": false
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-14T07:19:34.018Z|55474",
+      "type": "GraphGLTF",
+      "url": "Assets\\Eumling\\Eumling_Miner.glb"
+    }
+  },
   "Graph|2025-04-09T07:19:42.868Z|15220": {
     "ƒ.Graph": {
       "name": "Eumling",
@@ -586,6 +638,8 @@
           {
             "Script.JobAnimation": {
               "active": true,
+              "modelBase": "GraphGLTF|2025-04-10T11:33:30.270Z|12636",
+              "modelMine": "GraphGLTF|2025-04-14T07:19:34.018Z|55474",
               "animIdle": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
               "animWalk": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782",
               "animGatherFood": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534",
@@ -717,32 +771,6 @@
       ],
       "idResource": "Graph|2025-04-10T09:44:09.714Z|76594",
       "type": "Graph"
-    }
-  },
-  "GraphGLTF|2025-04-10T11:33:30.270Z|12636": {
-    "ƒ.GraphGLTF": {
-      "name": "Eumling_Scene",
-      "active": true,
-      "components": {
-        "ComponentAnimation": [
-          {
-            "ƒ.ComponentAnimation": {
-              "Component": {
-                "active": true
-              },
-              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
-              "playmode": "loop",
-              "quantization": "continous",
-              "scale": 1,
-              "scaleWithGameTime": true,
-              "animateInEditor": false
-            }
-          }
-        ]
-      },
-      "idResource": "GraphGLTF|2025-04-10T11:33:30.270Z|12636",
-      "type": "GraphGLTF",
-      "url": "Assets\\Eumling\\Eumling.glb"
     }
   },
   "AnimationGLTF|2025-04-10T11:33:30.282Z|80849": {
@@ -906,32 +934,6 @@
       "type": "Graph"
     }
   },
-  "GraphGLTF|2025-04-14T07:19:34.018Z|55474": {
-    "ƒ.GraphGLTF": {
-      "name": "Eumling_Scene",
-      "active": true,
-      "components": {
-        "ComponentAnimation": [
-          {
-            "ƒ.ComponentAnimation": {
-              "Component": {
-                "active": true
-              },
-              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
-              "playmode": "loop",
-              "quantization": "continous",
-              "scale": 1,
-              "scaleWithGameTime": true,
-              "animateInEditor": false
-            }
-          }
-        ]
-      },
-      "idResource": "GraphGLTF|2025-04-14T07:19:34.018Z|55474",
-      "type": "GraphGLTF",
-      "url": "Assets\\Eumling\\Eumling_Miner.glb"
-    }
-  },
   "AnimationGLTF|2025-04-14T07:31:18.368Z|01896": {
     "ƒ.AnimationGLTF": {
       "idResource": "AnimationGLTF|2025-04-14T07:31:18.368Z|01896",
@@ -1079,7 +1081,7 @@
             "Script.JobProviderStoreResource": {
               "active": true,
               "_jobType": 2,
-              "jobDuration": 2000,
+              "jobDuration": 200,
               "cooldown": 0
             }
           }

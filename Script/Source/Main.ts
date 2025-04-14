@@ -10,8 +10,8 @@ namespace Script {
 
   async function start(_event: CustomEvent) {
     viewport = _event.detail;
-    
-    
+
+
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
 
@@ -19,16 +19,17 @@ namespace Script {
 
   function update(_event: Event): void {
     // ƒ.Physics.simulate();  // if physics is included and used
-    
+
     UpdateScriptComponent.updateAllInBranch(viewport.getBranch());
     viewport.draw();
     // ƒ.AudioManager.default.update();
   }
 
-  
+
   document.addEventListener("click", startViewport, { once: true });
   async function startViewport() {
-
+    if (ƒ.Project.mode !== ƒ.MODE.RUNTIME) return;
+    document.getElementById("click-start").innerText = "Loading...";
     await ƒ.Project.loadResourcesFromHTML();
     let graphId/* : string */ = document.head.querySelector("meta[autoView]").getAttribute("autoView");
     let graph: ƒ.Graph = <ƒ.Graph>ƒ.Project.resources[graphId];
@@ -37,6 +38,7 @@ namespace Script {
 
     viewport.initialize("game", graph, camera, canvas);
     canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: viewport }));
+    document.getElementById("click-start").remove();
 
     setupUI();
   }
