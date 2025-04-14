@@ -774,15 +774,6 @@
       "events": {}
     }
   },
-  "AnimationGLTF|2025-04-10T11:33:30.288Z|43589": {
-    "ƒ.AnimationGLTF": {
-      "idResource": "AnimationGLTF|2025-04-10T11:33:30.288Z|43589",
-      "name": "WalkCycleVar1",
-      "type": "AnimationGLTF",
-      "url": "Assets\\Eumling\\Eumling.glb",
-      "events": {}
-    }
-  },
   "Graph|2025-04-10T13:08:31.732Z|93956": {
     "ƒ.Graph": {
       "name": "Stone",
@@ -933,6 +924,41 @@
       "children": [],
       "idResource": "Graph|2025-04-10T14:38:41.757Z|62271",
       "type": "Graph"
+    }
+  },
+  "GraphGLTF|2025-04-14T07:19:34.018Z|55474": {
+    "ƒ.GraphGLTF": {
+      "name": "Eumling_Scene",
+      "active": true,
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": false
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-14T07:19:34.018Z|55474",
+      "type": "GraphGLTF",
+      "url": "Assets\\Eumling\\Eumling_Miner.glb"
+    }
+  },
+  "AnimationGLTF|2025-04-14T07:31:18.368Z|01896": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-14T07:31:18.368Z|01896",
+      "name": "WalkCycleHappy",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
     }
   }
 }
