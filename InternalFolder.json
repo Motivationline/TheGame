@@ -158,6 +158,17 @@
                   },
                   {
                     "idResource": "TextureImage|2025-04-10T14:40:17.873Z|95219"
+                  },
+                  {
+                    "name": "GLB",
+                    "entries": [
+                      {
+                        "idResource": "GraphGLTF|2025-04-14T09:10:45.549Z|76890"
+                      },
+                      {
+                        "idResource": "Graph|2025-04-14T09:11:00.811Z|87072"
+                      }
+                    ]
                   }
                 ]
               }

@@ -456,33 +456,9 @@
           }
         },
         {
-          "ƒ.Node": {
-            "name": "MapWrapper",
-            "active": true,
-            "components": {
-              "ComponentTransform": [
-                {
-                  "ƒ.ComponentTransform": {
-                    "local": {
-                      "translation": "[0, 0, 0]",
-                      "rotation": "[0, 0, 0]",
-                      "scaling": "[44, 1, 44]"
-                    },
-                    "Component": {
-                      "active": true
-                    }
-                  }
-                }
-              ]
-            },
-            "children": [
-              {
-                "ƒ.GraphInstance": {
-                  "deserializeFromSource": true,
-                  "idSource": "Graph|2025-04-10T14:38:41.757Z|62271"
-                }
-              }
-            ]
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-14T09:11:00.811Z|87072"
           }
         }
       ],
@@ -959,6 +935,33 @@
       "type": "AnimationGLTF",
       "url": "Assets\\Eumling\\Eumling.glb",
       "events": {}
+    }
+  },
+  "GraphGLTF|2025-04-14T09:10:45.549Z|76890": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-14T09:10:45.549Z|76890",
+      "type": "GraphGLTF",
+      "url": "Assets\\Environment\\Ground\\Map_Ground_Base.glb"
+    }
+  },
+  "Graph|2025-04-14T09:11:00.811Z|87072": {
+    "ƒ.Graph": {
+      "name": "Ground",
+      "active": true,
+      "components": {},
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-14T09:10:45.549Z|76890"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-14T09:11:00.811Z|87072",
+      "type": "Graph"
     }
   }
 }
