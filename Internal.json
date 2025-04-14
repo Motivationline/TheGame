@@ -299,7 +299,7 @@
                     "direction": "diagonal",
                     "near": 1,
                     "far": 2000,
-                    "aspect": 1.510172143974961,
+                    "aspect": 0.9800629590766002,
                     "pivot": {
                       "translation": "[0, 0, 0]",
                       "rotation": "[0, 0, 0]",
@@ -433,6 +433,36 @@
           "ƒ.GraphInstance": {
             "deserializeFromSource": true,
             "idSource": "Graph|2025-04-14T09:11:00.811Z|87072"
+          }
+        },
+        {
+          "ƒ.Node": {
+            "name": "GodessWrapper",
+            "active": true,
+            "components": {
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, -60, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ]
+            },
+            "children": [
+              {
+                "ƒ.GraphInstance": {
+                  "deserializeFromSource": true,
+                  "idSource": "Graph|2025-04-14T09:45:20.097Z|41796"
+                }
+              }
+            ]
           }
         }
       ],
@@ -1012,6 +1042,58 @@
         }
       ],
       "idResource": "Graph|2025-04-14T09:26:15.653Z|33120",
+      "type": "Graph"
+    }
+  },
+  "GraphGLTF|2025-04-14T09:45:18.085Z|81489": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-14T09:45:18.085Z|81489",
+      "type": "GraphGLTF",
+      "url": "Assets\\Godess\\Godess.glb"
+    }
+  },
+  "Graph|2025-04-14T09:45:20.097Z|41796": {
+    "ƒ.Graph": {
+      "name": "Godess",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "JobProviderStoreResource": [
+          {
+            "Script.JobProviderStoreResource": {
+              "active": true,
+              "_jobType": 2,
+              "jobDuration": 2000,
+              "cooldown": 0
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-14T09:45:18.085Z|81489"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-14T09:45:20.097Z|41796",
       "type": "Graph"
     }
   }
