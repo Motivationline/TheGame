@@ -45,7 +45,10 @@ namespace Script {
 
             for (let build of Building.all) {
                 const button = document.createElement("button");
-                button.innerText = `${build.name ?? build.graph.name} (${build.size}x${build.size})`;
+                button.innerHTML = `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`;
+                if (Data.food < build.costFood || Data.stone < build.costStone) button.disabled = true;
+                button.dataset.costFood = build.costFood.toString();
+                button.dataset.costStone = build.costStone.toString();
                 button.addEventListener("click", () => {
                     this.selectBuilding(build);
                 });
@@ -68,7 +71,7 @@ namespace Script {
         private placeOnGrid = async (_event: MouseEvent) => {
             if (_event.button !== 0) return;
             if (!this.selectedBuilding) return;
-            console.log("place on grid");
+            if (!Data.buyBuilding(this.selectedBuilding)) return;
             let tilePos = this.tilePositionFromMouseEvent(_event);
             let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
             if (this.currentPositionOccupied) return;
@@ -81,6 +84,13 @@ namespace Script {
             let marker = await ƒ.Project.createGraphInstance(this.selectedBuilding.graph);
             viewport.getBranch().appendChild(marker);
             marker.mtxLocal.translation = new ƒ.Vector3(this.currentWorldPosition.x + this.selectedBuilding.size / 2, 0, this.currentWorldPosition.y + this.selectedBuilding.size / 2);
+
+            // make it so building needs to be built before it takes effect
+            const jobCmp = getDerivedComponent(marker, JobProvider);
+            if(jobCmp) {jobCmp.activate(false)}
+            const buildupCmp = new JobProviderBuild();
+            buildupCmp.jobDuration = 2000 * (this.selectedBuilding.costFood + this.selectedBuilding.costStone);
+            marker.addComponent(buildupCmp);
         }
 
         private checkAndSetCurrentPosition(_startPos: ƒ.Vector2): boolean {

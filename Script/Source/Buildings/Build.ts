@@ -5,6 +5,8 @@ namespace Script {
         graph: ƒ.Graph,
         size: number,
         name: string,
+        costFood: number,
+        costStone: number,
     }
 
 }

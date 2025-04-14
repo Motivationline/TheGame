@@ -5,7 +5,7 @@
 namespace Script {
     import ƒ = FudgeCore;
 
-    export const availableJobs: Set<JobType> = new Set([JobType.NONE, JobType.GATHER_FOOD, JobType.GATHER_STONE]);
+    export const availableJobs: Set<JobType> = new Set([JobType.NONE, JobType.GATHER_FOOD, JobType.GATHER_STONE, JobType.BUILD]);
 
     export interface ToggleableUI {
         enable: () => void;

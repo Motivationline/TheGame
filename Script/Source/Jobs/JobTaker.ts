@@ -26,17 +26,24 @@ namespace Script {
             ])
         }
 
+        #needToRemoveTarget: boolean = false;
         set job(_job: JobType) {
+            if (this.#needToRemoveTarget) {
+                this.removeTarget();
+            }
             this.#job = _job;
             this.#animator.setModel(this.#job);
             this.#animator.playAnimation(JobType.NONE);
             this.#progress = 0;
             this.#timers.forEach(t => t.clear());
             this.#timers.length = 0;
+
+            this.#prevDistance = Infinity;
         }
 
         static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined {
             const foundProviders: JobProvider[] = [];
+            console.log(_job, JobProvider.JobProviders);
             for (let provider of JobProvider.JobProviders) {
                 if (provider.jobType === _job) {
                     foundProviders.push(provider);
@@ -60,6 +67,7 @@ namespace Script {
                 case 0: {
                     // look for target
                     this.#currentJob = JobType.NONE;
+                    this.#animator.playAnimation(JobType.NONE);
                     const target = this.findAndSetTargetForJob(this.#job);
                     if (target) {
                         this.#progress++
@@ -73,10 +81,11 @@ namespace Script {
                     if (reachedTarget) {
                         this.#progress++;
                         this.#target.jobStart();
-                        new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
+                        let timer = new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
                             this.#progress++;
                             this.#target.jobFinish();
                         });
+                        this.#timers.push(timer);
                     }
                     break;
                 }
@@ -88,6 +97,7 @@ namespace Script {
                 }
                 case 3: {
                     // ready to find the place to drop stuff off
+                    this.#animator.playAnimation(JobType.NONE);
                     const target = this.findAndSetTargetForJob(JobType.STORE_RESOURCE);
                     if (target) {
                         this.#progress++;
@@ -111,13 +121,46 @@ namespace Script {
                 }
             }
         }
-        private build = () => {
-
+        private build = (deltaTime: number) => {
+            console.log(this.#progress);
+            if (this.#progress < 10) {
+                const target = this.findAndSetTargetForJob(this.#job);
+                if (target) {
+                    this.#progress = 10;
+                    this.#prevDistance = Infinity;
+                } else {
+                    this.idle(deltaTime);
+                }
+            }
+            switch (this.#progress) {
+                case 10: {
+                    let reachedTarget = this.moveToTarget(deltaTime);
+                    this.#animator.playAnimation(this.#job);
+                    if (reachedTarget) {
+                        this.#progress = 11;
+                        this.#target.jobStart();
+                        let timer = new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
+                            this.#progress = 12;
+                            this.#target.jobFinish();
+                        });
+                        this.#timers.push(timer);
+                    }
+                    break;
+                }
+                case 11: {
+                    // building
+                    break;
+                }
+                case 12: {
+                    // done building
+                    this.#progress = 2;
+                }
+            }
         }
         private idle = (deltaTime: number) => {
             switch (this.#progress) {
                 case 0: {
-                    this.#animator.playAnimation(this.#job);
+                    this.#animator.playAnimation(JobType.NONE);
                     this.#progress++;
                     this.#timers.push(new ƒ.Timer(ƒ.Time.game, randomRange(1000, 5000), 1, () => {
                         this.#progress = 2;
@@ -136,21 +179,30 @@ namespace Script {
                     node.addComponent(jp);
                     node.addComponent(new ƒ.ComponentTransform);
                     this.node.getParent().addChild(node);
-                    node.mtxLocal.translateX(Math.max(-20, Math.min(20, randomRange(-4, 4) + this.node.mtxWorld.translation.x)));
-                    node.mtxLocal.translateZ(Math.max(-20, Math.min(20, randomRange(-4, 4) + this.node.mtxWorld.translation.z)));
+                    node.mtxLocal.translateX(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(2, 5) + this.node.mtxWorld.translation.x)));
+                    node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(2, 5) + this.node.mtxWorld.translation.z)));
                     this.#target = jp;
                     this.node.mtxLocal.lookAt(node.mtxLocal.translation);
                     this.#progress = 3;
+                    this.#needToRemoveTarget = true;
                     break;
                 }
                 case 3: {
                     const reached = this.moveToTarget(deltaTime);
                     if (reached) {
-                        this.#target.node.getParent().removeChild(this.#target.node);
+                        this.removeTarget();
                         this.#progress = 0;
                     }
                 }
             }
+        }
+
+        private removeTarget() {
+            this.#needToRemoveTarget = false;
+            if (!this.#target || !this.#target.node) return;
+            let node = this.#target.node;
+            node.removeComponent(this.#target);
+            node.getParent().removeChild(node);
         }
 
         #prevDistance: number = Infinity;
@@ -171,9 +223,10 @@ namespace Script {
         }
 
         private findAndSetTargetForJob(_job: JobType): JobProvider | undefined {
-            this.#animator.playAnimation(JobType.NONE);
             const target = JobTaker.findClosestJobProvider(_job, this.node.mtxWorld.translation);
-            if (!target) return undefined;
+            if (!target) {
+                return undefined;
+            }
             this.#target = target;
             this.#currentJob = _job;
             this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);

@@ -13,7 +13,7 @@ namespace Script {
 
     @ƒ.serialize
     export abstract class JobProvider extends UpdateScriptComponent {
-        static JobProviders: JobProvider[] = [];
+        static JobProviders: Set<JobProvider> = new Set();
         @ƒ.serialize(JobType)
         protected _jobType: JobType;
         @ƒ.serialize(Number)
@@ -22,11 +22,10 @@ namespace Script {
         cooldown: number = 30000;
         #currentCooldown = 0;
         start(_e: CustomEvent<UpdateEvent>): void {
-            JobProvider.JobProviders.push(this);
+            JobProvider.JobProviders.add(this);
         }
         remove(_e: CustomEvent): void {
-            let index = JobProvider.JobProviders.indexOf(this);
-            JobProvider.JobProviders.splice(index, 1);
+            JobProvider.JobProviders.delete(this);
         }
         jobStart(): void { }
         jobFinish(): void {
@@ -63,5 +62,14 @@ namespace Script {
     }
     export class JobProviderBuild extends JobProvider {
         _jobType: JobType = JobType.BUILD;
+        jobFinish(): void {
+            super.jobFinish();
+            for (let cmp of this.node.getAllComponents()) {
+                if (cmp instanceof JobProvider) {
+                    cmp.activate(true);
+                }
+            }
+            this.node.removeComponent(this);
+        }
     }
 }

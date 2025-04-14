@@ -92,11 +92,15 @@ namespace Script {
     export function capitalize(s: string): string {
         return s.charAt(0).toLocaleUpperCase() + s.slice(1);
     }
-    
+
     export function getPlanePositionFromMouseEvent(_event: MouseEvent): ƒ.Vector3 {
         let mousePos = new ƒ.Vector2(_event.clientX, _event.clientY);
         let ray = viewport.getRayFromClient(mousePos);
         let pos = ray.intersectPlane(ƒ.Vector3.ZERO(), ƒ.Vector3.Y(1));
         return pos;
+    }
+
+    export function getDerivedComponent<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T | undefined {
+        return <T>node.getAllComponents().find(c => (c instanceof component));
     }
 }

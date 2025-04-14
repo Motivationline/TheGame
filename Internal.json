@@ -62,7 +62,7 @@
             "Script.JobProviderGatherFood": {
               "active": true,
               "_jobType": 1,
-              "jobDuration": 6249,
+              "jobDuration": 2083,
               "cooldown": 30000
             }
           }
@@ -129,6 +129,16 @@
                 "active": true
               },
               "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
+            }
+          }
+        ],
+        "JobProviderGatherStone": [
+          {
+            "Script.JobProviderGatherStone": {
+              "active": true,
+              "_jobType": 0,
+              "jobDuration": 2000,
+              "cooldown": 30000
             }
           }
         ]
@@ -354,7 +364,9 @@
                     "active": true,
                     "graph": "Graph|2025-04-08T06:37:31.827Z|46952",
                     "size": 1,
-                    "name": "Gather Indicator"
+                    "name": "Gather Indicator Food",
+                    "costFood": 0,
+                    "costStone": 0
                   }
                 },
                 {
@@ -362,7 +374,9 @@
                     "active": true,
                     "graph": "Graph|2025-04-08T06:38:54.587Z|91903",
                     "size": 2,
-                    "name": ""
+                    "name": "Gather Indicator Stone",
+                    "costFood": 0,
+                    "costStone": 0
                   }
                 },
                 {
@@ -370,7 +384,9 @@
                     "active": true,
                     "graph": "Graph|2025-04-08T06:39:49.139Z|03664",
                     "size": 3,
-                    "name": "default 3x3"
+                    "name": "default 3x3",
+                    "costFood": 5,
+                    "costStone": 5
                   }
                 },
                 {
@@ -378,7 +394,9 @@
                     "active": true,
                     "graph": "GraphGLTF|2025-04-08T10:32:49.691Z|74350",
                     "size": 2,
-                    "name": "Miner House"
+                    "name": "Miner House",
+                    "costFood": 5,
+                    "costStone": 5
                   }
                 },
                 {
@@ -386,7 +404,9 @@
                     "active": true,
                     "graph": "GraphGLTF|2025-04-08T10:48:00.622Z|81801",
                     "size": 3,
-                    "name": "House_Big"
+                    "name": "House_Big",
+                    "costFood": 5,
+                    "costStone": 5
                   }
                 }
               ]

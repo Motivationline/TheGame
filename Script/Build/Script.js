@@ -81,16 +81,41 @@ var Script;
         static set food(_food) {
             this.#food = _food;
             document.getElementById("resource-food").innerText = this.#food.toString();
+            this.updateBuildButtons();
         }
         static set stone(_stone) {
             this.#stone = _stone;
             document.getElementById("resource-stone").innerText = this.#stone.toString();
+            this.updateBuildButtons();
         }
         static get food() {
             return this.#food;
         }
         static get stone() {
             return this.#stone;
+        }
+        static canAffordBuilding(building) {
+            return building.costFood <= this.#food && building.costStone <= this.#stone;
+        }
+        static buyBuilding(building) {
+            if (!this.canAffordBuilding(building))
+                return false;
+            this.food -= building.costFood;
+            this.stone -= building.costStone;
+            return true;
+        }
+        static updateBuildButtons() {
+            const elements = document.getElementById("build-menu-buildings").childNodes;
+            for (let element of elements) {
+                if (element.dataset.costFood && element.dataset.costStone) {
+                    if (Number(element.dataset.costFood) > this.#food || Number(element.dataset.costStone) > this.#stone) {
+                        element.disabled = true;
+                    }
+                    else {
+                        element.disabled = false;
+                    }
+                }
+            }
         }
     }
     Script.Data = Data;
@@ -192,7 +217,8 @@ var Script;
                     return;
                 if (!this.selectedBuilding)
                     return;
-                console.log("place on grid");
+                if (!Script.Data.buyBuilding(this.selectedBuilding))
+                    return;
                 let tilePos = this.tilePositionFromMouseEvent(_event);
                 let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
                 if (this.currentPositionOccupied)
@@ -205,6 +231,14 @@ var Script;
                 let marker = await ƒ.Project.createGraphInstance(this.selectedBuilding.graph);
                 Script.viewport.getBranch().appendChild(marker);
                 marker.mtxLocal.translation = new ƒ.Vector3(this.currentWorldPosition.x + this.selectedBuilding.size / 2, 0, this.currentWorldPosition.y + this.selectedBuilding.size / 2);
+                // make it so building needs to be built before it takes effect
+                const jobCmp = Script.getDerivedComponent(marker, Script.JobProvider);
+                if (jobCmp) {
+                    jobCmp.activate(false);
+                }
+                const buildupCmp = new Script.JobProviderBuild();
+                buildupCmp.jobDuration = 2000 * (this.selectedBuilding.costFood + this.selectedBuilding.costStone);
+                marker.addComponent(buildupCmp);
             };
             if (ƒ.Project.mode === ƒ.MODE.EDITOR)
                 return;
@@ -234,7 +268,11 @@ var Script;
             const buttons = [];
             for (let build of Script.Building.all) {
                 const button = document.createElement("button");
-                button.innerText = `${build.name ?? build.graph.name} (${build.size}x${build.size})`;
+                button.innerHTML = `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`;
+                if (Script.Data.food < build.costFood || Script.Data.stone < build.costStone)
+                    button.disabled = true;
+                button.dataset.costFood = build.costFood.toString();
+                button.dataset.costStone = build.costStone.toString();
                 button.addEventListener("click", () => {
                     this.selectBuilding(build);
                 });
@@ -378,14 +416,13 @@ var Script;
                 JobProvider = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
             }
-            static { this.JobProviders = []; }
+            static { this.JobProviders = new Set(); }
             #currentCooldown;
             start(_e) {
-                JobProvider.JobProviders.push(this);
+                JobProvider.JobProviders.add(this);
             }
             remove(_e) {
-                let index = JobProvider.JobProviders.indexOf(this);
-                JobProvider.JobProviders.splice(index, 1);
+                JobProvider.JobProviders.delete(this);
             }
             jobStart() { }
             jobFinish() {
@@ -446,6 +483,15 @@ var Script;
             super(...arguments);
             this._jobType = JobType.BUILD;
         }
+        jobFinish() {
+            super.jobFinish();
+            for (let cmp of this.node.getAllComponents()) {
+                if (cmp instanceof JobProvider) {
+                    cmp.activate(true);
+                }
+            }
+            this.node.removeComponent(this);
+        }
     }
     Script.JobProviderBuild = JobProviderBuild;
 })(Script || (Script = {}));
@@ -456,7 +502,7 @@ var Script;
 /// <reference path="Jobs/JobProvider.ts" />
 (function (Script) {
     var ƒ = FudgeCore;
-    Script.availableJobs = new Set([Script.JobType.NONE, Script.JobType.GATHER_FOOD, Script.JobType.GATHER_STONE]);
+    Script.availableJobs = new Set([Script.JobType.NONE, Script.JobType.GATHER_FOOD, Script.JobType.GATHER_STONE, Script.JobType.BUILD]);
     let uis;
     let activeUI;
     function setupUI() {
@@ -628,6 +674,10 @@ var Script;
         let _size_initializers = [];
         let _name_decorators;
         let _name_initializers = [];
+        let _costFood_decorators;
+        let _costFood_initializers = [];
+        let _costStone_decorators;
+        let _costStone_initializers = [];
         var Building = class extends _classSuper {
             static { _classThis = this; }
             static {
@@ -635,9 +685,13 @@ var Script;
                 _graph_decorators = [ƒ.serialize(ƒ.Graph)];
                 _size_decorators = [ƒ.serialize(Number)];
                 _name_decorators = [ƒ.serialize(String)];
+                _costFood_decorators = [ƒ.serialize(Number)];
+                _costStone_decorators = [ƒ.serialize(Number)];
                 __esDecorate(null, null, _graph_decorators, { kind: "field", name: "graph", static: false, private: false, access: { has: obj => "graph" in obj, get: obj => obj.graph, set: (obj, value) => { obj.graph = value; } }, metadata: _metadata }, _graph_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _size_decorators, { kind: "field", name: "size", static: false, private: false, access: { has: obj => "size" in obj, get: obj => obj.size, set: (obj, value) => { obj.size = value; } }, metadata: _metadata }, _size_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: obj => "name" in obj, get: obj => obj.name, set: (obj, value) => { obj.name = value; } }, metadata: _metadata }, _name_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _costFood_decorators, { kind: "field", name: "costFood", static: false, private: false, access: { has: obj => "costFood" in obj, get: obj => obj.costFood, set: (obj, value) => { obj.costFood = value; } }, metadata: _metadata }, _costFood_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _costStone_decorators, { kind: "field", name: "costStone", static: false, private: false, access: { has: obj => "costStone" in obj, get: obj => obj.costStone, set: (obj, value) => { obj.costStone = value; } }, metadata: _metadata }, _costStone_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 Building = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -651,10 +705,12 @@ var Script;
                 this.graph = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _graph_initializers, void 0));
                 this.size = __runInitializers(this, _size_initializers, 1);
                 this.name = __runInitializers(this, _name_initializers, "");
+                this.costFood = __runInitializers(this, _costFood_initializers, 5);
+                this.costStone = __runInitializers(this, _costStone_initializers, 5);
                 if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                     return;
                 ƒ.Project.addEventListener("resourcesLoaded" /* ƒ.EVENT.RESOURCES_LOADED */, () => {
-                    Building.all.push({ graph: this.graph, size: this.size, name: this.name });
+                    Building.all.push({ graph: this.graph, size: this.size, name: this.name, costFood: this.costFood, costStone: this.costStone });
                 });
             }
             static {
@@ -828,11 +884,13 @@ var Script;
                 this.#progress = 0;
                 this.#timers = [];
                 this.speed = __runInitializers(this, _speed_initializers, 1);
+                this.#needToRemoveTarget = false;
                 this.gatherResource = (deltaTime) => {
                     switch (this.#progress) {
                         case 0: {
                             // look for target
                             this.#currentJob = Script.JobType.NONE;
+                            this.#animator.playAnimation(Script.JobType.NONE);
                             const target = this.findAndSetTargetForJob(this.#job);
                             if (target) {
                                 this.#progress++;
@@ -846,10 +904,11 @@ var Script;
                             if (reachedTarget) {
                                 this.#progress++;
                                 this.#target.jobStart();
-                                new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
+                                let timer = new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
                                     this.#progress++;
                                     this.#target.jobFinish();
                                 });
+                                this.#timers.push(timer);
                             }
                             break;
                         }
@@ -861,6 +920,7 @@ var Script;
                         }
                         case 3: {
                             // ready to find the place to drop stuff off
+                            this.#animator.playAnimation(Script.JobType.NONE);
                             const target = this.findAndSetTargetForJob(Script.JobType.STORE_RESOURCE);
                             if (target) {
                                 this.#progress++;
@@ -885,12 +945,47 @@ var Script;
                         }
                     }
                 };
-                this.build = () => {
+                this.build = (deltaTime) => {
+                    console.log(this.#progress);
+                    if (this.#progress < 10) {
+                        const target = this.findAndSetTargetForJob(this.#job);
+                        if (target) {
+                            this.#progress = 10;
+                            this.#prevDistance = Infinity;
+                        }
+                        else {
+                            this.idle(deltaTime);
+                        }
+                    }
+                    switch (this.#progress) {
+                        case 10: {
+                            let reachedTarget = this.moveToTarget(deltaTime);
+                            this.#animator.playAnimation(this.#job);
+                            if (reachedTarget) {
+                                this.#progress = 11;
+                                this.#target.jobStart();
+                                let timer = new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
+                                    this.#progress = 12;
+                                    this.#target.jobFinish();
+                                });
+                                this.#timers.push(timer);
+                            }
+                            break;
+                        }
+                        case 11: {
+                            // building
+                            break;
+                        }
+                        case 12: {
+                            // done building
+                            this.#progress = 2;
+                        }
+                    }
                 };
                 this.idle = (deltaTime) => {
                     switch (this.#progress) {
                         case 0: {
-                            this.#animator.playAnimation(this.#job);
+                            this.#animator.playAnimation(Script.JobType.NONE);
                             this.#progress++;
                             this.#timers.push(new ƒ.Timer(ƒ.Time.game, Script.randomRange(1000, 5000), 1, () => {
                                 this.#progress = 2;
@@ -908,17 +1003,18 @@ var Script;
                             node.addComponent(jp);
                             node.addComponent(new ƒ.ComponentTransform);
                             this.node.getParent().addChild(node);
-                            node.mtxLocal.translateX(Math.max(-20, Math.min(20, Script.randomRange(-4, 4) + this.node.mtxWorld.translation.x)));
-                            node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Script.randomRange(-4, 4) + this.node.mtxWorld.translation.z)));
+                            node.mtxLocal.translateX(Math.max(-20, Math.min(20, Math.sign(Script.randomRange(-1, 1)) * Script.randomRange(2, 5) + this.node.mtxWorld.translation.x)));
+                            node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Math.sign(Script.randomRange(-1, 1)) * Script.randomRange(2, 5) + this.node.mtxWorld.translation.z)));
                             this.#target = jp;
                             this.node.mtxLocal.lookAt(node.mtxLocal.translation);
                             this.#progress = 3;
+                            this.#needToRemoveTarget = true;
                             break;
                         }
                         case 3: {
                             const reached = this.moveToTarget(deltaTime);
                             if (reached) {
-                                this.#target.node.getParent().removeChild(this.#target.node);
+                                this.removeTarget();
                                 this.#progress = 0;
                             }
                         }
@@ -934,16 +1030,22 @@ var Script;
                     [Script.JobType.GATHER_STONE, this.gatherResource],
                 ]);
             }
+            #needToRemoveTarget;
             set job(_job) {
+                if (this.#needToRemoveTarget) {
+                    this.removeTarget();
+                }
                 this.#job = _job;
                 this.#animator.setModel(this.#job);
                 this.#animator.playAnimation(Script.JobType.NONE);
                 this.#progress = 0;
                 this.#timers.forEach(t => t.clear());
                 this.#timers.length = 0;
+                this.#prevDistance = Infinity;
             }
             static findClosestJobProvider(_job, _location) {
                 const foundProviders = [];
+                console.log(_job, Script.JobProvider.JobProviders);
                 for (let provider of Script.JobProvider.JobProviders) {
                     if (provider.jobType === _job) {
                         foundProviders.push(provider);
@@ -959,6 +1061,14 @@ var Script;
             }
             update(_e) {
                 this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
+            }
+            removeTarget() {
+                this.#needToRemoveTarget = false;
+                if (!this.#target || !this.#target.node)
+                    return;
+                let node = this.#target.node;
+                node.removeComponent(this.#target);
+                node.getParent().removeChild(node);
             }
             #prevDistance;
             moveToTarget(deltaTime) {
@@ -977,10 +1087,10 @@ var Script;
                 return false;
             }
             findAndSetTargetForJob(_job) {
-                this.#animator.playAnimation(Script.JobType.NONE);
                 const target = JobTaker.findClosestJobProvider(_job, this.node.mtxWorld.translation);
-                if (!target)
+                if (!target) {
                     return undefined;
+                }
                 this.#target = target;
                 this.#currentJob = _job;
                 this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);
@@ -1183,5 +1293,9 @@ var Script;
         return pos;
     }
     Script.getPlanePositionFromMouseEvent = getPlanePositionFromMouseEvent;
+    function getDerivedComponent(node, component) {
+        return node.getAllComponents().find(c => (c instanceof component));
+    }
+    Script.getDerivedComponent = getDerivedComponent;
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map

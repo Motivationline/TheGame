@@ -17,6 +17,9 @@ declare namespace Script {
         static set stone(_stone: number);
         static get food(): number;
         static get stone(): number;
+        static canAffordBuilding(building: Build): boolean;
+        static buyBuilding(building: Build): boolean;
+        private static updateBuildButtons;
     }
 }
 declare namespace Script {
@@ -88,7 +91,7 @@ declare namespace Script {
     }
     abstract class JobProvider extends UpdateScriptComponent {
         #private;
-        static JobProviders: JobProvider[];
+        static JobProviders: Set<JobProvider>;
         protected _jobType: JobType;
         jobDuration: number;
         cooldown: number;
@@ -117,6 +120,7 @@ declare namespace Script {
     }
     class JobProviderBuild extends JobProvider {
         _jobType: JobType;
+        jobFinish(): void;
     }
 }
 declare namespace Script {
@@ -133,6 +137,8 @@ declare namespace Script {
         graph: ƒ.Graph;
         size: number;
         name: string;
+        costFood: number;
+        costStone: number;
     }
 }
 declare namespace Script {
@@ -143,6 +149,8 @@ declare namespace Script {
         graph: ƒ.Graph;
         size: number;
         name: string;
+        costFood: number;
+        costStone: number;
         constructor();
     }
 }
@@ -181,6 +189,7 @@ declare namespace Script {
         private gatherResource;
         private build;
         private idle;
+        private removeTarget;
         private moveToTarget;
         private findAndSetTargetForJob;
     }
@@ -232,5 +241,6 @@ declare namespace Script {
     export function randomString(length: number): string;
     export function capitalize(s: string): string;
     export function getPlanePositionFromMouseEvent(_event: MouseEvent): ƒ.Vector3;
+    export function getDerivedComponent<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T | undefined;
     export {};
 }

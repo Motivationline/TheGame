@@ -13,6 +13,10 @@ namespace Script {
         size: number = 1;
         @ƒ.serialize(String)
         name: string = "";
+        @ƒ.serialize(Number)
+        costFood: number = 5;
+        @ƒ.serialize(Number)
+        costStone: number = 5;
 
 
         constructor() {
@@ -20,7 +24,7 @@ namespace Script {
             if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                 return;
             ƒ.Project.addEventListener(ƒ.EVENT.RESOURCES_LOADED, ()=>{
-                Building.all.push({ graph: this.graph, size: this.size, name: this.name });
+                Building.all.push({ graph: this.graph, size: this.size, name: this.name, costFood: this.costFood, costStone: this.costStone });
             })
         }
 
