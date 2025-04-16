@@ -1112,5 +1112,15 @@
       "idResource": "Graph|2025-04-14T09:45:20.097Z|41796",
       "type": "Graph"
     }
+  },
+  "GraphGLTF|2025-04-16T14:49:49.859Z|72837": {
+    "ƒ.GraphGLTF": {
+      "name": "Eumling_Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-16T14:49:49.859Z|72837",
+      "type": "GraphGLTF",
+      "url": "Assets\\Eumling\\Eumling_Food.glb"
+    }
   }
 }

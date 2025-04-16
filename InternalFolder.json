@@ -95,6 +95,14 @@
             ]
           },
           {
+            "name": "Eumling_Fooder",
+            "entries": [
+              {
+                "idResource": "GraphGLTF|2025-04-16T14:49:49.859Z|72837"
+              }
+            ]
+          },
+          {
             "name": "Eumling_Miner",
             "entries": [
               {
