@@ -43,7 +43,7 @@ namespace Script {
 
         static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined {
             const foundProviders: JobProvider[] = [];
-            console.log(_job, JobProvider.JobProviders);
+            // console.log(_job, JobProvider.JobProviders);
             for (let provider of JobProvider.JobProviders) {
                 if (provider.jobType === _job) {
                     foundProviders.push(provider);
@@ -66,7 +66,7 @@ namespace Script {
             if(this.#job !== JobType.NONE && this.#job !== JobType.BUILD) {
                 return;
             }
-            this.#progress = 3;
+            this.#progress = 2;
             this.#timers.forEach(t => t.clear());
             this.#timers.length = 0;
 
@@ -133,7 +133,7 @@ namespace Script {
             }
         }
         private build = (deltaTime: number) => {
-            console.log(this.#progress);
+            // console.log(this.#progress);
             if (this.#progress < 10) {
                 const target = this.findAndSetTargetForJob(this.#job);
                 if (target) {

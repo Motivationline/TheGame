@@ -7,6 +7,7 @@ namespace Script {
         name: string,
         costFood: number,
         costStone: number,
+        includeInMenu: boolean,
     }
 
 }

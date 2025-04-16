@@ -40,7 +40,7 @@
   },
   "Graph|2025-04-08T06:37:31.827Z|46952": {
     "ƒ.Graph": {
-      "name": "Building1x1",
+      "name": "GatherStone",
       "active": true,
       "components": {
         "ComponentTransform": [
@@ -57,12 +57,12 @@
             }
           }
         ],
-        "JobProviderGatherFood": [
+        "JobProviderGatherStone": [
           {
-            "Script.JobProviderGatherFood": {
+            "Script.JobProviderGatherStone": {
               "active": true,
-              "_jobType": 1,
-              "jobDuration": 2083,
+              "_jobType": 0,
+              "jobDuration": 2000,
               "cooldown": 30000
             }
           }
@@ -73,6 +73,48 @@
           "ƒ.GraphInstance": {
             "deserializeFromSource": true,
             "idSource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446"
+          }
+        },
+        {
+          "ƒ.Node": {
+            "name": "New Node",
+            "active": true,
+            "components": {
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshQuad|2025-04-07T11:28:36.118Z|26450",
+                    "pivot": {
+                      "translation": "[0, 0.025, 0]",
+                      "rotation": "[-90, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[0.5882352941176471, 0.5725490196078431, 0.5725490196078431, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0, 0]",
+                      "rotation": 0,
+                      "scaling": "[1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2025-04-07T11:28:44.995Z|71214"
+                  }
+                }
+              ]
+            },
+            "children": []
           }
         }
       ],
@@ -251,6 +293,16 @@
               }
             }
           }
+        ],
+        "BonusProvider": [
+          {
+            "Script.BonusProvider": {
+              "active": true,
+              "bonusType": 0,
+              "bonusData": 1,
+              "amount": 1
+            }
+          }
         ]
       },
       "idResource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350",
@@ -281,6 +333,226 @@
       "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801",
       "type": "GraphGLTF",
       "url": "Assets\\Houses\\House_Big.glb"
+    }
+  },
+  "Graph|2025-04-16T11:31:05.095Z|38834": {
+    "ƒ.Graph": {
+      "name": "EumlingHaus",
+      "active": true,
+      "components": {
+        "ComponentMesh": [
+          {
+            "ƒ.ComponentMesh": {
+              "idMesh": "MeshCube|2025-04-08T06:37:52.687Z|13643",
+              "pivot": {
+                "translation": "[0, 0.25, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[2, 0.5, 2]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentMaterial": [
+          {
+            "ƒ.ComponentMaterial": {
+              "sortForAlpha": false,
+              "clrPrimary": "[1, 1, 1, 1]",
+              "clrSecondary": "[1, 1, 1, 1]",
+              "pivot": {
+                "translation": "[0, 0]",
+                "rotation": 0,
+                "scaling": "[1, 1]"
+              },
+              "Component": {
+                "active": true
+              },
+              "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
+            }
+          }
+        ],
+        "BonusProvider": [
+          {
+            "Script.BonusProvider": {
+              "active": true,
+              "bonusType": 0,
+              "bonusData": 0,
+              "amount": 2
+            }
+          }
+        ]
+      },
+      "children": [],
+      "idResource": "Graph|2025-04-16T11:31:05.095Z|38834",
+      "type": "Graph"
+    }
+  },
+  "Graph|2025-04-16T11:34:07.466Z|93977": {
+    "ƒ.Graph": {
+      "name": "FarmHaus",
+      "active": true,
+      "components": {
+        "ComponentMesh": [
+          {
+            "ƒ.ComponentMesh": {
+              "idMesh": "MeshCube|2025-04-08T06:37:52.687Z|13643",
+              "pivot": {
+                "translation": "[0, 0.25, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[2, 0.5, 2]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentMaterial": [
+          {
+            "ƒ.ComponentMaterial": {
+              "sortForAlpha": false,
+              "clrPrimary": "[1, 1, 1, 1]",
+              "clrSecondary": "[1, 1, 1, 1]",
+              "pivot": {
+                "translation": "[0, 0]",
+                "rotation": 0,
+                "scaling": "[1, 1]"
+              },
+              "Component": {
+                "active": true
+              },
+              "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
+            }
+          }
+        ],
+        "BonusProvider": [
+          {
+            "Script.BonusProvider": {
+              "active": true,
+              "bonusType": 0,
+              "bonusData": 2,
+              "amount": 1
+            }
+          }
+        ]
+      },
+      "children": [],
+      "idResource": "Graph|2025-04-16T11:34:07.466Z|93977",
+      "type": "Graph"
+    }
+  },
+  "Graph|2025-04-16T14:53:37.027Z|54709": {
+    "ƒ.Graph": {
+      "name": "GatherFood",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "JobProviderGatherFood": [
+          {
+            "Script.JobProviderGatherFood": {
+              "active": true,
+              "_jobType": 1,
+              "jobDuration": 2083,
+              "cooldown": 30000
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446"
+          }
+        },
+        {
+          "ƒ.Node": {
+            "name": "New Node",
+            "active": true,
+            "components": {
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshQuad|2025-04-07T11:28:36.118Z|26450",
+                    "pivot": {
+                      "translation": "[0, 0.025000000000000005, 0]",
+                      "rotation": "[-90, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[0.07058823529411765, 0.7098039215686275, 0.3137254901960784, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0, 0]",
+                      "rotation": 0,
+                      "scaling": "[1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2025-04-07T11:28:44.995Z|71214"
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-16T14:53:37.027Z|54709",
+      "type": "Graph"
     }
   },
   "Graph|2025-03-05T11:38:04.024Z|25869": {
@@ -362,51 +634,56 @@
                 {
                   "Script.Building": {
                     "active": true,
-                    "graph": "Graph|2025-04-08T06:37:31.827Z|46952",
-                    "size": 1,
-                    "name": "Gather Indicator Food",
-                    "costFood": 0,
-                    "costStone": 0
-                  }
-                },
-                {
-                  "Script.Building": {
-                    "active": true,
-                    "graph": "Graph|2025-04-08T06:38:54.587Z|91903",
-                    "size": 2,
-                    "name": "Gather Indicator Stone",
-                    "costFood": 0,
-                    "costStone": 0
-                  }
-                },
-                {
-                  "Script.Building": {
-                    "active": true,
-                    "graph": "Graph|2025-04-08T06:39:49.139Z|03664",
-                    "size": 3,
-                    "name": "default 3x3",
-                    "costFood": 5,
-                    "costStone": 5
-                  }
-                },
-                {
-                  "Script.Building": {
-                    "active": true,
                     "graph": "GraphGLTF|2025-04-08T10:32:49.691Z|74350",
                     "size": 2,
-                    "name": "Miner House",
-                    "costFood": 5,
-                    "costStone": 5
+                    "name": "Mine",
+                    "costFood": 0,
+                    "costStone": 30,
+                    "includeInMenu": true
                   }
                 },
                 {
                   "Script.Building": {
                     "active": true,
-                    "graph": "GraphGLTF|2025-04-08T10:48:00.622Z|81801",
-                    "size": 3,
-                    "name": "House_Big",
-                    "costFood": 5,
-                    "costStone": 5
+                    "graph": "Graph|2025-04-16T11:31:05.095Z|38834",
+                    "size": 2,
+                    "name": "Wohnhaus",
+                    "costFood": 0,
+                    "costStone": 20,
+                    "includeInMenu": true
+                  }
+                },
+                {
+                  "Script.Building": {
+                    "active": true,
+                    "graph": "Graph|2025-04-16T11:34:07.466Z|93977",
+                    "size": 2,
+                    "name": "Farmhaus",
+                    "costFood": 10,
+                    "costStone": 10,
+                    "includeInMenu": true
+                  }
+                },
+                {
+                  "Script.Building": {
+                    "active": true,
+                    "graph": "Graph|2025-04-08T06:37:31.827Z|46952",
+                    "size": 1,
+                    "name": "GatherStone",
+                    "costFood": 0,
+                    "costStone": 0,
+                    "includeInMenu": false
+                  }
+                },
+                {
+                  "Script.Building": {
+                    "active": true,
+                    "graph": "Graph|2025-04-16T14:53:37.027Z|54709",
+                    "size": 1,
+                    "name": "GatherFood",
+                    "costFood": 0,
+                    "costStone": 0,
+                    "includeInMenu": false
                   }
                 }
               ]
@@ -621,6 +898,32 @@
       "url": "Assets\\Eumling\\Eumling_Miner.glb"
     }
   },
+  "GraphGLTF|2025-04-16T14:49:49.859Z|72837": {
+    "ƒ.GraphGLTF": {
+      "name": "Eumling_Scene",
+      "active": true,
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": false
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-16T14:49:49.859Z|72837",
+      "type": "GraphGLTF",
+      "url": "Assets\\Eumling\\Eumling_Food.glb"
+    }
+  },
   "Graph|2025-04-09T07:19:42.868Z|15220": {
     "ƒ.Graph": {
       "name": "Eumling",
@@ -630,7 +933,7 @@
           {
             "ƒ.ComponentTransform": {
               "local": {
-                "translation": "[0, 0, 0]",
+                "translation": "[-4, 0, -4]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
@@ -654,6 +957,7 @@
               "active": true,
               "modelBase": "GraphGLTF|2025-04-10T11:33:30.270Z|12636",
               "modelMine": "GraphGLTF|2025-04-14T07:19:34.018Z|55474",
+              "modelFood": "GraphGLTF|2025-04-16T14:49:49.859Z|72837",
               "animIdle": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
               "animWalk": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782",
               "animGatherFood": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534",
@@ -1111,16 +1415,6 @@
       ],
       "idResource": "Graph|2025-04-14T09:45:20.097Z|41796",
       "type": "Graph"
-    }
-  },
-  "GraphGLTF|2025-04-16T14:49:49.859Z|72837": {
-    "ƒ.GraphGLTF": {
-      "name": "Eumling_Scene",
-      "active": true,
-      "components": {},
-      "idResource": "GraphGLTF|2025-04-16T14:49:49.859Z|72837",
-      "type": "GraphGLTF",
-      "url": "Assets\\Eumling\\Eumling_Food.glb"
     }
   }
 }

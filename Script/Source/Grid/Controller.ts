@@ -17,6 +17,14 @@ namespace Script {
 
             this.wrapper = document.getElementById("build-menu");
             this.buildings = document.getElementById("build-menu-buildings");
+
+            // set center to occupied
+            let pos: ƒ.Vector2 = new ƒ.Vector2();
+            for (let y: number = -2; y <= 2; y++) {
+                for (let x: number = -2; x <= 2; x++) {
+                    this.grid.setTile({ origin: false, type: "goddess" }, pos.set(Math.floor(grid.size.x / 2) + x, Math.floor(grid.size.y / 2) + y));
+                }
+            }
         }
 
         async enable(): Promise<void> {
@@ -44,8 +52,9 @@ namespace Script {
             const buttons: HTMLButtonElement[] = [];
 
             for (let build of Building.all) {
+                if (!build.includeInMenu) continue;
                 const button = createElementAdvanced("button", {
-                    innerHTML : `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`,
+                    innerHTML: `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`,
                     classes: ["build"],
                 })
                 if (Data.food < build.costFood || Data.stone < build.costStone) button.disabled = true;
@@ -77,28 +86,46 @@ namespace Script {
             let tilePos = this.tilePositionFromMouseEvent(_event);
             let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
             if (this.currentPositionOccupied) return;
-            this.forEachSelectedTile(this.currentPosition, (tile, pos) => {
+            this.forEachSelectedTile(this.currentPosition, this.selectedBuilding.size, (tile, pos) => {
                 this.grid.setTile({ type: "test", origin: this.currentPosition.equals(pos) }, pos);
             });
             this.highlightGrid(_event);
 
-            // visually add building
-            let marker = await ƒ.Project.createGraphInstance(this.selectedBuilding.graph);
-            viewport.getBranch().appendChild(marker);
-            marker.mtxLocal.translation = new ƒ.Vector3(this.currentWorldPosition.x + this.selectedBuilding.size / 2, 0, this.currentWorldPosition.y + this.selectedBuilding.size / 2);
+            let marker = await this.placeGraphOnGrid(this.currentPosition, this.selectedBuilding.size, this.selectedBuilding.graph);
 
             // make it so building needs to be built before it takes effect
             const jobCmp = getDerivedComponent(marker, JobProvider);
-            if(jobCmp) {jobCmp.activate(false)}
+            if (jobCmp) { jobCmp.activate(false) }
+            const bonusCmp = marker.getComponent(BonusProvider);
+            if (bonusCmp) { bonusCmp.activate(false) }
             const buildupCmp = new JobProviderBuild();
             buildupCmp.jobDuration = 2000 * (this.selectedBuilding.costFood + this.selectedBuilding.costStone);
             marker.addComponent(buildupCmp);
+
+        }
+
+        public async placeGraphOnGrid(_posOfTile: ƒ.Vector2, _size: number, _graph: ƒ.Graph): Promise<ƒ.Node> {
+            this.forEachSelectedTile(_posOfTile, _size, (t, pos) => {
+                this.grid.setTile({ type: "test", origin: _posOfTile.equals(pos) }, pos);
+            });
+
+            // visually add building
+            let marker = await ƒ.Project.createGraphInstance(_graph);
+            viewport.getBranch().appendChild(marker);
+            let worldPos = this.grid.tilePosToWorldPos(_posOfTile);
+            marker.mtxLocal.translation = new ƒ.Vector3(worldPos.x + _size / 2, 0, worldPos.y + _size / 2);
+
+            setTimeout(()=>{
+                EumlingCreator.updateButton();
+            }, 1);
+
+            return marker;
         }
 
         private checkAndSetCurrentPosition(_startPos: ƒ.Vector2): boolean {
             let occupied: boolean = false;
             let valid: boolean = true;
-            this.forEachSelectedTile(_startPos, (tile) => {
+            this.forEachSelectedTile(_startPos, this.selectedBuilding.size, (tile) => {
                 if (tile === null) {
                     valid = false;
                 }
@@ -118,10 +145,10 @@ namespace Script {
             return true;
         }
 
-        private forEachSelectedTile(_startPos: ƒ.Vector2, callback: (tile?: Tile, pos?: ƒ.Vector2) => void) {
+        private forEachSelectedTile(_startPos: ƒ.Vector2, _size: number, callback: (tile?: Tile, pos?: ƒ.Vector2) => void) {
             let pos = ƒ.Recycler.get(ƒ.Vector2);
-            for (let x: number = _startPos.x; x < _startPos.x + this.selectedBuilding.size; x++) {
-                for (let y: number = _startPos.y; y < _startPos.y + this.selectedBuilding.size; y++) {
+            for (let x: number = _startPos.x; x < _startPos.x + _size; x++) {
+                for (let y: number = _startPos.y; y < _startPos.y + _size; y++) {
                     let tile = this.grid.getTile(pos.set(x, y), false);
                     callback(tile, pos);
                 }

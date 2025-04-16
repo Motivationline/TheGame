@@ -41,5 +41,36 @@ namespace Script {
     document.getElementById("click-start").remove();
 
     setupUI();
+
+    createStartingWorld();
+  }
+
+  async function createStartingWorld() {
+    const pos = new ƒ.Vector2(15, 15);
+
+    // starter hut
+    let starterHut = Building.all.find(b => b.name === "Wohnhaus");
+    if (starterHut) await gridBuilder.placeGraphOnGrid(pos, starterHut.size, starterHut.graph);
+
+    // gathering spots
+    let foodSpot = Building.all.find(b => b.name === "GatherFood");
+    if (foodSpot) {
+      for (let i: number = 0; i < 20; i++) {
+        pos.set(Math.floor(randomRange(0, 44)), Math.floor(randomRange(0, 44)));
+        let tile = grid.getTile(pos, false);
+        if (tile) continue;
+        await gridBuilder.placeGraphOnGrid(pos, foodSpot.size, foodSpot.graph);
+      }
+    }
+    // gathering spots
+    let stoneSpot = Building.all.find(b => b.name === "GatherStone");
+    if (stoneSpot) {
+      for (let i: number = 0; i < 20; i++) {
+        pos.set(Math.floor(randomRange(0, 44)), Math.floor(randomRange(0, 44)));
+        let tile = grid.getTile(pos, false);
+        if (tile) continue;
+        await gridBuilder.placeGraphOnGrid(pos, stoneSpot.size, stoneSpot.graph);
+      }
+    }
   }
 }

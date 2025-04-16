@@ -27,6 +27,10 @@ namespace Script {
             this.#tiles = newTiles;
         }
 
+        get size() {
+            return this.#size;
+        }
+
         public getTile(_pos: ƒ.Vector2, inWorldCoordinates: boolean = true): Tile | undefined | null {
             if (inWorldCoordinates)
                 _pos = this.worldPosToTilePos(_pos);

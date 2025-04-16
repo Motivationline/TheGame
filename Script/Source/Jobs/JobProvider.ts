@@ -39,7 +39,7 @@ namespace Script {
         }
         update(_e: CustomEvent<UpdateEvent>): void {
             if (this.#currentCooldown > 0) {
-                this.#currentCooldown -= _e.detail.deltaTime
+                this.#currentCooldown -= _e.detail.deltaTime;
             }
         }
     }
@@ -65,7 +65,7 @@ namespace Script {
         jobFinish(): void {
             super.jobFinish();
             for (let cmp of this.node.getAllComponents()) {
-                if (cmp instanceof JobProvider) {
+                if (cmp instanceof JobProvider || cmp instanceof BonusProvider) {
                     cmp.activate(true);
                 }
             }

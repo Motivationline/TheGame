@@ -72,27 +72,159 @@ var Script;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
+    var ƒ = FudgeCore;
+    class UpdateScriptComponent extends ƒ.Component {
+        constructor() {
+            super();
+            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
+                return;
+            this.addEventListener("preupdate", this.prestart, { once: true });
+            this.addEventListener("update", this.start, { once: true });
+            this.addEventListener("update", this.update);
+            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.remove);
+            this.addEventListener("componentDeactivate" /* ƒ.EVENT.COMPONENT_DEACTIVATE */, this.remove);
+        }
+        // runs updates of all updateable components
+        static updateAllInBranch(_branch) {
+            let event = new CustomEvent("update", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
+            let preEvent = new CustomEvent("preupdate", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
+            for (let node of _branch) {
+                for (let component of node.getAllComponents()) {
+                    if (component instanceof UpdateScriptComponent) {
+                        if (component.active)
+                            component.dispatchEvent(preEvent);
+                    }
+                }
+            }
+            for (let node of _branch) {
+                for (let component of node.getAllComponents()) {
+                    if (component instanceof UpdateScriptComponent) {
+                        if (component.active)
+                            component.dispatchEvent(event);
+                    }
+                }
+            }
+        }
+    }
+    Script.UpdateScriptComponent = UpdateScriptComponent;
+})(Script || (Script = {}));
+/// <reference path="../Plugins/UpdateScriptComponent.ts" />
+var Script;
+/// <reference path="../Plugins/UpdateScriptComponent.ts" />
+(function (Script) {
+    var ƒ = FudgeCore;
+    let BonusType;
+    (function (BonusType) {
+        BonusType[BonusType["ADD"] = 0] = "ADD";
+        BonusType[BonusType["MULTIPLY"] = 1] = "MULTIPLY";
+    })(BonusType = Script.BonusType || (Script.BonusType = {}));
+    let BonusData;
+    (function (BonusData) {
+        BonusData[BonusData["EUMLING_AMOUNT"] = 0] = "EUMLING_AMOUNT";
+        BonusData[BonusData["STONE"] = 1] = "STONE";
+        BonusData[BonusData["FOOD"] = 2] = "FOOD";
+    })(BonusData = Script.BonusData || (Script.BonusData = {}));
+    let BonusProvider = (() => {
+        var _a;
+        let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
+        let _classDescriptor;
+        let _classExtraInitializers = [];
+        let _classThis;
+        let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
+        let _bonusType_decorators;
+        let _bonusType_initializers = [];
+        let _bonusData_decorators;
+        let _bonusData_initializers = [];
+        let _amount_decorators;
+        let _amount_initializers = [];
+        var BonusProvider = class extends _classSuper {
+            static { _classThis = this; }
+            constructor() {
+                super(...arguments);
+                this.bonusType = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _bonusType_initializers, BonusType.ADD));
+                this.bonusData = __runInitializers(this, _bonusData_initializers, void 0);
+                this.amount = __runInitializers(this, _amount_initializers, 1);
+            }
+            static {
+                const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+                _bonusType_decorators = [ƒ.serialize(BonusType)];
+                _bonusData_decorators = [ƒ.serialize(BonusData)];
+                _amount_decorators = [ƒ.serialize(Number)];
+                __esDecorate(null, null, _bonusType_decorators, { kind: "field", name: "bonusType", static: false, private: false, access: { has: obj => "bonusType" in obj, get: obj => obj.bonusType, set: (obj, value) => { obj.bonusType = value; } }, metadata: _metadata }, _bonusType_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _bonusData_decorators, { kind: "field", name: "bonusData", static: false, private: false, access: { has: obj => "bonusData" in obj, get: obj => obj.bonusData, set: (obj, value) => { obj.bonusData = value; } }, metadata: _metadata }, _bonusData_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _amount_decorators, { kind: "field", name: "amount", static: false, private: false, access: { has: obj => "amount" in obj, get: obj => obj.amount, set: (obj, value) => { obj.amount = value; } }, metadata: _metadata }, _amount_initializers, _instanceExtraInitializers);
+                __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+                BonusProvider = _classThis = _classDescriptor.value;
+                if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            }
+            static { this.BonusProviders = new Map(); }
+            start(_e) {
+                if (!BonusProvider.BonusProviders.has(this.bonusData))
+                    BonusProvider.BonusProviders.set(this.bonusData, new Set());
+                BonusProvider.BonusProviders.get(this.bonusData)?.add(this);
+            }
+            remove(_e) {
+                BonusProvider.BonusProviders.get(this.bonusData)?.delete(this);
+            }
+            static getBonus(data, startAmount = 1) {
+                let set = BonusProvider.BonusProviders.get(data);
+                if (!set)
+                    return startAmount;
+                let arr = set.values().toArray().sort((a, b) => {
+                    if (a.bonusType === b.bonusType)
+                        return 0;
+                    if (a.bonusType === BonusType.ADD)
+                        return -1;
+                    if (b.bonusType === BonusType.ADD)
+                        return 1;
+                    return 0;
+                });
+                for (let el of arr) {
+                    if (el.bonusType === BonusType.ADD) {
+                        startAmount += el.amount;
+                    }
+                    else if (el.bonusType === BonusType.MULTIPLY) {
+                        startAmount *= el.amount;
+                    }
+                }
+                return startAmount;
+            }
+            static {
+                __runInitializers(_classThis, _classExtraInitializers);
+            }
+        };
+        return BonusProvider = _classThis;
+    })();
+    Script.BonusProvider = BonusProvider;
+})(Script || (Script = {}));
+/// <reference path="Buildings/BonusProvider.ts" />
+var Script;
+/// <reference path="Buildings/BonusProvider.ts" />
+(function (Script) {
     class Data {
         static #stone = 0;
         static #food = 0;
-        static { this.eumlingLimit = 0; }
         static { this.gatherBonusFood = 1; }
         static { this.gatherBonusStone = 1; }
         static set food(_food) {
             this.#food = _food;
             document.getElementById("resource-food").innerText = this.#food.toString();
-            this.updateBuildButtons();
+            this.updateCostButtons();
         }
         static set stone(_stone) {
             this.#stone = _stone;
             document.getElementById("resource-stone").innerText = this.#stone.toString();
-            this.updateBuildButtons();
+            this.updateCostButtons();
         }
         static get food() {
             return this.#food;
         }
         static get stone() {
             return this.#stone;
+        }
+        static get eumlingLimit() {
+            return Script.BonusProvider.getBonus(Script.BonusData.EUMLING_AMOUNT, 0);
         }
         static canAffordBuilding(building) {
             return building.costFood <= this.#food && building.costStone <= this.#stone;
@@ -104,17 +236,28 @@ var Script;
             this.stone -= building.costStone;
             return true;
         }
-        static updateBuildButtons() {
+        static updateCostButtons() {
             const elements = document.querySelectorAll("button.build");
             for (let element of elements) {
-                if (element.dataset.costFood && element.dataset.costStone) {
-                    if (Number(element.dataset.costFood) > this.#food || Number(element.dataset.costStone) > this.#stone) {
-                        element.disabled = true;
+                let enabled = true;
+                for (let set in element.dataset) {
+                    if (set === "costFood") {
+                        if (Number(element.dataset.costFood) > this.#food) {
+                            enabled = false;
+                        }
                     }
-                    else {
-                        element.disabled = false;
+                    else if (set === "costStone") {
+                        if (Number(element.dataset.costStone) > this.#stone) {
+                            enabled = false;
+                        }
+                    }
+                    else if (set === "eumlingLimit") {
+                        if (Number(element.dataset.eumlingLimit) > this.eumlingLimit) {
+                            enabled = false;
+                        }
                     }
                 }
+                element.disabled = !enabled;
             }
         }
     }
@@ -134,6 +277,9 @@ var Script;
         static { this.createEumling = async () => {
             let current = this.eumlingPrices[this.eumlingAmount];
             if (!current)
+                return;
+            // check if there is space for new eumling
+            if (Script.Data.eumlingLimit <= this.eumlingAmount)
                 return;
             if (Script.Data.food < current.food || Script.Data.stone < current.stone)
                 return;
@@ -155,13 +301,14 @@ var Script;
             }
             btn.dataset.costFood = current.food.toString();
             btn.dataset.costStone = current.stone.toString();
-            if (Script.Data.food < current.food || Script.Data.stone < current.stone) {
+            btn.dataset.eumlingLimit = (this.eumlingAmount + 1).toString();
+            if (Script.Data.food < current.food || Script.Data.stone < current.stone || Script.Data.eumlingLimit <= this.eumlingAmount) {
                 btn.disabled = true;
             }
             else {
                 btn.disabled = false;
             }
-            btn.innerHTML = `+ Eumling<br>${current.food} Food, ${current.stone} Stone`;
+            btn.innerHTML = `+ Eumling (${this.eumlingAmount} / ${Script.Data.eumlingLimit})<br>${current.food} Food, ${current.stone} Stone`;
         }
     }
     Script.EumlingCreator = EumlingCreator;
@@ -189,6 +336,9 @@ var Script;
                 }
             }
             this.#tiles = newTiles;
+        }
+        get size() {
+            return this.#size;
         }
         getTile(_pos, inWorldCoordinates = true) {
             if (inWorldCoordinates)
@@ -243,6 +393,36 @@ var Script;
         canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: Script.viewport }));
         document.getElementById("click-start").remove();
         Script.setupUI();
+        createStartingWorld();
+    }
+    async function createStartingWorld() {
+        const pos = new ƒ.Vector2(15, 15);
+        // starter hut
+        let starterHut = Script.Building.all.find(b => b.name === "Wohnhaus");
+        if (starterHut)
+            await Script.gridBuilder.placeGraphOnGrid(pos, starterHut.size, starterHut.graph);
+        // gathering spots
+        let foodSpot = Script.Building.all.find(b => b.name === "GatherFood");
+        if (foodSpot) {
+            for (let i = 0; i < 20; i++) {
+                pos.set(Math.floor(Script.randomRange(0, 44)), Math.floor(Script.randomRange(0, 44)));
+                let tile = Script.grid.getTile(pos, false);
+                if (tile)
+                    continue;
+                await Script.gridBuilder.placeGraphOnGrid(pos, foodSpot.size, foodSpot.graph);
+            }
+        }
+        // gathering spots
+        let stoneSpot = Script.Building.all.find(b => b.name === "GatherStone");
+        if (stoneSpot) {
+            for (let i = 0; i < 20; i++) {
+                pos.set(Math.floor(Script.randomRange(0, 44)), Math.floor(Script.randomRange(0, 44)));
+                let tile = Script.grid.getTile(pos, false);
+                if (tile)
+                    continue;
+                await Script.gridBuilder.placeGraphOnGrid(pos, stoneSpot.size, stoneSpot.graph);
+            }
+        }
     }
 })(Script || (Script = {}));
 var Script;
@@ -273,18 +453,19 @@ var Script;
                 let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
                 if (this.currentPositionOccupied)
                     return;
-                this.forEachSelectedTile(this.currentPosition, (tile, pos) => {
+                this.forEachSelectedTile(this.currentPosition, this.selectedBuilding.size, (tile, pos) => {
                     this.grid.setTile({ type: "test", origin: this.currentPosition.equals(pos) }, pos);
                 });
                 this.highlightGrid(_event);
-                // visually add building
-                let marker = await ƒ.Project.createGraphInstance(this.selectedBuilding.graph);
-                Script.viewport.getBranch().appendChild(marker);
-                marker.mtxLocal.translation = new ƒ.Vector3(this.currentWorldPosition.x + this.selectedBuilding.size / 2, 0, this.currentWorldPosition.y + this.selectedBuilding.size / 2);
+                let marker = await this.placeGraphOnGrid(this.currentPosition, this.selectedBuilding.size, this.selectedBuilding.graph);
                 // make it so building needs to be built before it takes effect
                 const jobCmp = Script.getDerivedComponent(marker, Script.JobProvider);
                 if (jobCmp) {
                     jobCmp.activate(false);
+                }
+                const bonusCmp = marker.getComponent(Script.BonusProvider);
+                if (bonusCmp) {
+                    bonusCmp.activate(false);
                 }
                 const buildupCmp = new Script.JobProviderBuild();
                 buildupCmp.jobDuration = 2000 * (this.selectedBuilding.costFood + this.selectedBuilding.costStone);
@@ -294,6 +475,13 @@ var Script;
                 return;
             this.wrapper = document.getElementById("build-menu");
             this.buildings = document.getElementById("build-menu-buildings");
+            // set center to occupied
+            let pos = new ƒ.Vector2();
+            for (let y = -2; y <= 2; y++) {
+                for (let x = -2; x <= 2; x++) {
+                    this.grid.setTile({ origin: false, type: "goddess" }, pos.set(Math.floor(grid.size.x / 2) + x, Math.floor(grid.size.y / 2) + y));
+                }
+            }
         }
         async enable() {
             this.wrapper.classList.remove("hidden");
@@ -317,6 +505,8 @@ var Script;
         generateBuildingButtons() {
             const buttons = [];
             for (let build of Script.Building.all) {
+                if (!build.includeInMenu)
+                    continue;
                 const button = Script.createElementAdvanced("button", {
                     innerHTML: `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`,
                     classes: ["build"],
@@ -332,10 +522,24 @@ var Script;
             }
             this.buildings.replaceChildren(...buttons);
         }
+        async placeGraphOnGrid(_posOfTile, _size, _graph) {
+            this.forEachSelectedTile(_posOfTile, _size, (t, pos) => {
+                this.grid.setTile({ type: "test", origin: _posOfTile.equals(pos) }, pos);
+            });
+            // visually add building
+            let marker = await ƒ.Project.createGraphInstance(_graph);
+            Script.viewport.getBranch().appendChild(marker);
+            let worldPos = this.grid.tilePosToWorldPos(_posOfTile);
+            marker.mtxLocal.translation = new ƒ.Vector3(worldPos.x + _size / 2, 0, worldPos.y + _size / 2);
+            setTimeout(() => {
+                Script.EumlingCreator.updateButton();
+            }, 1);
+            return marker;
+        }
         checkAndSetCurrentPosition(_startPos) {
             let occupied = false;
             let valid = true;
-            this.forEachSelectedTile(_startPos, (tile) => {
+            this.forEachSelectedTile(_startPos, this.selectedBuilding.size, (tile) => {
                 if (tile === null) {
                     valid = false;
                 }
@@ -356,10 +560,10 @@ var Script;
             this.currentPositionOccupied = occupied;
             return true;
         }
-        forEachSelectedTile(_startPos, callback) {
+        forEachSelectedTile(_startPos, _size, callback) {
             let pos = ƒ.Recycler.get(ƒ.Vector2);
-            for (let x = _startPos.x; x < _startPos.x + this.selectedBuilding.size; x++) {
-                for (let y = _startPos.y; y < _startPos.y + this.selectedBuilding.size; y++) {
+            for (let x = _startPos.x; x < _startPos.x + _size; x++) {
+                for (let y = _startPos.y; y < _startPos.y + _size; y++) {
                     let tile = this.grid.getTile(pos.set(x, y), false);
                     callback(tile, pos);
                 }
@@ -381,44 +585,6 @@ var Script;
         }
     }
     Script.GridBuilder = GridBuilder;
-})(Script || (Script = {}));
-var Script;
-(function (Script) {
-    var ƒ = FudgeCore;
-    class UpdateScriptComponent extends ƒ.Component {
-        constructor() {
-            super();
-            if (ƒ.Project.mode == ƒ.MODE.EDITOR)
-                return;
-            this.addEventListener("preupdate", this.prestart, { once: true });
-            this.addEventListener("update", this.start, { once: true });
-            this.addEventListener("update", this.update);
-            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.remove);
-            this.addEventListener("componentDeactivate" /* ƒ.EVENT.COMPONENT_DEACTIVATE */, this.remove);
-        }
-        // runs updates of all updateable components
-        static updateAllInBranch(_branch) {
-            let event = new CustomEvent("update", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
-            let preEvent = new CustomEvent("preupdate", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
-            for (let node of _branch) {
-                for (let component of node.getAllComponents()) {
-                    if (component instanceof UpdateScriptComponent) {
-                        if (component.active)
-                            component.dispatchEvent(preEvent);
-                    }
-                }
-            }
-            for (let node of _branch) {
-                for (let component of node.getAllComponents()) {
-                    if (component instanceof UpdateScriptComponent) {
-                        if (component.active)
-                            component.dispatchEvent(event);
-                    }
-                }
-            }
-        }
-    }
-    Script.UpdateScriptComponent = UpdateScriptComponent;
 })(Script || (Script = {}));
 /// <reference path="../Plugins/UpdateScriptComponent.ts" />
 var Script;
@@ -538,7 +704,7 @@ var Script;
         jobFinish() {
             super.jobFinish();
             for (let cmp of this.node.getAllComponents()) {
-                if (cmp instanceof JobProvider) {
+                if (cmp instanceof JobProvider || cmp instanceof Script.BonusProvider) {
                     cmp.activate(true);
                 }
             }
@@ -555,13 +721,15 @@ var Script;
 (function (Script) {
     var ƒ = FudgeCore;
     Script.availableJobs = new Set([Script.JobType.NONE, Script.JobType.GATHER_FOOD, Script.JobType.GATHER_STONE, Script.JobType.BUILD]);
+    Script.grid = new Script.Grid(new ƒ.Vector2(44, 44));
+    Script.gridBuilder = new Script.GridBuilder(Script.grid);
     let uis;
     let activeUI;
     function setupUI() {
         if (ƒ.Project.mode === ƒ.MODE.EDITOR)
             return;
         uis = new Map([
-            ["build", new Script.GridBuilder(new Script.Grid(new ƒ.Vector2(44, 44)))],
+            ["build", Script.gridBuilder],
             ["close", new PickController()],
             ["job", new JobController()],
         ]);
@@ -729,6 +897,8 @@ var Script;
         let _costFood_initializers = [];
         let _costStone_decorators;
         let _costStone_initializers = [];
+        let _includeInMenu_decorators;
+        let _includeInMenu_initializers = [];
         var Building = class extends _classSuper {
             static { _classThis = this; }
             static {
@@ -738,11 +908,13 @@ var Script;
                 _name_decorators = [ƒ.serialize(String)];
                 _costFood_decorators = [ƒ.serialize(Number)];
                 _costStone_decorators = [ƒ.serialize(Number)];
+                _includeInMenu_decorators = [ƒ.serialize(Boolean)];
                 __esDecorate(null, null, _graph_decorators, { kind: "field", name: "graph", static: false, private: false, access: { has: obj => "graph" in obj, get: obj => obj.graph, set: (obj, value) => { obj.graph = value; } }, metadata: _metadata }, _graph_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _size_decorators, { kind: "field", name: "size", static: false, private: false, access: { has: obj => "size" in obj, get: obj => obj.size, set: (obj, value) => { obj.size = value; } }, metadata: _metadata }, _size_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: obj => "name" in obj, get: obj => obj.name, set: (obj, value) => { obj.name = value; } }, metadata: _metadata }, _name_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _costFood_decorators, { kind: "field", name: "costFood", static: false, private: false, access: { has: obj => "costFood" in obj, get: obj => obj.costFood, set: (obj, value) => { obj.costFood = value; } }, metadata: _metadata }, _costFood_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _costStone_decorators, { kind: "field", name: "costStone", static: false, private: false, access: { has: obj => "costStone" in obj, get: obj => obj.costStone, set: (obj, value) => { obj.costStone = value; } }, metadata: _metadata }, _costStone_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _includeInMenu_decorators, { kind: "field", name: "includeInMenu", static: false, private: false, access: { has: obj => "includeInMenu" in obj, get: obj => obj.includeInMenu, set: (obj, value) => { obj.includeInMenu = value; } }, metadata: _metadata }, _includeInMenu_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 Building = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -758,10 +930,11 @@ var Script;
                 this.name = __runInitializers(this, _name_initializers, "");
                 this.costFood = __runInitializers(this, _costFood_initializers, 5);
                 this.costStone = __runInitializers(this, _costStone_initializers, 5);
+                this.includeInMenu = __runInitializers(this, _includeInMenu_initializers, false);
                 if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                     return;
                 ƒ.Project.addEventListener("resourcesLoaded" /* ƒ.EVENT.RESOURCES_LOADED */, () => {
-                    Building.all.push({ graph: this.graph, size: this.size, name: this.name, costFood: this.costFood, costStone: this.costStone });
+                    Building.all.push(this);
                 });
             }
             static {
@@ -997,7 +1170,7 @@ var Script;
                     }
                 };
                 this.build = (deltaTime) => {
-                    console.log(this.#progress);
+                    // console.log(this.#progress);
                     if (this.#progress < 10) {
                         const target = this.findAndSetTargetForJob(this.#job);
                         if (target) {
@@ -1096,7 +1269,7 @@ var Script;
             }
             static findClosestJobProvider(_job, _location) {
                 const foundProviders = [];
-                console.log(_job, Script.JobProvider.JobProviders);
+                // console.log(_job, JobProvider.JobProviders);
                 for (let provider of Script.JobProvider.JobProviders) {
                     if (provider.jobType === _job) {
                         foundProviders.push(provider);
@@ -1117,7 +1290,7 @@ var Script;
                 if (this.#job !== Script.JobType.NONE && this.#job !== Script.JobType.BUILD) {
                     return;
                 }
-                this.#progress = 3;
+                this.#progress = 2;
                 this.#timers.forEach(t => t.clear());
                 this.#timers.length = 0;
                 this.#prevDistance = Infinity;

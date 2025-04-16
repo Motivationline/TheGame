@@ -8,18 +8,52 @@ declare namespace Script {
     }
 }
 declare namespace Script {
+    import ƒ = FudgeCore;
+    interface UpdateEvent {
+        deltaTime: number;
+    }
+    abstract class UpdateScriptComponent extends ƒ.Component {
+        constructor();
+        static updateAllInBranch(_branch: ƒ.Node): void;
+        prestart?(_e: CustomEvent<UpdateEvent>): void;
+        start?(_e: CustomEvent<UpdateEvent>): void;
+        update?(_e: CustomEvent<UpdateEvent>): void;
+        remove?(_e: CustomEvent): void;
+    }
+}
+declare namespace Script {
+    enum BonusType {
+        ADD = 0,
+        MULTIPLY = 1
+    }
+    enum BonusData {
+        EUMLING_AMOUNT = 0,
+        STONE = 1,
+        FOOD = 2
+    }
+    class BonusProvider extends UpdateScriptComponent {
+        bonusType: BonusType;
+        bonusData: BonusData;
+        amount: number;
+        static BonusProviders: Map<BonusData, Set<BonusProvider>>;
+        start(_e: CustomEvent<UpdateEvent>): void;
+        remove(_e: CustomEvent): void;
+        static getBonus(data: BonusData, startAmount?: number): number;
+    }
+}
+declare namespace Script {
     class Data {
         #private;
-        static eumlingLimit: number;
         static gatherBonusFood: number;
         static gatherBonusStone: number;
         static set food(_food: number);
         static set stone(_stone: number);
         static get food(): number;
         static get stone(): number;
+        static get eumlingLimit(): number;
         static canAffordBuilding(building: Build): boolean;
         static buyBuilding(building: Build): boolean;
-        private static updateBuildButtons;
+        private static updateCostButtons;
     }
 }
 declare namespace Script {
@@ -43,6 +77,7 @@ declare namespace Script {
         #private;
         constructor(_size: ƒ.Vector2);
         set size(_size: ƒ.Vector2);
+        get size(): ƒ.Vector2;
         getTile(_pos: ƒ.Vector2, inWorldCoordinates?: boolean): Tile | undefined | null;
         setTile(_tile: Tile | undefined, _pos: ƒ.Vector2): void;
         worldPosToTilePos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
@@ -71,25 +106,12 @@ declare namespace Script {
         private generateBuildingButtons;
         private highlightGrid;
         private placeOnGrid;
+        placeGraphOnGrid(_posOfTile: ƒ.Vector2, _size: number, _graph: ƒ.Graph): Promise<ƒ.Node>;
         private checkAndSetCurrentPosition;
         private forEachSelectedTile;
         private changeTileColor;
         private tilePositionFromMouseEvent;
         private selectBuilding;
-    }
-}
-declare namespace Script {
-    import ƒ = FudgeCore;
-    interface UpdateEvent {
-        deltaTime: number;
-    }
-    abstract class UpdateScriptComponent extends ƒ.Component {
-        constructor();
-        static updateAllInBranch(_branch: ƒ.Node): void;
-        prestart?(_e: CustomEvent<UpdateEvent>): void;
-        start?(_e: CustomEvent<UpdateEvent>): void;
-        update?(_e: CustomEvent<UpdateEvent>): void;
-        remove?(_e: CustomEvent): void;
     }
 }
 declare namespace Script {
@@ -136,6 +158,8 @@ declare namespace Script {
 }
 declare namespace Script {
     const availableJobs: Set<JobType>;
+    const grid: Grid;
+    const gridBuilder: GridBuilder;
     interface ToggleableUI {
         enable: () => void;
         disable: () => void;
@@ -150,6 +174,7 @@ declare namespace Script {
         name: string;
         costFood: number;
         costStone: number;
+        includeInMenu: boolean;
     }
 }
 declare namespace Script {
@@ -162,6 +187,7 @@ declare namespace Script {
         name: string;
         costFood: number;
         costStone: number;
+        includeInMenu: boolean;
         constructor();
     }
 }

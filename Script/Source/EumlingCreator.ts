@@ -11,6 +11,8 @@ namespace Script {
         static createEumling = async () => {
             let current = this.eumlingPrices[this.eumlingAmount];
             if (!current) return;
+            // check if there is space for new eumling
+            if (Data.eumlingLimit <= this.eumlingAmount) return;
             if (Data.food < current.food || Data.stone < current.stone) return;
             Data.food -= current.food;
             Data.stone -= current.stone;
@@ -33,12 +35,13 @@ namespace Script {
             }
             btn.dataset.costFood = current.food.toString();
             btn.dataset.costStone = current.stone.toString();
-            if (Data.food < current.food || Data.stone < current.stone) {
+            btn.dataset.eumlingLimit = (this.eumlingAmount + 1).toString();
+            if (Data.food < current.food || Data.stone < current.stone || Data.eumlingLimit <= this.eumlingAmount) {
                 btn.disabled = true;
             } else {
                 btn.disabled = false;
-            }
-            btn.innerHTML = `+ Eumling<br>${current.food} Food, ${current.stone} Stone`
+            }            
+            btn.innerHTML = `+ Eumling (${this.eumlingAmount} / ${Data.eumlingLimit})<br>${current.food} Food, ${current.stone} Stone`
         }
     }
     if (ƒ.Project.mode === ƒ.MODE.RUNTIME) {

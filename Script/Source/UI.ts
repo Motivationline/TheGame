@@ -6,6 +6,8 @@ namespace Script {
     import ƒ = FudgeCore;
 
     export const availableJobs: Set<JobType> = new Set([JobType.NONE, JobType.GATHER_FOOD, JobType.GATHER_STONE, JobType.BUILD]);
+    export const grid = new Grid(new ƒ.Vector2(44, 44));
+    export const gridBuilder = new GridBuilder(grid)
 
     export interface ToggleableUI {
         enable: () => void;
@@ -17,7 +19,7 @@ namespace Script {
         if (ƒ.Project.mode === ƒ.MODE.EDITOR) return;
 
         uis = new Map<string, ToggleableUI>([
-            ["build", new GridBuilder(new Grid(new ƒ.Vector2(44, 44)))],
+            ["build", gridBuilder],
             ["close", new PickController()],
             ["job", new JobController()],
         ])
