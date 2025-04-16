@@ -23,6 +23,17 @@ declare namespace Script {
     }
 }
 declare namespace Script {
+    class EumlingCreator {
+        static eumlingPrices: {
+            stone: number;
+            food: number;
+        }[];
+        static eumlingAmount: number;
+        static createEumling: () => Promise<void>;
+        static updateButton(): void;
+    }
+}
+declare namespace Script {
     import ƒ = FudgeCore;
     interface Tile {
         type: string;
@@ -186,6 +197,7 @@ declare namespace Script {
         static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined;
         start(_e: CustomEvent<UpdateEvent>): void;
         update(_e: CustomEvent<UpdateEvent>): void;
+        moveAwayNow(): void;
         private gatherResource;
         private build;
         private idle;

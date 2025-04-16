@@ -36,7 +36,7 @@ namespace Script {
         }
 
         private static updateBuildButtons() {
-            const elements: NodeListOf<HTMLButtonElement> = document.getElementById("build-menu-buildings").childNodes as NodeListOf<HTMLButtonElement>;
+            const elements: NodeListOf<HTMLButtonElement> = document.querySelectorAll("button.build") as NodeListOf<HTMLButtonElement>;
             for(let element of elements) {
                 if(element.dataset.costFood && element.dataset.costStone){
                     if(Number(element.dataset.costFood) > this.#food || Number(element.dataset.costStone) > this.#stone) {

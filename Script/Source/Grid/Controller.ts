@@ -44,8 +44,10 @@ namespace Script {
             const buttons: HTMLButtonElement[] = [];
 
             for (let build of Building.all) {
-                const button = document.createElement("button");
-                button.innerHTML = `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`;
+                const button = createElementAdvanced("button", {
+                    innerHTML : `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`,
+                    classes: ["build"],
+                })
                 if (Data.food < build.costFood || Data.stone < build.costStone) button.disabled = true;
                 button.dataset.costFood = build.costFood.toString();
                 button.dataset.costStone = build.costStone.toString();

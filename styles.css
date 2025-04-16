@@ -47,3 +47,9 @@ div.overlay > * {
   pointer-events: none;
   background-color: white;
 }
+
+#eumling-plus {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}

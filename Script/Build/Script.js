@@ -105,7 +105,7 @@ var Script;
             return true;
         }
         static updateBuildButtons() {
-            const elements = document.getElementById("build-menu-buildings").childNodes;
+            const elements = document.querySelectorAll("button.build");
             for (let element of elements) {
                 if (element.dataset.costFood && element.dataset.costStone) {
                     if (Number(element.dataset.costFood) > this.#food || Number(element.dataset.costStone) > this.#stone) {
@@ -119,6 +119,56 @@ var Script;
         }
     }
     Script.Data = Data;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    class EumlingCreator {
+        static { this.eumlingPrices = [
+            { food: 0, stone: 0 },
+            { food: 10, stone: 0 },
+            { food: 20, stone: 5 },
+            { food: 40, stone: 10 },
+        ]; }
+        static { this.eumlingAmount = 0; }
+        static { this.createEumling = async () => {
+            let current = this.eumlingPrices[this.eumlingAmount];
+            if (!current)
+                return;
+            if (Script.Data.food < current.food || Script.Data.stone < current.stone)
+                return;
+            Script.Data.food -= current.food;
+            Script.Data.stone -= current.stone;
+            let graph = ƒ.Project.getResourcesByName("Eumling")[0];
+            let node = await ƒ.Project.createGraphInstance(graph);
+            Script.viewport.getBranch().addChild(node);
+            node.getComponent(Script.JobTaker)?.moveAwayNow();
+            this.eumlingAmount += 1;
+            this.updateButton();
+        }; }
+        static updateButton() {
+            let btn = document.getElementById("eumling-btn");
+            let current = this.eumlingPrices[this.eumlingAmount];
+            if (!current) {
+                btn.classList.add("hidden");
+                return;
+            }
+            btn.dataset.costFood = current.food.toString();
+            btn.dataset.costStone = current.stone.toString();
+            if (Script.Data.food < current.food || Script.Data.stone < current.stone) {
+                btn.disabled = true;
+            }
+            else {
+                btn.disabled = false;
+            }
+            btn.innerHTML = `+ Eumling<br>${current.food} Food, ${current.stone} Stone`;
+        }
+    }
+    Script.EumlingCreator = EumlingCreator;
+    if (ƒ.Project.mode === ƒ.MODE.RUNTIME) {
+        document.getElementById("eumling-btn").addEventListener("click", EumlingCreator.createEumling);
+        EumlingCreator.updateButton();
+    }
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
@@ -267,8 +317,10 @@ var Script;
         generateBuildingButtons() {
             const buttons = [];
             for (let build of Script.Building.all) {
-                const button = document.createElement("button");
-                button.innerHTML = `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`;
+                const button = Script.createElementAdvanced("button", {
+                    innerHTML: `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`,
+                    classes: ["build"],
+                });
                 if (Script.Data.food < build.costFood || Script.Data.stone < build.costStone)
                     button.disabled = true;
                 button.dataset.costFood = build.costFood.toString();
@@ -645,8 +697,7 @@ var Script;
             let buttons = [];
             let keys = Script.availableJobs.values();
             for (let job of keys) {
-                const btn = document.createElement("button");
-                btn.innerText = Script.JobType[job];
+                const btn = Script.createElementAdvanced("button", { innerHTML: Script.JobType[job] });
                 btn.addEventListener("click", () => {
                     selectedEumling.getComponent(Script.JobTaker).job = job;
                     enableUI("close");
@@ -1003,8 +1054,8 @@ var Script;
                             node.addComponent(jp);
                             node.addComponent(new ƒ.ComponentTransform);
                             this.node.getParent().addChild(node);
-                            node.mtxLocal.translateX(Math.max(-20, Math.min(20, Math.sign(Script.randomRange(-1, 1)) * Script.randomRange(2, 5) + this.node.mtxWorld.translation.x)));
-                            node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Math.sign(Script.randomRange(-1, 1)) * Script.randomRange(2, 5) + this.node.mtxWorld.translation.z)));
+                            node.mtxLocal.translateX(Math.max(-20, Math.min(20, Math.sign(Script.randomRange(-1, 1)) * Script.randomRange(3, 5) + this.node.mtxWorld.translation.x)));
+                            node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Math.sign(Script.randomRange(-1, 1)) * Script.randomRange(3, 5) + this.node.mtxWorld.translation.z)));
                             this.#target = jp;
                             this.node.mtxLocal.lookAt(node.mtxLocal.translation);
                             this.#progress = 3;
@@ -1061,6 +1112,15 @@ var Script;
             }
             update(_e) {
                 this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
+            }
+            moveAwayNow() {
+                if (this.#job !== Script.JobType.NONE && this.#job !== Script.JobType.BUILD) {
+                    return;
+                }
+                this.#progress = 3;
+                this.#timers.forEach(t => t.clear());
+                this.#timers.length = 0;
+                this.#prevDistance = Infinity;
             }
             removeTarget() {
                 this.#needToRemoveTarget = false;

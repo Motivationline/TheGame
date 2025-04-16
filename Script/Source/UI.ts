@@ -150,8 +150,7 @@ namespace Script {
             let buttons: HTMLElement[] = [];
             let keys = availableJobs.values();
             for(let job of keys){
-                const btn = document.createElement("button");
-                btn.innerText = JobType[job];
+                const btn = createElementAdvanced("button", {innerHTML: JobType[job]});
                 btn.addEventListener("click", () => {
                     selectedEumling.getComponent(JobTaker).job = job;
                     enableUI("close");

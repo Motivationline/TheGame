@@ -62,6 +62,17 @@ namespace Script {
             this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
         }
 
+        moveAwayNow(){
+            if(this.#job !== JobType.NONE && this.#job !== JobType.BUILD) {
+                return;
+            }
+            this.#progress = 3;
+            this.#timers.forEach(t => t.clear());
+            this.#timers.length = 0;
+
+            this.#prevDistance = Infinity;
+        }
+
         private gatherResource = (deltaTime: number) => {
             switch (this.#progress) {
                 case 0: {
@@ -179,8 +190,8 @@ namespace Script {
                     node.addComponent(jp);
                     node.addComponent(new ƒ.ComponentTransform);
                     this.node.getParent().addChild(node);
-                    node.mtxLocal.translateX(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(2, 5) + this.node.mtxWorld.translation.x)));
-                    node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(2, 5) + this.node.mtxWorld.translation.z)));
+                    node.mtxLocal.translateX(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(3, 5) + this.node.mtxWorld.translation.x)));
+                    node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(3, 5) + this.node.mtxWorld.translation.z)));
                     this.#target = jp;
                     this.node.mtxLocal.lookAt(node.mtxLocal.translation);
                     this.#progress = 3;

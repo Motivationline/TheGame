@@ -309,7 +309,7 @@
                     "direction": "diagonal",
                     "near": 1,
                     "far": 2000,
-                    "aspect": 0.9800629590766002,
+                    "aspect": 1.3702702702702703,
                     "pivot": {
                       "translation": "[0, 0, 0]",
                       "rotation": "[0, 0, 0]",
@@ -325,7 +325,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-100, 86, -100]",
+                      "translation": "[-110, 86, -110]",
                       "rotation": "[29, 45, -0.0000012038336639031983]",
                       "scaling": "[1, 1, 1]"
                     },
@@ -441,12 +441,6 @@
               ]
             },
             "children": []
-          }
-        },
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "Graph|2025-04-09T07:19:42.868Z|15220"
           }
         },
         {
@@ -636,7 +630,7 @@
           {
             "ƒ.ComponentTransform": {
               "local": {
-                "translation": "[10, 0, 10]",
+                "translation": "[0, 0, 0]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
