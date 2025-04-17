@@ -70,12 +70,6 @@
       },
       "children": [
         {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446"
-          }
-        },
-        {
           "ƒ.Node": {
             "name": "New Node",
             "active": true,
@@ -115,6 +109,12 @@
               ]
             },
             "children": []
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-17T10:18:46.161Z|80005"
           }
         }
       ],
@@ -503,12 +503,6 @@
       },
       "children": [
         {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446"
-          }
-        },
-        {
           "ƒ.Node": {
             "name": "New Node",
             "active": true,
@@ -548,6 +542,12 @@
               ]
             },
             "children": []
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-17T10:27:56.733Z|67719"
           }
         }
       ],
@@ -1415,6 +1415,46 @@
       ],
       "idResource": "Graph|2025-04-14T09:45:20.097Z|41796",
       "type": "Graph"
+    }
+  },
+  "GraphGLTF|2025-04-17T10:17:57.332Z|63758": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-17T10:17:57.332Z|63758",
+      "type": "GraphGLTF",
+      "url": "Assets\\Indicator\\Stone_Gather_Indicator_Empty.glb"
+    }
+  },
+  "GraphGLTF|2025-04-17T10:18:46.161Z|80005": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-17T10:18:46.161Z|80005",
+      "type": "GraphGLTF",
+      "url": "Assets\\Indicator\\Stone_Gather_Indicator_Full.glb"
+    }
+  },
+  "GraphGLTF|2025-04-17T10:27:50.483Z|38263": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-17T10:27:50.483Z|38263",
+      "type": "GraphGLTF",
+      "url": "Assets\\Indicator\\Food_Gatherer_Empty.glb"
+    }
+  },
+  "GraphGLTF|2025-04-17T10:27:56.733Z|67719": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-17T10:27:56.733Z|67719",
+      "type": "GraphGLTF",
+      "url": "Assets\\Indicator\\Food_Gatherer_Full.glb"
     }
   }
 }
