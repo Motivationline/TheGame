@@ -112,14 +112,27 @@
                   },
                   {
                     "idResource": "Graph|2025-04-16T14:53:37.027Z|54709"
+                  },
+                  {
+                    "idResource": "Graph|2025-04-14T09:45:20.097Z|41796"
                   }
                 ]
               },
               {
-                "idResource": "MeshCube|2025-04-08T06:37:52.687Z|13643"
+                "name": "Mesh",
+                "entries": [
+                  {
+                    "idResource": "MeshCube|2025-04-08T06:37:52.687Z|13643"
+                  }
+                ]
               },
               {
-                "idResource": "Material|2025-04-08T06:38:46.828Z|94095"
+                "name": "Mat",
+                "entries": [
+                  {
+                    "idResource": "Material|2025-04-08T06:38:46.828Z|94095"
+                  }
+                ]
               }
             ]
           },
@@ -128,9 +141,6 @@
             "entries": [
               {
                 "idResource": "GraphGLTF|2025-04-14T09:45:18.085Z|81489"
-              },
-              {
-                "idResource": "Graph|2025-04-14T09:45:20.097Z|41796"
               }
             ]
           }
