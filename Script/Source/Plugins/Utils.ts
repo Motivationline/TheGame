@@ -102,4 +102,7 @@ namespace Script {
     export function getDerivedComponent<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T | undefined {
         return <T>node.getAllComponents().find(c => (c instanceof component));
     }
+    export function getDerivedComponents<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T[] {
+        return <T[]>node.getAllComponents().filter(c => (c instanceof component));
+    }
 }

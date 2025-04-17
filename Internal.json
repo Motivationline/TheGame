@@ -66,51 +66,17 @@
               "cooldown": 30000
             }
           }
+        ],
+        "BuildData": [
+          {
+            "Script.BuildData": {
+              "active": true,
+              "interactionRadius": 1
+            }
+          }
         ]
       },
       "children": [
-        {
-          "ƒ.Node": {
-            "name": "New Node",
-            "active": true,
-            "components": {
-              "ComponentMesh": [
-                {
-                  "ƒ.ComponentMesh": {
-                    "idMesh": "MeshQuad|2025-04-07T11:28:36.118Z|26450",
-                    "pivot": {
-                      "translation": "[0, 0.025, 0]",
-                      "rotation": "[-90, 0, 0]",
-                      "scaling": "[1, 1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    }
-                  }
-                }
-              ],
-              "ComponentMaterial": [
-                {
-                  "ƒ.ComponentMaterial": {
-                    "sortForAlpha": false,
-                    "clrPrimary": "[0.5882352941176471, 0.5725490196078431, 0.5725490196078431, 1]",
-                    "clrSecondary": "[1, 1, 1, 1]",
-                    "pivot": {
-                      "translation": "[0, 0]",
-                      "rotation": 0,
-                      "scaling": "[1, 1]"
-                    },
-                    "Component": {
-                      "active": true
-                    },
-                    "idMaterial": "Material|2025-04-07T11:28:44.995Z|71214"
-                  }
-                }
-              ]
-            },
-            "children": []
-          }
-        },
         {
           "ƒ.GraphInstance": {
             "deserializeFromSource": true,
@@ -303,6 +269,14 @@
               "amount": 1
             }
           }
+        ],
+        "BuildData": [
+          {
+            "Script.BuildData": {
+              "active": true,
+              "interactionRadius": 2
+            }
+          }
         ]
       },
       "idResource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350",
@@ -396,6 +370,14 @@
               "amount": 2
             }
           }
+        ],
+        "BuildData": [
+          {
+            "Script.BuildData": {
+              "active": true,
+              "interactionRadius": 2
+            }
+          }
         ]
       },
       "children": [],
@@ -464,6 +446,14 @@
               "amount": 1
             }
           }
+        ],
+        "BuildData": [
+          {
+            "Script.BuildData": {
+              "active": true,
+              "interactionRadius": 2
+            }
+          }
         ]
       },
       "children": [],
@@ -499,13 +489,21 @@
               "cooldown": 30000
             }
           }
+        ],
+        "BuildData": [
+          {
+            "Script.BuildData": {
+              "active": true,
+              "interactionRadius": 1
+            }
+          }
         ]
       },
       "children": [
         {
           "ƒ.Node": {
             "name": "New Node",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -1401,6 +1399,14 @@
               "_jobType": 2,
               "jobDuration": 200,
               "cooldown": 0
+            }
+          }
+        ],
+        "BuildData": [
+          {
+            "Script.BuildData": {
+              "active": true,
+              "interactionRadius": 3
             }
           }
         ]

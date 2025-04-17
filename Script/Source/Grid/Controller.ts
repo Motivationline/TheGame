@@ -84,7 +84,7 @@ namespace Script {
             if (!this.selectedBuilding) return;
             if (!Data.buyBuilding(this.selectedBuilding)) return;
             let tilePos = this.tilePositionFromMouseEvent(_event);
-            let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
+            this.checkAndSetCurrentPosition(tilePos);
             if (this.currentPositionOccupied) return;
             this.forEachSelectedTile(this.currentPosition, this.selectedBuilding.size, (tile, pos) => {
                 this.grid.setTile({ type: "test", origin: this.currentPosition.equals(pos) }, pos);
@@ -94,10 +94,9 @@ namespace Script {
             let marker = await this.placeGraphOnGrid(this.currentPosition, this.selectedBuilding.size, this.selectedBuilding.graph);
 
             // make it so building needs to be built before it takes effect
-            const jobCmp = getDerivedComponent(marker, JobProvider);
-            if (jobCmp) { jobCmp.activate(false) }
-            const bonusCmp = marker.getComponent(BonusProvider);
-            if (bonusCmp) { bonusCmp.activate(false) }
+            getDerivedComponents(marker, JobProvider).forEach((jobCmp) => {jobCmp.activate(false);});
+            marker.getComponents(BonusProvider).forEach((bonusCmp) => { bonusCmp.activate(false) });
+            
             const buildupCmp = new JobProviderBuild(this.selectedBuilding.costFood + this.selectedBuilding.costStone);
             marker.addComponent(buildupCmp);
 
@@ -114,7 +113,7 @@ namespace Script {
             let worldPos = this.grid.tilePosToWorldPos(_posOfTile);
             marker.mtxLocal.translation = new ƒ.Vector3(worldPos.x + _size / 2, 0, worldPos.y + _size / 2);
 
-            setTimeout(()=>{
+            setTimeout(() => {
                 EumlingCreator.updateButton();
             }, 1);
 

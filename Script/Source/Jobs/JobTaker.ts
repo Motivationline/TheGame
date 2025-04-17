@@ -220,8 +220,13 @@ namespace Script {
         private moveToTarget(deltaTime: number): boolean {
             this.#animator.playAnimation(NonJobAnimations.WALK);
             let distance = this.node.mtxWorld.translation.getDistance(this.#target.node.mtxWorld.translation);
-            if (distance > this.#prevDistance) {
+            if (distance < this.#target.node.getComponent(BuildData)?.interactionRadius) {
                 // target reached
+                this.#prevDistance = Infinity;
+                return true;
+            }
+            else if (distance > this.#prevDistance) {
+                // algorithm failed
                 this.node.mtxLocal.translate(this.node.mtxWorld.getTranslationTo(this.#target.node.mtxWorld));
                 this.#prevDistance = Infinity;
                 return true;

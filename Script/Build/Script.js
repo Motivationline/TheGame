@@ -451,7 +451,7 @@ var Script;
                 if (!Script.Data.buyBuilding(this.selectedBuilding))
                     return;
                 let tilePos = this.tilePositionFromMouseEvent(_event);
-                let newPosInGrid = this.checkAndSetCurrentPosition(tilePos);
+                this.checkAndSetCurrentPosition(tilePos);
                 if (this.currentPositionOccupied)
                     return;
                 this.forEachSelectedTile(this.currentPosition, this.selectedBuilding.size, (tile, pos) => {
@@ -460,14 +460,8 @@ var Script;
                 this.highlightGrid(_event);
                 let marker = await this.placeGraphOnGrid(this.currentPosition, this.selectedBuilding.size, this.selectedBuilding.graph);
                 // make it so building needs to be built before it takes effect
-                const jobCmp = Script.getDerivedComponent(marker, Script.JobProvider);
-                if (jobCmp) {
-                    jobCmp.activate(false);
-                }
-                const bonusCmp = marker.getComponent(Script.BonusProvider);
-                if (bonusCmp) {
-                    bonusCmp.activate(false);
-                }
+                Script.getDerivedComponents(marker, Script.JobProvider).forEach((jobCmp) => { jobCmp.activate(false); });
+                marker.getComponents(Script.BonusProvider).forEach((bonusCmp) => { bonusCmp.activate(false); });
                 const buildupCmp = new Script.JobProviderBuild(this.selectedBuilding.costFood + this.selectedBuilding.costStone);
                 marker.addComponent(buildupCmp);
             };
@@ -890,6 +884,46 @@ var Script;
             this.wrapper.replaceChildren(...buttons);
         }
     }
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    let BuildData = (() => {
+        var _a;
+        let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
+        let _classDescriptor;
+        let _classExtraInitializers = [];
+        let _classThis;
+        let _classSuper = Script.UpdateScriptComponent;
+        let _interactionRadius_decorators;
+        let _interactionRadius_initializers = [];
+        let _interactionRadius_extraInitializers = [];
+        let _buildUpGraph_decorators;
+        let _buildUpGraph_initializers = [];
+        let _buildUpGraph_extraInitializers = [];
+        var BuildData = class extends _classSuper {
+            static { _classThis = this; }
+            static {
+                const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+                _interactionRadius_decorators = [ƒ.serialize(Number)];
+                _buildUpGraph_decorators = [ƒ.serialize(ƒ.Graph)];
+                __esDecorate(null, null, _interactionRadius_decorators, { kind: "field", name: "interactionRadius", static: false, private: false, access: { has: obj => "interactionRadius" in obj, get: obj => obj.interactionRadius, set: (obj, value) => { obj.interactionRadius = value; } }, metadata: _metadata }, _interactionRadius_initializers, _interactionRadius_extraInitializers);
+                __esDecorate(null, null, _buildUpGraph_decorators, { kind: "field", name: "buildUpGraph", static: false, private: false, access: { has: obj => "buildUpGraph" in obj, get: obj => obj.buildUpGraph, set: (obj, value) => { obj.buildUpGraph = value; } }, metadata: _metadata }, _buildUpGraph_initializers, _buildUpGraph_extraInitializers);
+                __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+                BuildData = _classThis = _classDescriptor.value;
+                if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+                __runInitializers(_classThis, _classExtraInitializers);
+            }
+            constructor() {
+                super(...arguments);
+                this.interactionRadius = __runInitializers(this, _interactionRadius_initializers, 1);
+                this.buildUpGraph = (__runInitializers(this, _interactionRadius_extraInitializers), __runInitializers(this, _buildUpGraph_initializers, void 0));
+                __runInitializers(this, _buildUpGraph_extraInitializers);
+            }
+        };
+        return BuildData = _classThis;
+    })();
+    Script.BuildData = BuildData;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
@@ -1337,8 +1371,13 @@ var Script;
             moveToTarget(deltaTime) {
                 this.#animator.playAnimation(Script.NonJobAnimations.WALK);
                 let distance = this.node.mtxWorld.translation.getDistance(this.#target.node.mtxWorld.translation);
-                if (distance > this.#prevDistance) {
+                if (distance < this.#target.node.getComponent(Script.BuildData)?.interactionRadius) {
                     // target reached
+                    this.#prevDistance = Infinity;
+                    return true;
+                }
+                else if (distance > this.#prevDistance) {
+                    // algorithm failed
                     this.node.mtxLocal.translate(this.node.mtxWorld.getTranslationTo(this.#target.node.mtxWorld));
                     this.#prevDistance = Infinity;
                     return true;
@@ -1561,5 +1600,9 @@ var Script;
         return node.getAllComponents().find(c => (c instanceof component));
     }
     Script.getDerivedComponent = getDerivedComponent;
+    function getDerivedComponents(node, component) {
+        return node.getAllComponents().filter(c => (c instanceof component));
+    }
+    Script.getDerivedComponents = getDerivedComponents;
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map

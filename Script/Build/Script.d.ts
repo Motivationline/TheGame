@@ -178,6 +178,13 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
+    class BuildData extends UpdateScriptComponent {
+        interactionRadius: number;
+        buildUpGraph: ƒ.Graph;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
     class Building extends ƒ.Component implements Build {
         static all: Build[];
         get isSingleton(): boolean;
@@ -279,5 +286,6 @@ declare namespace Script {
     export function capitalize(s: string): string;
     export function getPlanePositionFromMousePosition(_mousePosition: ƒ.Vector2): ƒ.Vector3;
     export function getDerivedComponent<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T | undefined;
+    export function getDerivedComponents<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T[];
     export {};
 }
