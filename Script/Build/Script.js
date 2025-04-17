@@ -696,7 +696,7 @@ var Script;
         constructor(resourceAmt) {
             super();
             this._jobType = JobType.BUILD;
-            this.jobDuration = resourceAmt * 2000;
+            this.jobDuration = resourceAmt * 200;
         }
         jobFinish() {
             super.jobFinish();
@@ -706,6 +706,7 @@ var Script;
                 }
             }
             this.node.removeComponent(this);
+            setTimeout(() => { Script.EumlingCreator.updateButton(); }, 1);
         }
     }
     Script.JobProviderBuild = JobProviderBuild;

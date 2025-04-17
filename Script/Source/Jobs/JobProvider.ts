@@ -64,7 +64,7 @@ namespace Script {
         _jobType: JobType = JobType.BUILD;
         constructor(resourceAmt: number) {
             super();
-            this.jobDuration = resourceAmt * 2000;
+            this.jobDuration = resourceAmt * 200;
         }
         jobFinish(): void {
             super.jobFinish();
@@ -74,6 +74,7 @@ namespace Script {
                 }
             }
             this.node.removeComponent(this);
+            setTimeout(() => { EumlingCreator.updateButton() }, 1);
         }
     }
 }
