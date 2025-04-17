@@ -62,6 +62,10 @@ namespace Script {
     }
     export class JobProviderBuild extends JobProvider {
         _jobType: JobType = JobType.BUILD;
+        constructor(resourceAmt: number) {
+            super();
+            this.jobDuration = resourceAmt * 2000;
+        }
         jobFinish(): void {
             super.jobFinish();
             for (let cmp of this.node.getAllComponents()) {

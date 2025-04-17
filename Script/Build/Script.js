@@ -468,8 +468,7 @@ var Script;
                 if (bonusCmp) {
                     bonusCmp.activate(false);
                 }
-                const buildupCmp = new Script.JobProviderBuild();
-                buildupCmp.jobDuration = 2000 * (this.selectedBuilding.costFood + this.selectedBuilding.costStone);
+                const buildupCmp = new Script.JobProviderBuild(this.selectedBuilding.costFood + this.selectedBuilding.costStone);
                 marker.addComponent(buildupCmp);
             };
             if (ƒ.Project.mode === ƒ.MODE.EDITOR)
@@ -700,9 +699,10 @@ var Script;
     }
     Script.JobProviderStoreResource = JobProviderStoreResource;
     class JobProviderBuild extends JobProvider {
-        constructor() {
-            super(...arguments);
+        constructor(resourceAmt) {
+            super();
             this._jobType = JobType.BUILD;
+            this.jobDuration = resourceAmt * 2000;
         }
         jobFinish() {
             super.jobFinish();

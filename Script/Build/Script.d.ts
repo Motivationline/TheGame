@@ -151,6 +151,7 @@ declare namespace Script {
     }
     class JobProviderBuild extends JobProvider {
         _jobType: JobType;
+        constructor(resourceAmt: number);
         jobFinish(): void;
     }
 }

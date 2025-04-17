@@ -98,8 +98,7 @@ namespace Script {
             if (jobCmp) { jobCmp.activate(false) }
             const bonusCmp = marker.getComponent(BonusProvider);
             if (bonusCmp) { bonusCmp.activate(false) }
-            const buildupCmp = new JobProviderBuild();
-            buildupCmp.jobDuration = 2000 * (this.selectedBuilding.costFood + this.selectedBuilding.costStone);
+            const buildupCmp = new JobProviderBuild(this.selectedBuilding.costFood + this.selectedBuilding.costStone);
             marker.addComponent(buildupCmp);
 
         }
