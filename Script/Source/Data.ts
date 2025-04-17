@@ -5,8 +5,6 @@ namespace Script {
     export class Data {
         static #stone: number = 0;
         static #food: number = 0;
-        static gatherBonusFood: number = 1;
-        static gatherBonusStone: number = 1;
 
         static set food(_food: number) {
             this.#food = _food;

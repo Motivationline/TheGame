@@ -62,8 +62,8 @@ namespace Script {
             this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
         }
 
-        moveAwayNow(){
-            if(this.#job !== JobType.NONE && this.#job !== JobType.BUILD) {
+        moveAwayNow() {
+            if (this.#job !== JobType.NONE && this.#job !== JobType.BUILD) {
                 return;
             }
             this.#progress = 2;
@@ -123,9 +123,9 @@ namespace Script {
                 case 6: {
                     // dropped off the resources
                     if (this.#job === JobType.GATHER_FOOD) {
-                        Data.food += Math.max(1, Math.floor(1 * Data.gatherBonusFood));
+                        Data.food += Math.max(1, BonusProvider.getBonus(BonusData.FOOD, 1));
                     } else if (this.#job === JobType.GATHER_STONE) {
-                        Data.stone += Math.max(1, Math.floor(1 * Data.gatherBonusStone));
+                        Data.stone += Math.max(1, BonusProvider.getBonus(BonusData.STONE, 1));
                     }
                     this.#progress = 0;
                     break;

@@ -44,8 +44,6 @@ declare namespace Script {
 declare namespace Script {
     class Data {
         #private;
-        static gatherBonusFood: number;
-        static gatherBonusStone: number;
         static set food(_food: number);
         static set stone(_stone: number);
         static get food(): number;
