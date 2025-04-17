@@ -161,7 +161,7 @@ namespace Script {
         }
 
         private tilePositionFromMouseEvent(_event: MouseEvent): ƒ.Vector2 {
-            let pos = getPlanePositionFromMouseEvent(_event);
+            let pos = getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
             let tilePos = this.grid.worldPosToTilePos(new ƒ.Vector2(pos.x, pos.z));
             return tilePos;
         }

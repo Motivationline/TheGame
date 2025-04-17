@@ -47,8 +47,10 @@ namespace Script {
     class CameraController implements ToggleableUI {
         canvas = document.querySelector("canvas");
         camera = findFirstCameraInGraph(viewport.getBranch());
-        currentZoom: number = 0;
+        currentZoom: number = 3;
         zoomFactor: number = 10;
+        zoomFactorLimits: [number, number] = [0, 10];
+        cameraPositionLimits: ƒ.Vector2 = new ƒ.Vector2(grid.size.x / 2, grid.size.y / 2);
 
 
         enable() {
@@ -70,7 +72,7 @@ namespace Script {
             const direction = -Math.sign(_event.deltaY);
 
             const newZoom = this.currentZoom + direction;
-            if (newZoom < 0 || newZoom > 10) return;
+            if (newZoom < this.zoomFactorLimits[0] || newZoom > this.zoomFactorLimits[1]) return;
             this.currentZoom += direction;
 
             this.camera.node.mtxLocal.translateZ(direction * this.zoomFactor, true);
@@ -84,7 +86,7 @@ namespace Script {
                 case "mousedown": {
                     if (_event.button !== 2) return;
                     this.moving = true;
-                    this.prevPosition = getPlanePositionFromMouseEvent(_event);
+                    this.prevPosition = getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
                     break;
                 }
                 case "mouseup": {
@@ -94,12 +96,28 @@ namespace Script {
                 }
                 case "mousemove": {
                     if (!this.moving) break;
-                    let pos = getPlanePositionFromMouseEvent(_event);
-                    let diff = pos.clone.subtract(this.prevPosition);
+                    let pos = getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
+                    let diff = ƒ.Vector3.DIFFERENCE(pos, this.prevPosition).negate();
+
+
                     // console.log(_event.movementX, _event.movementY, pos, this.prevPosition, diff);
-                    this.camera.node.mtxLocal.translate(diff.negate(), false);
+                    this.camera.node.mtxLocal.translate(diff, false);
                     requestAnimationFrame(() => {
-                        this.prevPosition = getPlanePositionFromMouseEvent(_event);
+                        this.prevPosition = getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
+                        // check for boundaries
+                        let centerPos = getPlanePositionFromMousePosition(new ƒ.Vector2(this.canvas.width / 2, this.canvas.height / 2));
+                        let maxCenterPos = new ƒ.Vector3(
+                            Math.min(this.cameraPositionLimits.x, Math.max(-this.cameraPositionLimits.x, centerPos.x)),
+                            0,
+                            Math.min(this.cameraPositionLimits.y, Math.max(-this.cameraPositionLimits.y, centerPos.z)),
+                        )
+                        let correction = ƒ.Vector3.DIFFERENCE(maxCenterPos, centerPos);
+                        if (!correction.equals(ƒ.Vector3.ZERO())) {
+                            this.camera.node.mtxLocal.translate(correction, false);
+                            requestAnimationFrame(() => {
+                                this.prevPosition = getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
+                            });
+                        }
                     })
                     // console.log(this.camera.node.mtxLocal.translation);
                     break;
@@ -151,8 +169,8 @@ namespace Script {
 
             let buttons: HTMLElement[] = [];
             let keys = availableJobs.values();
-            for(let job of keys){
-                const btn = createElementAdvanced("button", {innerHTML: JobType[job]});
+            for (let job of keys) {
+                const btn = createElementAdvanced("button", { innerHTML: JobType[job] });
                 btn.addEventListener("click", () => {
                     selectedEumling.getComponent(JobTaker).job = job;
                     enableUI("close");
@@ -162,15 +180,15 @@ namespace Script {
             this.wrapper.replaceChildren(...buttons);
         }
         close = (_e: ToggleEvent) => {
-            if(_e.newState === "closed"){
+            if (_e.newState === "closed") {
                 enableUI("close");
             }
         }
-        
+
         disable = () => {
             this.dialog.removeEventListener("toggle", <EventListener>this.close);
             this.dialog.hidePopover();
-            
+
         }
 
     }

@@ -276,7 +276,7 @@ declare namespace Script {
     export function randomRange(min?: number, max?: number): number;
     export function randomString(length: number): string;
     export function capitalize(s: string): string;
-    export function getPlanePositionFromMouseEvent(_event: MouseEvent): ƒ.Vector3;
+    export function getPlanePositionFromMousePosition(_mousePosition: ƒ.Vector2): ƒ.Vector3;
     export function getDerivedComponent<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T | undefined;
     export {};
 }

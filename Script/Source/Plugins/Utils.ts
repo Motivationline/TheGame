@@ -93,9 +93,8 @@ namespace Script {
         return s.charAt(0).toLocaleUpperCase() + s.slice(1);
     }
 
-    export function getPlanePositionFromMouseEvent(_event: MouseEvent): ƒ.Vector3 {
-        let mousePos = new ƒ.Vector2(_event.clientX, _event.clientY);
-        let ray = viewport.getRayFromClient(mousePos);
+    export function getPlanePositionFromMousePosition(_mousePosition: ƒ.Vector2): ƒ.Vector3 {
+        let ray = viewport.getRayFromClient(_mousePosition);
         let pos = ray.intersectPlane(ƒ.Vector3.ZERO(), ƒ.Vector3.Y(1));
         return pos;
     }

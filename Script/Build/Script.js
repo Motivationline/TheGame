@@ -575,7 +575,7 @@ var Script;
             this.marker.getComponent(ƒ.ComponentMaterial).clrPrimary = _color;
         }
         tilePositionFromMouseEvent(_event) {
-            let pos = Script.getPlanePositionFromMouseEvent(_event);
+            let pos = Script.getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
             let tilePos = this.grid.worldPosToTilePos(new ƒ.Vector2(pos.x, pos.z));
             return tilePos;
         }
@@ -759,12 +759,14 @@ var Script;
         constructor() {
             this.canvas = document.querySelector("canvas");
             this.camera = Script.findFirstCameraInGraph(Script.viewport.getBranch());
-            this.currentZoom = 0;
+            this.currentZoom = 3;
             this.zoomFactor = 10;
+            this.zoomFactorLimits = [0, 10];
+            this.cameraPositionLimits = new ƒ.Vector2(Script.grid.size.x / 2, Script.grid.size.y / 2);
             this.zoom = (_event) => {
                 const direction = -Math.sign(_event.deltaY);
                 const newZoom = this.currentZoom + direction;
-                if (newZoom < 0 || newZoom > 10)
+                if (newZoom < this.zoomFactorLimits[0] || newZoom > this.zoomFactorLimits[1])
                     return;
                 this.currentZoom += direction;
                 this.camera.node.mtxLocal.translateZ(direction * this.zoomFactor, true);
@@ -776,7 +778,7 @@ var Script;
                         if (_event.button !== 2)
                             return;
                         this.moving = true;
-                        this.prevPosition = Script.getPlanePositionFromMouseEvent(_event);
+                        this.prevPosition = Script.getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
                         break;
                     }
                     case "mouseup": {
@@ -788,12 +790,22 @@ var Script;
                     case "mousemove": {
                         if (!this.moving)
                             break;
-                        let pos = Script.getPlanePositionFromMouseEvent(_event);
-                        let diff = pos.clone.subtract(this.prevPosition);
+                        let pos = Script.getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
+                        let diff = ƒ.Vector3.DIFFERENCE(pos, this.prevPosition).negate();
                         // console.log(_event.movementX, _event.movementY, pos, this.prevPosition, diff);
-                        this.camera.node.mtxLocal.translate(diff.negate(), false);
+                        this.camera.node.mtxLocal.translate(diff, false);
                         requestAnimationFrame(() => {
-                            this.prevPosition = Script.getPlanePositionFromMouseEvent(_event);
+                            this.prevPosition = Script.getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
+                            // check for boundaries
+                            let centerPos = Script.getPlanePositionFromMousePosition(new ƒ.Vector2(this.canvas.width / 2, this.canvas.height / 2));
+                            let maxCenterPos = new ƒ.Vector3(Math.min(this.cameraPositionLimits.x, Math.max(-this.cameraPositionLimits.x, centerPos.x)), 0, Math.min(this.cameraPositionLimits.y, Math.max(-this.cameraPositionLimits.y, centerPos.z)));
+                            let correction = ƒ.Vector3.DIFFERENCE(maxCenterPos, centerPos);
+                            if (!correction.equals(ƒ.Vector3.ZERO())) {
+                                this.camera.node.mtxLocal.translate(correction, false);
+                                requestAnimationFrame(() => {
+                                    this.prevPosition = Script.getPlanePositionFromMousePosition(new ƒ.Vector2(_event.clientX, _event.clientY));
+                                });
+                            }
                         });
                         // console.log(this.camera.node.mtxLocal.translation);
                         break;
@@ -1539,13 +1551,12 @@ var Script;
         return s.charAt(0).toLocaleUpperCase() + s.slice(1);
     }
     Script.capitalize = capitalize;
-    function getPlanePositionFromMouseEvent(_event) {
-        let mousePos = new ƒ.Vector2(_event.clientX, _event.clientY);
-        let ray = Script.viewport.getRayFromClient(mousePos);
+    function getPlanePositionFromMousePosition(_mousePosition) {
+        let ray = Script.viewport.getRayFromClient(_mousePosition);
         let pos = ray.intersectPlane(ƒ.Vector3.ZERO(), ƒ.Vector3.Y(1));
         return pos;
     }
-    Script.getPlanePositionFromMouseEvent = getPlanePositionFromMouseEvent;
+    Script.getPlanePositionFromMousePosition = getPlanePositionFromMousePosition;
     function getDerivedComponent(node, component) {
         return node.getAllComponents().find(c => (c instanceof component));
     }
