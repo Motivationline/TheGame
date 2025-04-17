@@ -130,7 +130,9 @@ declare namespace Script {
         remove(_e: CustomEvent): void;
         jobStart(): void;
         jobFinish(): void;
+        target(_targeted: boolean): void;
         get jobType(): JobType;
+        get targeted(): boolean;
         update(_e: CustomEvent<UpdateEvent>): void;
     }
     class JobProviderNone extends JobProvider {
@@ -148,6 +150,7 @@ declare namespace Script {
         jobDuration: number;
         _jobType: JobType;
         cooldown: number;
+        target(_targeted: boolean): void;
     }
     class JobProviderBuild extends JobProvider {
         _jobType: JobType;

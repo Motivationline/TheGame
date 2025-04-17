@@ -632,6 +632,7 @@ var Script;
             }
             static { this.JobProviders = new Set(); }
             #currentCooldown;
+            #targeted;
             start(_e) {
                 JobProvider.JobProviders.add(this);
             }
@@ -641,12 +642,19 @@ var Script;
             jobStart() { }
             jobFinish() {
                 this.#currentCooldown = this.cooldown;
+                this.target(false);
+            }
+            target(_targeted) {
+                this.#targeted = _targeted;
             }
             get jobType() {
                 if (this.#currentCooldown > 0) {
                     return JobType.NONE;
                 }
                 return this._jobType;
+            }
+            get targeted() {
+                return this.#targeted;
             }
             update(_e) {
                 if (this.#currentCooldown > 0) {
@@ -690,6 +698,7 @@ var Script;
             this._jobType = JobType.STORE_RESOURCE;
             this.cooldown = 0;
         }
+        target(_targeted) { }
     }
     Script.JobProviderStoreResource = JobProviderStoreResource;
     class JobProviderBuild extends JobProvider {
@@ -1336,7 +1345,7 @@ var Script;
                 const foundProviders = [];
                 // console.log(_job, JobProvider.JobProviders);
                 for (let provider of Script.JobProvider.JobProviders) {
-                    if (provider.jobType === _job) {
+                    if (provider.jobType === _job && !provider.targeted) {
                         foundProviders.push(provider);
                     }
                 }
@@ -1364,6 +1373,7 @@ var Script;
                 this.#needToRemoveTarget = false;
                 if (!this.#target || !this.#target.node)
                     return;
+                this.#target.target(false);
                 let node = this.#target.node;
                 node.removeComponent(this.#target);
                 node.getParent().removeChild(node);
@@ -1394,6 +1404,7 @@ var Script;
                 if (!target) {
                     return undefined;
                 }
+                target.target(true);
                 this.#target = target;
                 this.#currentJob = _job;
                 this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);

@@ -21,6 +21,7 @@ namespace Script {
         @ƒ.serialize(Number)
         cooldown: number = 30000;
         #currentCooldown = 0;
+        #targeted: boolean;
         start(_e: CustomEvent<UpdateEvent>): void {
             JobProvider.JobProviders.add(this);
         }
@@ -30,12 +31,19 @@ namespace Script {
         jobStart(): void { }
         jobFinish(): void {
             this.#currentCooldown = this.cooldown;
+            this.target(false);
+        }
+        target(_targeted: boolean){
+            this.#targeted = _targeted;
         }
         get jobType(): JobType {
             if (this.#currentCooldown > 0) {
                 return JobType.NONE;
             }
             return this._jobType;
+        }
+        get targeted() {
+            return this.#targeted;
         }
         update(_e: CustomEvent<UpdateEvent>): void {
             if (this.#currentCooldown > 0) {
@@ -59,6 +67,7 @@ namespace Script {
         jobDuration: number = 2000;
         _jobType: JobType = JobType.STORE_RESOURCE;
         cooldown: number = 0;
+        target(_targeted: boolean): void {}
     }
     export class JobProviderBuild extends JobProvider {
         _jobType: JobType = JobType.BUILD;

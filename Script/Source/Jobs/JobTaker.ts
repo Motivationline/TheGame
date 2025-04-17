@@ -45,7 +45,7 @@ namespace Script {
             const foundProviders: JobProvider[] = [];
             // console.log(_job, JobProvider.JobProviders);
             for (let provider of JobProvider.JobProviders) {
-                if (provider.jobType === _job) {
+                if (provider.jobType === _job && !provider.targeted) {
                     foundProviders.push(provider);
                 }
             }
@@ -211,6 +211,7 @@ namespace Script {
         private removeTarget() {
             this.#needToRemoveTarget = false;
             if (!this.#target || !this.#target.node) return;
+            this.#target.target(false);
             let node = this.#target.node;
             node.removeComponent(this.#target);
             node.getParent().removeChild(node);
@@ -243,6 +244,7 @@ namespace Script {
             if (!target) {
                 return undefined;
             }
+            target.target(true);
             this.#target = target;
             this.#currentJob = _job;
             this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);
