@@ -314,21 +314,6 @@
       "name": "EumlingHaus",
       "active": true,
       "components": {
-        "ComponentMesh": [
-          {
-            "ƒ.ComponentMesh": {
-              "idMesh": "MeshCube|2025-04-08T06:37:52.687Z|13643",
-              "pivot": {
-                "translation": "[0, 0.25, 0]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[2, 0.5, 2]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ],
         "ComponentTransform": [
           {
             "ƒ.ComponentTransform": {
@@ -340,24 +325,6 @@
               "Component": {
                 "active": true
               }
-            }
-          }
-        ],
-        "ComponentMaterial": [
-          {
-            "ƒ.ComponentMaterial": {
-              "sortForAlpha": false,
-              "clrPrimary": "[1, 1, 1, 1]",
-              "clrSecondary": "[1, 1, 1, 1]",
-              "pivot": {
-                "translation": "[0, 0]",
-                "rotation": 0,
-                "scaling": "[1, 1]"
-              },
-              "Component": {
-                "active": true
-              },
-              "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
             }
           }
         ],
@@ -380,7 +347,14 @@
           }
         ]
       },
-      "children": [],
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-17T12:16:12.451Z|79009"
+          }
+        }
+      ],
       "idResource": "Graph|2025-04-16T11:31:05.095Z|38834",
       "type": "Graph"
     }
@@ -390,21 +364,6 @@
       "name": "FarmHaus",
       "active": true,
       "components": {
-        "ComponentMesh": [
-          {
-            "ƒ.ComponentMesh": {
-              "idMesh": "MeshCube|2025-04-08T06:37:52.687Z|13643",
-              "pivot": {
-                "translation": "[0, 0.25, 0]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[2, 0.5, 2]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ],
         "ComponentTransform": [
           {
             "ƒ.ComponentTransform": {
@@ -416,24 +375,6 @@
               "Component": {
                 "active": true
               }
-            }
-          }
-        ],
-        "ComponentMaterial": [
-          {
-            "ƒ.ComponentMaterial": {
-              "sortForAlpha": false,
-              "clrPrimary": "[1, 1, 1, 1]",
-              "clrSecondary": "[1, 1, 1, 1]",
-              "pivot": {
-                "translation": "[0, 0]",
-                "rotation": 0,
-                "scaling": "[1, 1]"
-              },
-              "Component": {
-                "active": true
-              },
-              "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
             }
           }
         ],
@@ -456,7 +397,14 @@
           }
         ]
       },
-      "children": [],
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801"
+          }
+        }
+      ],
       "idResource": "Graph|2025-04-16T11:34:07.466Z|93977",
       "type": "Graph"
     }
@@ -579,7 +527,7 @@
                     "direction": "diagonal",
                     "near": 1,
                     "far": 2000,
-                    "aspect": 1.3702702702702703,
+                    "aspect": 0.9800629590766002,
                     "pivot": {
                       "translation": "[0, 0, 0]",
                       "rotation": "[0, 0, 0]",
@@ -958,7 +906,7 @@
               "modelFood": "GraphGLTF|2025-04-16T14:49:49.859Z|72837",
               "animIdle": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
               "animWalk": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782",
-              "animGatherFood": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534",
+              "animGatherFood": "AnimationGLTF|2025-04-17T13:18:40.288Z|81182",
               "animGatherStone": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534"
             }
           }
@@ -1461,6 +1409,25 @@
       "idResource": "GraphGLTF|2025-04-17T10:27:56.733Z|67719",
       "type": "GraphGLTF",
       "url": "Assets\\Indicator\\Food_Gatherer_Full.glb"
+    }
+  },
+  "GraphGLTF|2025-04-17T12:16:12.451Z|79009": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-17T12:16:12.451Z|79009",
+      "type": "GraphGLTF",
+      "url": "Assets\\Houses\\House_Eumling.glb"
+    }
+  },
+  "AnimationGLTF|2025-04-17T13:18:40.288Z|81182": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-17T13:18:40.288Z|81182",
+      "name": "PickBerries",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
     }
   }
 }

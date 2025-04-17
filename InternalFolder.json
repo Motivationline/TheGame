@@ -18,18 +18,31 @@
         "name": "Buildings",
         "entries": [
           {
-            "name": "House_Miner",
+            "name": "Houses",
             "entries": [
               {
-                "idResource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350"
-              }
-            ]
-          },
-          {
-            "name": "House_Big",
-            "entries": [
+                "name": "House_Miner",
+                "entries": [
+                  {
+                    "idResource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350"
+                  }
+                ]
+              },
               {
-                "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801"
+                "name": "House_Farm",
+                "entries": [
+                  {
+                    "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801"
+                  }
+                ]
+              },
+              {
+                "name": "House_Eumling",
+                "entries": [
+                  {
+                    "idResource": "GraphGLTF|2025-04-17T12:16:12.451Z|79009"
+                  }
+                ]
               }
             ]
           },
@@ -187,6 +200,9 @@
               },
               {
                 "idResource": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534"
+              },
+              {
+                "idResource": "AnimationGLTF|2025-04-17T13:18:40.288Z|81182"
               },
               {
                 "idResource": "AnimationGLTF|2025-04-10T11:33:30.282Z|80849"
