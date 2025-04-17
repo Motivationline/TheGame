@@ -94,12 +94,22 @@ namespace Script {
             let marker = await this.placeGraphOnGrid(this.currentPosition, this.selectedBuilding.size, this.selectedBuilding.graph);
 
             // make it so building needs to be built before it takes effect
-            getDerivedComponents(marker, JobProvider).forEach((jobCmp) => {jobCmp.activate(false);});
+            getDerivedComponents(marker, JobProvider).forEach((jobCmp) => { jobCmp.activate(false); });
             marker.getComponents(BonusProvider).forEach((bonusCmp) => { bonusCmp.activate(false) });
-            
+
             const buildupCmp = new JobProviderBuild(this.selectedBuilding.costFood + this.selectedBuilding.costStone);
             marker.addComponent(buildupCmp);
 
+            // place temporary node & hide current child
+            let graphToPlace = marker.getComponent(BuildData)?.buildUpGraph;
+            if (graphToPlace) {
+                let placeholder = await ƒ.Project.createGraphInstance(graphToPlace);
+                buildupCmp.nodeToRemove = placeholder;
+                marker.addChild(placeholder);
+                
+                buildupCmp.nodeToEnable = marker.getChild(0);
+                marker.getChild(0)?.activate(false);
+            }
         }
 
         public async placeGraphOnGrid(_posOfTile: ƒ.Vector2, _size: number, _graph: ƒ.Graph): Promise<ƒ.Node> {

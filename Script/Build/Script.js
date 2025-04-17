@@ -464,6 +464,15 @@ var Script;
                 marker.getComponents(Script.BonusProvider).forEach((bonusCmp) => { bonusCmp.activate(false); });
                 const buildupCmp = new Script.JobProviderBuild(this.selectedBuilding.costFood + this.selectedBuilding.costStone);
                 marker.addComponent(buildupCmp);
+                // place temporary node & hide current child
+                let graphToPlace = marker.getComponent(Script.BuildData)?.buildUpGraph;
+                if (graphToPlace) {
+                    let placeholder = await ƒ.Project.createGraphInstance(graphToPlace);
+                    buildupCmp.nodeToRemove = placeholder;
+                    marker.addChild(placeholder);
+                    buildupCmp.nodeToEnable = marker.getChild(0);
+                    marker.getChild(0)?.activate(false);
+                }
             };
             if (ƒ.Project.mode === ƒ.MODE.EDITOR)
                 return;
@@ -714,6 +723,10 @@ var Script;
                     cmp.activate(true);
                 }
             }
+            if (this.nodeToRemove)
+                this.nodeToRemove.getParent().removeChild(this.nodeToRemove);
+            if (this.nodeToEnable)
+                this.nodeToEnable.activate(true);
             this.node.removeComponent(this);
             setTimeout(() => { Script.EumlingCreator.updateButton(); }, 1);
         }

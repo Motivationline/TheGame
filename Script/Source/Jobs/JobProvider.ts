@@ -33,7 +33,7 @@ namespace Script {
             this.#currentCooldown = this.cooldown;
             this.target(false);
         }
-        target(_targeted: boolean){
+        target(_targeted: boolean) {
             this.#targeted = _targeted;
         }
         get jobType(): JobType {
@@ -67,10 +67,12 @@ namespace Script {
         jobDuration: number = 2000;
         _jobType: JobType = JobType.STORE_RESOURCE;
         cooldown: number = 0;
-        target(_targeted: boolean): void {}
+        target(_targeted: boolean): void { }
     }
     export class JobProviderBuild extends JobProvider {
         _jobType: JobType = JobType.BUILD;
+        nodeToRemove: ƒ.Node;
+        nodeToEnable: ƒ.Node;
         constructor(resourceAmt: number) {
             super();
             this.jobDuration = resourceAmt * 200;
@@ -82,6 +84,8 @@ namespace Script {
                     cmp.activate(true);
                 }
             }
+            if (this.nodeToRemove) this.nodeToRemove.getParent().removeChild(this.nodeToRemove);
+            if (this.nodeToEnable) this.nodeToEnable.activate(true);
             this.node.removeComponent(this);
             setTimeout(() => { EumlingCreator.updateButton() }, 1);
         }

@@ -113,6 +113,7 @@ declare namespace Script {
     }
 }
 declare namespace Script {
+    import ƒ = FudgeCore;
     enum JobType {
         GATHER_STONE = 0,
         GATHER_FOOD = 1,
@@ -154,6 +155,8 @@ declare namespace Script {
     }
     class JobProviderBuild extends JobProvider {
         _jobType: JobType;
+        nodeToRemove: ƒ.Node;
+        nodeToEnable: ƒ.Node;
         constructor(resourceAmt: number);
         jobFinish(): void;
     }
