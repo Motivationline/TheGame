@@ -270,9 +270,9 @@ var Script;
     class EumlingCreator {
         static { this.eumlingPrices = [
             { food: 0, stone: 0 },
-            { food: 10, stone: 0 },
-            { food: 20, stone: 5 },
-            { food: 40, stone: 10 },
+            { food: 2, stone: 0 },
+            { food: 5, stone: 5 },
+            { food: 10, stone: 10 },
         ]; }
         static { this.eumlingAmount = 0; }
         static { this.createEumling = async () => {

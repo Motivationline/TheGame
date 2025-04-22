@@ -245,40 +245,7 @@
     "ƒ.GraphGLTF": {
       "name": "Scene",
       "active": true,
-      "components": {
-        "ComponentTransform": [
-          {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0, 0, 0]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ],
-        "BonusProvider": [
-          {
-            "Script.BonusProvider": {
-              "active": true,
-              "bonusType": 0,
-              "bonusData": 1,
-              "amount": 1
-            }
-          }
-        ],
-        "BuildData": [
-          {
-            "Script.BuildData": {
-              "active": true,
-              "interactionRadius": 2
-            }
-          }
-        ]
-      },
+      "components": {},
       "idResource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350",
       "type": "GraphGLTF",
       "url": "Assets\\Houses\\House_Miner.glb"
@@ -307,6 +274,38 @@
       "idResource": "GraphGLTF|2025-04-08T10:48:00.622Z|81801",
       "type": "GraphGLTF",
       "url": "Assets\\Houses\\House_Big.glb"
+    }
+  },
+  "Graph|2025-04-22T09:39:38.302Z|76334": {
+    "ƒ.Graph": {
+      "name": "Construction2x2",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-22T09:37:22.551Z|03629"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-22T09:39:38.302Z|76334",
+      "type": "Graph"
     }
   },
   "Graph|2025-04-16T11:31:05.095Z|38834": {
@@ -342,7 +341,8 @@
           {
             "Script.BuildData": {
               "active": true,
-              "interactionRadius": 2
+              "interactionRadius": 2,
+              "buildUpGraph": "Graph|2025-04-22T09:39:38.302Z|76334"
             }
           }
         ]
@@ -392,7 +392,8 @@
           {
             "Script.BuildData": {
               "active": true,
-              "interactionRadius": 2
+              "interactionRadius": 2,
+              "buildUpGraph": "Graph|2025-04-22T12:28:54.572Z|46958"
             }
           }
         ]
@@ -580,7 +581,7 @@
                 {
                   "Script.Building": {
                     "active": true,
-                    "graph": "GraphGLTF|2025-04-08T10:32:49.691Z|74350",
+                    "graph": "Graph|2025-04-22T12:30:42.441Z|49439",
                     "size": 2,
                     "name": "Mine",
                     "costFood": 0,
@@ -595,7 +596,7 @@
                     "size": 2,
                     "name": "Wohnhaus",
                     "costFood": 0,
-                    "costStone": 20,
+                    "costStone": 0,
                     "includeInMenu": true
                   }
                 },
@@ -1429,6 +1430,108 @@
       "idResource": "GraphGLTF|2025-04-17T12:16:12.451Z|79009",
       "type": "GraphGLTF",
       "url": "Assets\\Houses\\House_Eumling.glb"
+    }
+  },
+  "GraphGLTF|2025-04-22T09:37:22.551Z|03629": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-22T09:37:22.551Z|03629",
+      "type": "GraphGLTF",
+      "url": "Assets\\Houses\\House_Construction_2x2.glb"
+    }
+  },
+  "GraphGLTF|2025-04-22T12:28:50.255Z|78263": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
+      "active": true,
+      "components": {},
+      "idResource": "GraphGLTF|2025-04-22T12:28:50.255Z|78263",
+      "type": "GraphGLTF",
+      "url": "Assets\\Houses\\House_Construction_3x3.glb"
+    }
+  },
+  "Graph|2025-04-22T12:28:54.572Z|46958": {
+    "ƒ.Graph": {
+      "name": "Construction3x3",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-22T12:28:50.255Z|78263"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-22T12:28:54.572Z|46958",
+      "type": "Graph"
+    }
+  },
+  "Graph|2025-04-22T12:30:42.441Z|49439": {
+    "ƒ.Graph": {
+      "name": "MineHaus",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "BonusProvider": [
+          {
+            "Script.BonusProvider": {
+              "active": true,
+              "bonusType": 0,
+              "bonusData": 1,
+              "amount": 1
+            }
+          }
+        ],
+        "BuildData": [
+          {
+            "Script.BuildData": {
+              "active": true,
+              "interactionRadius": 1
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-22T12:30:42.441Z|49439",
+      "type": "Graph"
     }
   }
 }
