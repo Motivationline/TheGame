@@ -8,6 +8,7 @@ namespace Script {
 
     export enum NonJobAnimations {
         WALK = "walk",
+        SELECTED = "selected"
     }
 
     @ƒ.serialize
@@ -36,9 +37,12 @@ namespace Script {
         animGatherStone: ƒ.Animation;
         @ƒ.serialize(ƒ.Animation)
         animBuild: ƒ.Animation;
+        @ƒ.serialize(ƒ.Animation)
+        animSelected: ƒ.Animation;
 
         async start(_e: CustomEvent<UpdateEvent>): Promise<void> {
             this.#animations.set(NonJobAnimations.WALK, this.animWalk);
+            this.#animations.set(NonJobAnimations.SELECTED, this.animSelected);
             this.#animations.set(JobType.NONE, this.animIdle);
             this.#animations.set(JobType.STORE_RESOURCE, this.animIdle);
             this.#animations.set(JobType.GATHER_FOOD, this.animGatherFood);

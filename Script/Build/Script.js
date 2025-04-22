@@ -889,11 +889,13 @@ var Script;
             this.disable = () => {
                 this.dialog.removeEventListener("toggle", this.close);
                 this.dialog.hidePopover();
+                selectedEumling.getComponent(Script.JobTaker).paused = false;
             };
         }
         enable() {
             this.dialog.showPopover();
             this.dialog.addEventListener("toggle", this.close);
+            selectedEumling.getComponent(Script.JobTaker).paused = true;
             let buttons = [];
             let keys = Script.availableJobs.values();
             for (let job of keys) {
@@ -1031,6 +1033,7 @@ var Script;
     let NonJobAnimations;
     (function (NonJobAnimations) {
         NonJobAnimations["WALK"] = "walk";
+        NonJobAnimations["SELECTED"] = "selected";
     })(NonJobAnimations = Script.NonJobAnimations || (Script.NonJobAnimations = {}));
     let JobAnimation = (() => {
         var _a;
@@ -1066,6 +1069,9 @@ var Script;
         let _animBuild_decorators;
         let _animBuild_initializers = [];
         let _animBuild_extraInitializers = [];
+        let _animSelected_decorators;
+        let _animSelected_initializers = [];
+        let _animSelected_extraInitializers = [];
         var JobAnimation = class extends _classSuper {
             static { _classThis = this; }
             static {
@@ -1079,6 +1085,7 @@ var Script;
                 _animGatherFood_decorators = [ƒ.serialize(ƒ.Animation)];
                 _animGatherStone_decorators = [ƒ.serialize(ƒ.Animation)];
                 _animBuild_decorators = [ƒ.serialize(ƒ.Animation)];
+                _animSelected_decorators = [ƒ.serialize(ƒ.Animation)];
                 __esDecorate(null, null, _modelBase_decorators, { kind: "field", name: "modelBase", static: false, private: false, access: { has: obj => "modelBase" in obj, get: obj => obj.modelBase, set: (obj, value) => { obj.modelBase = value; } }, metadata: _metadata }, _modelBase_initializers, _modelBase_extraInitializers);
                 __esDecorate(null, null, _modelMine_decorators, { kind: "field", name: "modelMine", static: false, private: false, access: { has: obj => "modelMine" in obj, get: obj => obj.modelMine, set: (obj, value) => { obj.modelMine = value; } }, metadata: _metadata }, _modelMine_initializers, _modelMine_extraInitializers);
                 __esDecorate(null, null, _modelBuild_decorators, { kind: "field", name: "modelBuild", static: false, private: false, access: { has: obj => "modelBuild" in obj, get: obj => obj.modelBuild, set: (obj, value) => { obj.modelBuild = value; } }, metadata: _metadata }, _modelBuild_initializers, _modelBuild_extraInitializers);
@@ -1088,6 +1095,7 @@ var Script;
                 __esDecorate(null, null, _animGatherFood_decorators, { kind: "field", name: "animGatherFood", static: false, private: false, access: { has: obj => "animGatherFood" in obj, get: obj => obj.animGatherFood, set: (obj, value) => { obj.animGatherFood = value; } }, metadata: _metadata }, _animGatherFood_initializers, _animGatherFood_extraInitializers);
                 __esDecorate(null, null, _animGatherStone_decorators, { kind: "field", name: "animGatherStone", static: false, private: false, access: { has: obj => "animGatherStone" in obj, get: obj => obj.animGatherStone, set: (obj, value) => { obj.animGatherStone = value; } }, metadata: _metadata }, _animGatherStone_initializers, _animGatherStone_extraInitializers);
                 __esDecorate(null, null, _animBuild_decorators, { kind: "field", name: "animBuild", static: false, private: false, access: { has: obj => "animBuild" in obj, get: obj => obj.animBuild, set: (obj, value) => { obj.animBuild = value; } }, metadata: _metadata }, _animBuild_initializers, _animBuild_extraInitializers);
+                __esDecorate(null, null, _animSelected_decorators, { kind: "field", name: "animSelected", static: false, private: false, access: { has: obj => "animSelected" in obj, get: obj => obj.animSelected, set: (obj, value) => { obj.animSelected = value; } }, metadata: _metadata }, _animSelected_initializers, _animSelected_extraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 JobAnimation = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -1099,6 +1107,7 @@ var Script;
             #animator;
             async start(_e) {
                 this.#animations.set(NonJobAnimations.WALK, this.animWalk);
+                this.#animations.set(NonJobAnimations.SELECTED, this.animSelected);
                 this.#animations.set(Script.JobType.NONE, this.animIdle);
                 this.#animations.set(Script.JobType.STORE_RESOURCE, this.animIdle);
                 this.#animations.set(Script.JobType.GATHER_FOOD, this.animGatherFood);
@@ -1150,7 +1159,8 @@ var Script;
                 this.animGatherFood = (__runInitializers(this, _animWalk_extraInitializers), __runInitializers(this, _animGatherFood_initializers, void 0));
                 this.animGatherStone = (__runInitializers(this, _animGatherFood_extraInitializers), __runInitializers(this, _animGatherStone_initializers, void 0));
                 this.animBuild = (__runInitializers(this, _animGatherStone_extraInitializers), __runInitializers(this, _animBuild_initializers, void 0));
-                __runInitializers(this, _animBuild_extraInitializers);
+                this.animSelected = (__runInitializers(this, _animBuild_extraInitializers), __runInitializers(this, _animSelected_initializers, void 0));
+                __runInitializers(this, _animSelected_extraInitializers);
             }
         };
         return JobAnimation = _classThis;
@@ -1188,6 +1198,7 @@ var Script;
             #target;
             #animator;
             #timers;
+            #paused;
             constructor() {
                 super();
                 this.#job = Script.JobType.NONE;
@@ -1195,7 +1206,8 @@ var Script;
                 this.#progress = 0;
                 this.#timers = [];
                 this.speed = __runInitializers(this, _speed_initializers, 1);
-                this.#needToRemoveTarget = (__runInitializers(this, _speed_extraInitializers), false);
+                this.#paused = (__runInitializers(this, _speed_extraInitializers), false);
+                this.#needToRemoveTarget = false;
                 this.gatherResource = (deltaTime) => {
                     switch (this.#progress) {
                         case 0: {
@@ -1331,6 +1343,14 @@ var Script;
                         }
                     }
                 };
+                this.pause = () => {
+                    this.#animator.playAnimation(Script.NonJobAnimations.SELECTED);
+                    this.node.mtxLocal.lookIn(new ƒ.Vector3(-1, 0, -1));
+                };
+                this.unpause = () => {
+                    if (this.#target && this.#target.node)
+                        this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
+                };
                 this.#prevDistance = Infinity;
                 if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                     return;
@@ -1353,6 +1373,16 @@ var Script;
                 this.#timers.forEach(t => t.clear());
                 this.#timers.length = 0;
                 this.#prevDistance = Infinity;
+                this.paused = false;
+            }
+            set paused(_paused) {
+                this.#paused = _paused;
+                if (_paused) {
+                    this.pause();
+                }
+                else {
+                    this.unpause();
+                }
             }
             static findClosestJobProvider(_job, _location) {
                 const foundProviders = [];
@@ -1371,6 +1401,8 @@ var Script;
                 this.#animator = this.node.getComponent(Script.JobAnimation);
             }
             update(_e) {
+                if (this.#paused)
+                    return;
                 this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
             }
             moveAwayNow() {
@@ -1408,6 +1440,7 @@ var Script;
                 }
                 this.#prevDistance = distance;
                 // move to target
+                this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
                 deltaTime = Math.min(1000, deltaTime); // limit delta time to 1 second max to prevent lag causing super big jumps
                 this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
                 return false;

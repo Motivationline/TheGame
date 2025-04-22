@@ -166,7 +166,8 @@ namespace Script {
         enable(): void {
             this.dialog.showPopover();
             this.dialog.addEventListener("toggle", <EventListener>this.close);
-
+            selectedEumling.getComponent(JobTaker).paused = true;
+            
             let buttons: HTMLElement[] = [];
             let keys = availableJobs.values();
             for (let job of keys) {
@@ -184,11 +185,11 @@ namespace Script {
                 enableUI("close");
             }
         }
-
+        
         disable = () => {
             this.dialog.removeEventListener("toggle", <EventListener>this.close);
             this.dialog.hidePopover();
-
+            selectedEumling.getComponent(JobTaker).paused = false;
         }
 
     }

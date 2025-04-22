@@ -11,6 +11,7 @@ namespace Script {
         #timers: ƒ.Timer[] = [];
         @ƒ.serialize(Number)
         speed: number = 1;
+        #paused: boolean = false;
 
 
         constructor() {
@@ -39,6 +40,16 @@ namespace Script {
             this.#timers.length = 0;
 
             this.#prevDistance = Infinity;
+            this.paused = false;
+        }
+
+        set paused(_paused: boolean) {
+            this.#paused = _paused;
+            if (_paused) {
+                this.pause();
+            } else {
+                this.unpause();
+            }
         }
 
         static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined {
@@ -59,6 +70,7 @@ namespace Script {
         }
 
         update(_e: CustomEvent<UpdateEvent>): void {
+            if (this.#paused) return;
             this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
         }
 
@@ -208,6 +220,15 @@ namespace Script {
             }
         }
 
+        private pause = () => {
+            this.#animator.playAnimation(NonJobAnimations.SELECTED);
+            this.node.mtxLocal.lookIn(new ƒ.Vector3(-1, 0, -1));
+        }
+        private unpause = () => {
+            if (this.#target && this.#target.node)
+                this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
+        }
+
         private removeTarget() {
             this.#needToRemoveTarget = false;
             if (!this.#target || !this.#target.node) return;
@@ -234,6 +255,7 @@ namespace Script {
             }
             this.#prevDistance = distance;
             // move to target
+            this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
             deltaTime = Math.min(1000, deltaTime); // limit delta time to 1 second max to prevent lag causing super big jumps
             this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
             return false;

@@ -207,7 +207,8 @@ declare namespace Script {
     import ƒ = FudgeCore;
     type AnimationType = JobType | NonJobAnimations;
     enum NonJobAnimations {
-        WALK = "walk"
+        WALK = "walk",
+        SELECTED = "selected"
     }
     class JobAnimation extends UpdateScriptComponent {
         #private;
@@ -220,6 +221,7 @@ declare namespace Script {
         animGatherFood: ƒ.Animation;
         animGatherStone: ƒ.Animation;
         animBuild: ƒ.Animation;
+        animSelected: ƒ.Animation;
         start(_e: CustomEvent<UpdateEvent>): Promise<void>;
         playAnimation(anim: AnimationType): void;
         setModel(model: JobType): void;
@@ -232,6 +234,7 @@ declare namespace Script {
         speed: number;
         constructor();
         set job(_job: JobType);
+        set paused(_paused: boolean);
         static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined;
         start(_e: CustomEvent<UpdateEvent>): void;
         update(_e: CustomEvent<UpdateEvent>): void;
@@ -239,6 +242,8 @@ declare namespace Script {
         private gatherResource;
         private build;
         private idle;
+        private pause;
+        private unpause;
         private removeTarget;
         private moveToTarget;
         private findAndSetTargetForJob;
