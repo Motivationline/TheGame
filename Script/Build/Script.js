@@ -270,9 +270,9 @@ var Script;
     class EumlingCreator {
         static { this.eumlingPrices = [
             { food: 0, stone: 0 },
-            { food: 2, stone: 0 },
-            { food: 5, stone: 5 },
-            { food: 10, stone: 10 },
+            { food: 10, stone: 0 },
+            { food: 20, stone: 5 },
+            { food: 40, stone: 10 },
         ]; }
         static { this.eumlingAmount = 0; }
         static { this.createEumling = async () => {
@@ -1440,7 +1440,7 @@ var Script;
                 }
                 this.#prevDistance = distance;
                 // move to target
-                this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
+                // this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
                 deltaTime = Math.min(1000, deltaTime); // limit delta time to 1 second max to prevent lag causing super big jumps
                 this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
                 return false;

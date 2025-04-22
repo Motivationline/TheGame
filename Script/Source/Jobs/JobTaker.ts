@@ -255,7 +255,7 @@ namespace Script {
             }
             this.#prevDistance = distance;
             // move to target
-            this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
+            // this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
             deltaTime = Math.min(1000, deltaTime); // limit delta time to 1 second max to prevent lag causing super big jumps
             this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
             return false;
