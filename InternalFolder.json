@@ -81,6 +81,17 @@
                         "idResource": "GraphGLTF|2025-04-17T10:18:46.161Z|80005"
                       }
                     ]
+                  },
+                  {
+                    "name": "Animation",
+                    "entries": [
+                      {
+                        "idResource": "AnimationGLTF|2025-04-23T12:31:14.177Z|06514"
+                      },
+                      {
+                        "idResource": "AnimationGLTF|2025-04-23T12:31:14.178Z|20131"
+                      }
+                    ]
                   }
                 ]
               },
