@@ -359,6 +359,38 @@
       "type": "Graph"
     }
   },
+  "Graph|2025-04-22T12:28:54.572Z|46958": {
+    "ƒ.Graph": {
+      "name": "Construction3x3",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-22T12:28:50.255Z|78263"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-22T12:28:54.572Z|46958",
+      "type": "Graph"
+    }
+  },
   "Graph|2025-04-16T11:34:07.466Z|93977": {
     "ƒ.Graph": {
       "name": "FarmHaus",
@@ -410,6 +442,33 @@
       "type": "Graph"
     }
   },
+  "AnimationGLTF|2025-04-23T10:13:10.311Z|47575": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-23T10:13:10.311Z|47575",
+      "name": "Bush_Regrow",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Indicator\\Food_Gatherer_Full.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-23T10:27:54.202Z|74916": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-23T10:27:54.202Z|74916",
+      "name": "Bush_Full",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Indicator\\Food_Gatherer_Full.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-23T10:41:20.405Z|33762": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-23T10:41:20.405Z|33762",
+      "name": "Bush_Picking",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Indicator\\Food_Gatherer_Full.glb",
+      "events": {}
+    }
+  },
   "Graph|2025-04-16T14:53:37.027Z|54709": {
     "ƒ.Graph": {
       "name": "GatherFood",
@@ -435,7 +494,9 @@
               "active": true,
               "_jobType": 1,
               "jobDuration": 2083,
-              "cooldown": 30000
+              "cooldown": 30000,
+              "animationActive": "AnimationGLTF|2025-04-23T10:41:20.405Z|33762",
+              "animationCooldown": "AnimationGLTF|2025-04-23T10:13:10.311Z|47575"
             }
           }
         ],
@@ -494,11 +555,61 @@
         {
           "ƒ.GraphInstance": {
             "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-17T10:27:56.733Z|67719"
+            "idSource": "GraphGLTF|2025-04-23T10:19:54.296Z|68637"
           }
         }
       ],
       "idResource": "Graph|2025-04-16T14:53:37.027Z|54709",
+      "type": "Graph"
+    }
+  },
+  "Graph|2025-04-22T12:30:42.441Z|49439": {
+    "ƒ.Graph": {
+      "name": "MineHaus",
+      "active": true,
+      "components": {
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "BonusProvider": [
+          {
+            "Script.BonusProvider": {
+              "active": true,
+              "bonusType": 0,
+              "bonusData": 1,
+              "amount": 1
+            }
+          }
+        ],
+        "BuildData": [
+          {
+            "Script.BuildData": {
+              "active": true,
+              "interactionRadius": 1
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350"
+          }
+        }
+      ],
+      "idResource": "Graph|2025-04-22T12:30:42.441Z|49439",
       "type": "Graph"
     }
   },
@@ -1245,83 +1356,6 @@
       "type": "Graph"
     }
   },
-  "GraphGLTF|2025-04-14T09:24:07.316Z|19446": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
-      "active": true,
-      "components": {
-        "ComponentAnimation": [
-          {
-            "ƒ.ComponentAnimation": {
-              "Component": {
-                "active": true
-              },
-              "idAnimation": "AnimationGLTF|2025-04-14T09:24:07.316Z|46617",
-              "playmode": "loop",
-              "quantization": "continous",
-              "scale": 1,
-              "scaleWithGameTime": true,
-              "animateInEditor": true
-            }
-          }
-        ]
-      },
-      "idResource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446",
-      "type": "GraphGLTF",
-      "url": "Assets\\Indicator\\Gather_indicator.glb"
-    }
-  },
-  "AnimationGLTF|2025-04-14T09:24:07.316Z|46617": {
-    "ƒ.AnimationGLTF": {
-      "idResource": "AnimationGLTF|2025-04-14T09:24:07.316Z|46617",
-      "name": "Idle",
-      "type": "AnimationGLTF",
-      "url": "Assets\\Indicator\\Gather_indicator.glb",
-      "events": {}
-    }
-  },
-  "Graph|2025-04-14T09:26:15.653Z|33120": {
-    "ƒ.Graph": {
-      "name": "Indicator",
-      "active": true,
-      "components": {
-        "ComponentTransform": [
-          {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0, 0, 0]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ],
-        "JobProvider": [
-          {
-            "Script.JobProvider": {
-              "active": true,
-              "_jobType": 1,
-              "jobDuration": 500,
-              "cooldown": 30000
-            }
-          }
-        ]
-      },
-      "children": [
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-14T09:24:07.316Z|19446"
-          }
-        }
-      ],
-      "idResource": "Graph|2025-04-14T09:26:15.653Z|33120",
-      "type": "Graph"
-    }
-  },
   "GraphGLTF|2025-04-14T09:45:18.085Z|81489": {
     "ƒ.GraphGLTF": {
       "name": "Scene",
@@ -1382,16 +1416,6 @@
       "type": "Graph"
     }
   },
-  "GraphGLTF|2025-04-17T10:17:57.332Z|63758": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
-      "active": true,
-      "components": {},
-      "idResource": "GraphGLTF|2025-04-17T10:17:57.332Z|63758",
-      "type": "GraphGLTF",
-      "url": "Assets\\Indicator\\Stone_Gather_Indicator_Empty.glb"
-    }
-  },
   "GraphGLTF|2025-04-17T10:18:46.161Z|80005": {
     "ƒ.GraphGLTF": {
       "name": "Scene",
@@ -1400,26 +1424,6 @@
       "idResource": "GraphGLTF|2025-04-17T10:18:46.161Z|80005",
       "type": "GraphGLTF",
       "url": "Assets\\Indicator\\Stone_Gather_Indicator_Full.glb"
-    }
-  },
-  "GraphGLTF|2025-04-17T10:27:50.483Z|38263": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
-      "active": true,
-      "components": {},
-      "idResource": "GraphGLTF|2025-04-17T10:27:50.483Z|38263",
-      "type": "GraphGLTF",
-      "url": "Assets\\Indicator\\Food_Gatherer_Empty.glb"
-    }
-  },
-  "GraphGLTF|2025-04-17T10:27:56.733Z|67719": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
-      "active": true,
-      "components": {},
-      "idResource": "GraphGLTF|2025-04-17T10:27:56.733Z|67719",
-      "type": "GraphGLTF",
-      "url": "Assets\\Indicator\\Food_Gatherer_Full.glb"
     }
   },
   "GraphGLTF|2025-04-17T12:16:12.451Z|79009": {
@@ -1452,86 +1456,39 @@
       "url": "Assets\\Houses\\House_Construction_3x3.glb"
     }
   },
-  "Graph|2025-04-22T12:28:54.572Z|46958": {
-    "ƒ.Graph": {
-      "name": "Construction3x3",
+  "GraphGLTF|2025-04-23T10:19:54.296Z|68637": {
+    "ƒ.GraphGLTF": {
+      "name": "Scene",
       "active": true,
       "components": {
-        "ComponentTransform": [
+        "ComponentAnimation": [
           {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0, 0, 0]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
+            "ƒ.ComponentAnimation": {
               "Component": {
                 "active": true
-              }
+              },
+              "idAnimation": "AnimationGLTF|2025-04-23T10:27:54.202Z|74916",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": false
             }
           }
         ]
       },
-      "children": [
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-22T12:28:50.255Z|78263"
-          }
-        }
-      ],
-      "idResource": "Graph|2025-04-22T12:28:54.572Z|46958",
-      "type": "Graph"
+      "idResource": "GraphGLTF|2025-04-23T10:19:54.296Z|68637",
+      "type": "GraphGLTF",
+      "url": "Assets\\Indicator\\Food_Gatherer_Full.glb"
     }
   },
-  "Graph|2025-04-22T12:30:42.441Z|49439": {
-    "ƒ.Graph": {
-      "name": "MineHaus",
-      "active": true,
-      "components": {
-        "ComponentTransform": [
-          {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0, 0, 0]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ],
-        "BonusProvider": [
-          {
-            "Script.BonusProvider": {
-              "active": true,
-              "bonusType": 0,
-              "bonusData": 1,
-              "amount": 1
-            }
-          }
-        ],
-        "BuildData": [
-          {
-            "Script.BuildData": {
-              "active": true,
-              "interactionRadius": 1
-            }
-          }
-        ]
-      },
-      "children": [
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-08T10:32:49.691Z|74350"
-          }
-        }
-      ],
-      "idResource": "Graph|2025-04-22T12:30:42.441Z|49439",
-      "type": "Graph"
+  "AnimationGLTF|2025-04-23T10:27:54.201Z|81788": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-23T10:27:54.201Z|81788",
+      "name": "Bush_Empty",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Indicator\\Food_Gatherer_Full.glb",
+      "events": {}
     }
   }
 }
