@@ -658,16 +658,13 @@ var Script;
             jobStart() {
                 if (this.#animator && this.animationActive) {
                     this.#animator.animation = this.animationActive;
+                    this.#animator.playmode = ƒ.ANIMATION_PLAYMODE.PLAY_ONCE;
                     this.#animator.time = 0;
                 }
             }
             jobFinish() {
                 this.#currentCooldown = this.cooldown;
                 this.target(false);
-                if (this.#animator && this.animationCooldown) {
-                    this.#animator.animation = this.animationCooldown;
-                    this.#animator.time = 0;
-                }
             }
             target(_targeted) {
                 this.#targeted = _targeted;
@@ -684,6 +681,12 @@ var Script;
             update(_e) {
                 if (this.#currentCooldown > 0) {
                     this.#currentCooldown -= _e.detail.deltaTime;
+                    if (this.#currentCooldown <= 0) {
+                        if (this.#animator && this.animationCooldown) {
+                            this.#animator.animation = this.animationCooldown;
+                            this.#animator.time = 0;
+                        }
+                    }
                 }
             }
             static {

@@ -38,16 +38,13 @@ namespace Script {
         jobStart(): void {
             if (this.#animator && this.animationActive) {
                 this.#animator.animation = this.animationActive;
+                this.#animator.playmode = ƒ.ANIMATION_PLAYMODE.PLAY_ONCE;
                 this.#animator.time = 0;
             }
         }
         jobFinish(): void {
             this.#currentCooldown = this.cooldown;
             this.target(false);
-            if (this.#animator && this.animationCooldown) {
-                this.#animator.animation = this.animationCooldown;
-                this.#animator.time = 0;
-            }
         }
         target(_targeted: boolean) {
             this.#targeted = _targeted;
@@ -64,6 +61,12 @@ namespace Script {
         update(_e: CustomEvent<UpdateEvent>): void {
             if (this.#currentCooldown > 0) {
                 this.#currentCooldown -= _e.detail.deltaTime;
+                if (this.#currentCooldown <= 0) {
+                    if (this.#animator && this.animationCooldown) {
+                        this.#animator.animation = this.animationCooldown;
+                        this.#animator.time = 0;
+                    }
+                }
             }
         }
     }
