@@ -38,6 +38,24 @@
       "alphaClip": 0.01
     }
   },
+  "AnimationGLTF|2025-04-23T12:31:14.177Z|06514": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-23T12:31:14.177Z|06514",
+      "name": "Ore_Picking",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Indicator\\Stone_Gather_Indicator_Full.glb",
+      "events": {}
+    }
+  },
+  "AnimationGLTF|2025-04-23T12:31:14.178Z|20131": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-23T12:31:14.178Z|20131",
+      "name": "Ore_Regrow",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Indicator\\Stone_Gather_Indicator_Full.glb",
+      "events": {}
+    }
+  },
   "Graph|2025-04-08T06:37:31.827Z|46952": {
     "ƒ.Graph": {
       "name": "GatherStone",
@@ -1430,7 +1448,7 @@
                 "active": true
               },
               "idAnimation": "AnimationGLTF|2025-04-23T12:31:14.177Z|06514",
-              "playmode": "loop",
+              "playmode": "stop",
               "quantization": "continous",
               "scale": 1,
               "scaleWithGameTime": true,
@@ -1486,7 +1504,7 @@
                 "active": true
               },
               "idAnimation": "AnimationGLTF|2025-04-23T10:13:10.311Z|47575",
-              "playmode": "loop",
+              "playmode": "stop",
               "quantization": "continous",
               "scale": 1,
               "scaleWithGameTime": true,
@@ -1506,24 +1524,6 @@
       "name": "Bush_Empty",
       "type": "AnimationGLTF",
       "url": "Assets\\Indicator\\Food_Gatherer_Full.glb",
-      "events": {}
-    }
-  },
-  "AnimationGLTF|2025-04-23T12:31:14.177Z|06514": {
-    "ƒ.AnimationGLTF": {
-      "idResource": "AnimationGLTF|2025-04-23T12:31:14.177Z|06514",
-      "name": "Ore_Picking",
-      "type": "AnimationGLTF",
-      "url": "Assets\\Indicator\\Stone_Gather_Indicator_Full.glb",
-      "events": {}
-    }
-  },
-  "AnimationGLTF|2025-04-23T12:31:14.178Z|20131": {
-    "ƒ.AnimationGLTF": {
-      "idResource": "AnimationGLTF|2025-04-23T12:31:14.178Z|20131",
-      "name": "Ore_Regrow",
-      "type": "AnimationGLTF",
-      "url": "Assets\\Indicator\\Stone_Gather_Indicator_Full.glb",
       "events": {}
     }
   }
