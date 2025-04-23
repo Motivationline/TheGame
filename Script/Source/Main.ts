@@ -34,7 +34,7 @@ namespace Script {
     let graphId/* : string */ = document.head.querySelector("meta[autoView]").getAttribute("autoView");
     let graph: ƒ.Graph = <ƒ.Graph>ƒ.Project.resources[graphId];
     viewport = new ƒ.Viewport();
-    let camera = findFirstCameraInGraph(graph);
+    let camera = findFirstComponentInGraph(graph, ƒ.ComponentCamera);
 
     viewport.initialize("game", graph, camera, canvas);
     canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: viewport }));

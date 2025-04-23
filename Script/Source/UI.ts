@@ -46,7 +46,7 @@ namespace Script {
 
     class CameraController implements ToggleableUI {
         canvas = document.querySelector("canvas");
-        camera = findFirstCameraInGraph(viewport.getBranch());
+        camera = findFirstComponentInGraph(viewport.getBranch(), ƒ.ComponentCamera);
         currentZoom: number = 3;
         zoomFactor: number = 10;
         zoomFactorLimits: [number, number] = [0, 10];

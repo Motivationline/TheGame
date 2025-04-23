@@ -131,25 +131,29 @@ var Script;
         let _classExtraInitializers = [];
         let _classThis;
         let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
         let _bonusType_decorators;
         let _bonusType_initializers = [];
-        let _bonusType_extraInitializers = [];
         let _bonusData_decorators;
         let _bonusData_initializers = [];
-        let _bonusData_extraInitializers = [];
         let _amount_decorators;
         let _amount_initializers = [];
-        let _amount_extraInitializers = [];
         var BonusProvider = class extends _classSuper {
             static { _classThis = this; }
+            constructor() {
+                super(...arguments);
+                this.bonusType = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _bonusType_initializers, BonusType.ADD));
+                this.bonusData = __runInitializers(this, _bonusData_initializers, void 0);
+                this.amount = __runInitializers(this, _amount_initializers, 1);
+            }
             static {
                 const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
                 _bonusType_decorators = [ƒ.serialize(BonusType)];
                 _bonusData_decorators = [ƒ.serialize(BonusData)];
                 _amount_decorators = [ƒ.serialize(Number)];
-                __esDecorate(null, null, _bonusType_decorators, { kind: "field", name: "bonusType", static: false, private: false, access: { has: obj => "bonusType" in obj, get: obj => obj.bonusType, set: (obj, value) => { obj.bonusType = value; } }, metadata: _metadata }, _bonusType_initializers, _bonusType_extraInitializers);
-                __esDecorate(null, null, _bonusData_decorators, { kind: "field", name: "bonusData", static: false, private: false, access: { has: obj => "bonusData" in obj, get: obj => obj.bonusData, set: (obj, value) => { obj.bonusData = value; } }, metadata: _metadata }, _bonusData_initializers, _bonusData_extraInitializers);
-                __esDecorate(null, null, _amount_decorators, { kind: "field", name: "amount", static: false, private: false, access: { has: obj => "amount" in obj, get: obj => obj.amount, set: (obj, value) => { obj.amount = value; } }, metadata: _metadata }, _amount_initializers, _amount_extraInitializers);
+                __esDecorate(null, null, _bonusType_decorators, { kind: "field", name: "bonusType", static: false, private: false, access: { has: obj => "bonusType" in obj, get: obj => obj.bonusType, set: (obj, value) => { obj.bonusType = value; } }, metadata: _metadata }, _bonusType_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _bonusData_decorators, { kind: "field", name: "bonusData", static: false, private: false, access: { has: obj => "bonusData" in obj, get: obj => obj.bonusData, set: (obj, value) => { obj.bonusData = value; } }, metadata: _metadata }, _bonusData_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _amount_decorators, { kind: "field", name: "amount", static: false, private: false, access: { has: obj => "amount" in obj, get: obj => obj.amount, set: (obj, value) => { obj.amount = value; } }, metadata: _metadata }, _amount_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 BonusProvider = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -185,13 +189,6 @@ var Script;
                     }
                 }
                 return startAmount;
-            }
-            constructor() {
-                super(...arguments);
-                this.bonusType = __runInitializers(this, _bonusType_initializers, BonusType.ADD);
-                this.bonusData = (__runInitializers(this, _bonusType_extraInitializers), __runInitializers(this, _bonusData_initializers, void 0));
-                this.amount = (__runInitializers(this, _bonusData_extraInitializers), __runInitializers(this, _amount_initializers, 1));
-                __runInitializers(this, _amount_extraInitializers);
             }
             static {
                 __runInitializers(_classThis, _classExtraInitializers);
@@ -389,7 +386,7 @@ var Script;
         let graphId /* : string */ = document.head.querySelector("meta[autoView]").getAttribute("autoView");
         let graph = ƒ.Project.resources[graphId];
         Script.viewport = new ƒ.Viewport();
-        let camera = Script.findFirstCameraInGraph(graph);
+        let camera = Script.findFirstComponentInGraph(graph, ƒ.ComponentCamera);
         Script.viewport.initialize("game", graph, camera, canvas);
         canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: Script.viewport }));
         document.getElementById("click-start").remove();
@@ -609,32 +606,40 @@ var Script;
         let _classExtraInitializers = [];
         let _classThis;
         let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
         let __jobType_decorators;
         let __jobType_initializers = [];
-        let __jobType_extraInitializers = [];
         let _jobDuration_decorators;
         let _jobDuration_initializers = [];
-        let _jobDuration_extraInitializers = [];
         let _cooldown_decorators;
         let _cooldown_initializers = [];
-        let _cooldown_extraInitializers = [];
+        let _animationActive_decorators;
+        let _animationActive_initializers = [];
+        let _animationCooldown_decorators;
+        let _animationCooldown_initializers = [];
         var JobProvider = class extends _classSuper {
             static { _classThis = this; }
             constructor() {
                 super(...arguments);
-                this._jobType = __runInitializers(this, __jobType_initializers, void 0);
-                this.jobDuration = (__runInitializers(this, __jobType_extraInitializers), __runInitializers(this, _jobDuration_initializers, 500));
-                this.cooldown = (__runInitializers(this, _jobDuration_extraInitializers), __runInitializers(this, _cooldown_initializers, 30000));
-                this.#currentCooldown = (__runInitializers(this, _cooldown_extraInitializers), 0);
+                this._jobType = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, __jobType_initializers, void 0));
+                this.jobDuration = __runInitializers(this, _jobDuration_initializers, 500);
+                this.cooldown = __runInitializers(this, _cooldown_initializers, 30000);
+                this.animationActive = __runInitializers(this, _animationActive_initializers, void 0);
+                this.animationCooldown = __runInitializers(this, _animationCooldown_initializers, void 0);
+                this.#currentCooldown = 0;
             }
             static {
                 const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
                 __jobType_decorators = [ƒ.serialize(JobType)];
                 _jobDuration_decorators = [ƒ.serialize(Number)];
                 _cooldown_decorators = [ƒ.serialize(Number)];
-                __esDecorate(null, null, __jobType_decorators, { kind: "field", name: "_jobType", static: false, private: false, access: { has: obj => "_jobType" in obj, get: obj => obj._jobType, set: (obj, value) => { obj._jobType = value; } }, metadata: _metadata }, __jobType_initializers, __jobType_extraInitializers);
-                __esDecorate(null, null, _jobDuration_decorators, { kind: "field", name: "jobDuration", static: false, private: false, access: { has: obj => "jobDuration" in obj, get: obj => obj.jobDuration, set: (obj, value) => { obj.jobDuration = value; } }, metadata: _metadata }, _jobDuration_initializers, _jobDuration_extraInitializers);
-                __esDecorate(null, null, _cooldown_decorators, { kind: "field", name: "cooldown", static: false, private: false, access: { has: obj => "cooldown" in obj, get: obj => obj.cooldown, set: (obj, value) => { obj.cooldown = value; } }, metadata: _metadata }, _cooldown_initializers, _cooldown_extraInitializers);
+                _animationActive_decorators = [ƒ.serialize(ƒ.Animation)];
+                _animationCooldown_decorators = [ƒ.serialize(ƒ.Animation)];
+                __esDecorate(null, null, __jobType_decorators, { kind: "field", name: "_jobType", static: false, private: false, access: { has: obj => "_jobType" in obj, get: obj => obj._jobType, set: (obj, value) => { obj._jobType = value; } }, metadata: _metadata }, __jobType_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _jobDuration_decorators, { kind: "field", name: "jobDuration", static: false, private: false, access: { has: obj => "jobDuration" in obj, get: obj => obj.jobDuration, set: (obj, value) => { obj.jobDuration = value; } }, metadata: _metadata }, _jobDuration_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _cooldown_decorators, { kind: "field", name: "cooldown", static: false, private: false, access: { has: obj => "cooldown" in obj, get: obj => obj.cooldown, set: (obj, value) => { obj.cooldown = value; } }, metadata: _metadata }, _cooldown_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _animationActive_decorators, { kind: "field", name: "animationActive", static: false, private: false, access: { has: obj => "animationActive" in obj, get: obj => obj.animationActive, set: (obj, value) => { obj.animationActive = value; } }, metadata: _metadata }, _animationActive_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _animationCooldown_decorators, { kind: "field", name: "animationCooldown", static: false, private: false, access: { has: obj => "animationCooldown" in obj, get: obj => obj.animationCooldown, set: (obj, value) => { obj.animationCooldown = value; } }, metadata: _metadata }, _animationCooldown_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 JobProvider = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -642,16 +647,27 @@ var Script;
             static { this.JobProviders = new Set(); }
             #currentCooldown;
             #targeted;
+            #animator;
             start(_e) {
                 JobProvider.JobProviders.add(this);
+                this.#animator = Script.findFirstComponentInGraph(this.node, ƒ.ComponentAnimation);
             }
             remove(_e) {
                 JobProvider.JobProviders.delete(this);
             }
-            jobStart() { }
+            jobStart() {
+                if (this.#animator && this.animationActive) {
+                    this.#animator.animation = this.animationActive;
+                    this.#animator.time = 0;
+                }
+            }
             jobFinish() {
                 this.#currentCooldown = this.cooldown;
                 this.target(false);
+                if (this.#animator && this.animationCooldown) {
+                    this.#animator.animation = this.animationCooldown;
+                    this.#animator.time = 0;
+                }
             }
             target(_targeted) {
                 this.#targeted = _targeted;
@@ -775,7 +791,7 @@ var Script;
     class CameraController {
         constructor() {
             this.canvas = document.querySelector("canvas");
-            this.camera = Script.findFirstCameraInGraph(Script.viewport.getBranch());
+            this.camera = Script.findFirstComponentInGraph(Script.viewport.getBranch(), ƒ.ComponentCamera);
             this.currentZoom = 3;
             this.zoomFactor = 10;
             this.zoomFactorLimits = [0, 10];
@@ -920,30 +936,28 @@ var Script;
         let _classExtraInitializers = [];
         let _classThis;
         let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
         let _interactionRadius_decorators;
         let _interactionRadius_initializers = [];
-        let _interactionRadius_extraInitializers = [];
         let _buildUpGraph_decorators;
         let _buildUpGraph_initializers = [];
-        let _buildUpGraph_extraInitializers = [];
         var BuildData = class extends _classSuper {
             static { _classThis = this; }
+            constructor() {
+                super(...arguments);
+                this.interactionRadius = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _interactionRadius_initializers, 1));
+                this.buildUpGraph = __runInitializers(this, _buildUpGraph_initializers, void 0);
+            }
             static {
                 const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
                 _interactionRadius_decorators = [ƒ.serialize(Number)];
                 _buildUpGraph_decorators = [ƒ.serialize(ƒ.Graph)];
-                __esDecorate(null, null, _interactionRadius_decorators, { kind: "field", name: "interactionRadius", static: false, private: false, access: { has: obj => "interactionRadius" in obj, get: obj => obj.interactionRadius, set: (obj, value) => { obj.interactionRadius = value; } }, metadata: _metadata }, _interactionRadius_initializers, _interactionRadius_extraInitializers);
-                __esDecorate(null, null, _buildUpGraph_decorators, { kind: "field", name: "buildUpGraph", static: false, private: false, access: { has: obj => "buildUpGraph" in obj, get: obj => obj.buildUpGraph, set: (obj, value) => { obj.buildUpGraph = value; } }, metadata: _metadata }, _buildUpGraph_initializers, _buildUpGraph_extraInitializers);
+                __esDecorate(null, null, _interactionRadius_decorators, { kind: "field", name: "interactionRadius", static: false, private: false, access: { has: obj => "interactionRadius" in obj, get: obj => obj.interactionRadius, set: (obj, value) => { obj.interactionRadius = value; } }, metadata: _metadata }, _interactionRadius_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _buildUpGraph_decorators, { kind: "field", name: "buildUpGraph", static: false, private: false, access: { has: obj => "buildUpGraph" in obj, get: obj => obj.buildUpGraph, set: (obj, value) => { obj.buildUpGraph = value; } }, metadata: _metadata }, _buildUpGraph_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 BuildData = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
                 __runInitializers(_classThis, _classExtraInitializers);
-            }
-            constructor() {
-                super(...arguments);
-                this.interactionRadius = __runInitializers(this, _interactionRadius_initializers, 1);
-                this.buildUpGraph = (__runInitializers(this, _interactionRadius_extraInitializers), __runInitializers(this, _buildUpGraph_initializers, void 0));
-                __runInitializers(this, _buildUpGraph_extraInitializers);
             }
         };
         return BuildData = _classThis;
@@ -960,24 +974,19 @@ var Script;
         let _classExtraInitializers = [];
         let _classThis;
         let _classSuper = ƒ.Component;
+        let _instanceExtraInitializers = [];
         let _graph_decorators;
         let _graph_initializers = [];
-        let _graph_extraInitializers = [];
         let _size_decorators;
         let _size_initializers = [];
-        let _size_extraInitializers = [];
         let _name_decorators;
         let _name_initializers = [];
-        let _name_extraInitializers = [];
         let _costFood_decorators;
         let _costFood_initializers = [];
-        let _costFood_extraInitializers = [];
         let _costStone_decorators;
         let _costStone_initializers = [];
-        let _costStone_extraInitializers = [];
         let _includeInMenu_decorators;
         let _includeInMenu_initializers = [];
-        let _includeInMenu_extraInitializers = [];
         var Building = class extends _classSuper {
             static { _classThis = this; }
             static {
@@ -988,12 +997,12 @@ var Script;
                 _costFood_decorators = [ƒ.serialize(Number)];
                 _costStone_decorators = [ƒ.serialize(Number)];
                 _includeInMenu_decorators = [ƒ.serialize(Boolean)];
-                __esDecorate(null, null, _graph_decorators, { kind: "field", name: "graph", static: false, private: false, access: { has: obj => "graph" in obj, get: obj => obj.graph, set: (obj, value) => { obj.graph = value; } }, metadata: _metadata }, _graph_initializers, _graph_extraInitializers);
-                __esDecorate(null, null, _size_decorators, { kind: "field", name: "size", static: false, private: false, access: { has: obj => "size" in obj, get: obj => obj.size, set: (obj, value) => { obj.size = value; } }, metadata: _metadata }, _size_initializers, _size_extraInitializers);
-                __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: obj => "name" in obj, get: obj => obj.name, set: (obj, value) => { obj.name = value; } }, metadata: _metadata }, _name_initializers, _name_extraInitializers);
-                __esDecorate(null, null, _costFood_decorators, { kind: "field", name: "costFood", static: false, private: false, access: { has: obj => "costFood" in obj, get: obj => obj.costFood, set: (obj, value) => { obj.costFood = value; } }, metadata: _metadata }, _costFood_initializers, _costFood_extraInitializers);
-                __esDecorate(null, null, _costStone_decorators, { kind: "field", name: "costStone", static: false, private: false, access: { has: obj => "costStone" in obj, get: obj => obj.costStone, set: (obj, value) => { obj.costStone = value; } }, metadata: _metadata }, _costStone_initializers, _costStone_extraInitializers);
-                __esDecorate(null, null, _includeInMenu_decorators, { kind: "field", name: "includeInMenu", static: false, private: false, access: { has: obj => "includeInMenu" in obj, get: obj => obj.includeInMenu, set: (obj, value) => { obj.includeInMenu = value; } }, metadata: _metadata }, _includeInMenu_initializers, _includeInMenu_extraInitializers);
+                __esDecorate(null, null, _graph_decorators, { kind: "field", name: "graph", static: false, private: false, access: { has: obj => "graph" in obj, get: obj => obj.graph, set: (obj, value) => { obj.graph = value; } }, metadata: _metadata }, _graph_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _size_decorators, { kind: "field", name: "size", static: false, private: false, access: { has: obj => "size" in obj, get: obj => obj.size, set: (obj, value) => { obj.size = value; } }, metadata: _metadata }, _size_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: obj => "name" in obj, get: obj => obj.name, set: (obj, value) => { obj.name = value; } }, metadata: _metadata }, _name_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _costFood_decorators, { kind: "field", name: "costFood", static: false, private: false, access: { has: obj => "costFood" in obj, get: obj => obj.costFood, set: (obj, value) => { obj.costFood = value; } }, metadata: _metadata }, _costFood_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _costStone_decorators, { kind: "field", name: "costStone", static: false, private: false, access: { has: obj => "costStone" in obj, get: obj => obj.costStone, set: (obj, value) => { obj.costStone = value; } }, metadata: _metadata }, _costStone_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _includeInMenu_decorators, { kind: "field", name: "includeInMenu", static: false, private: false, access: { has: obj => "includeInMenu" in obj, get: obj => obj.includeInMenu, set: (obj, value) => { obj.includeInMenu = value; } }, metadata: _metadata }, _includeInMenu_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 Building = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -1004,13 +1013,12 @@ var Script;
             }
             constructor() {
                 super();
-                this.graph = __runInitializers(this, _graph_initializers, void 0);
-                this.size = (__runInitializers(this, _graph_extraInitializers), __runInitializers(this, _size_initializers, 1));
-                this.name = (__runInitializers(this, _size_extraInitializers), __runInitializers(this, _name_initializers, ""));
-                this.costFood = (__runInitializers(this, _name_extraInitializers), __runInitializers(this, _costFood_initializers, 5));
-                this.costStone = (__runInitializers(this, _costFood_extraInitializers), __runInitializers(this, _costStone_initializers, 5));
-                this.includeInMenu = (__runInitializers(this, _costStone_extraInitializers), __runInitializers(this, _includeInMenu_initializers, false));
-                __runInitializers(this, _includeInMenu_extraInitializers);
+                this.graph = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _graph_initializers, void 0));
+                this.size = __runInitializers(this, _size_initializers, 1);
+                this.name = __runInitializers(this, _name_initializers, "");
+                this.costFood = __runInitializers(this, _costFood_initializers, 5);
+                this.costStone = __runInitializers(this, _costStone_initializers, 5);
+                this.includeInMenu = __runInitializers(this, _includeInMenu_initializers, false);
                 if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                     return;
                 ƒ.Project.addEventListener("resourcesLoaded" /* ƒ.EVENT.RESOURCES_LOADED */, () => {
@@ -1042,38 +1050,44 @@ var Script;
         let _classExtraInitializers = [];
         let _classThis;
         let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
         let _modelBase_decorators;
         let _modelBase_initializers = [];
-        let _modelBase_extraInitializers = [];
         let _modelMine_decorators;
         let _modelMine_initializers = [];
-        let _modelMine_extraInitializers = [];
         let _modelBuild_decorators;
         let _modelBuild_initializers = [];
-        let _modelBuild_extraInitializers = [];
         let _modelFood_decorators;
         let _modelFood_initializers = [];
-        let _modelFood_extraInitializers = [];
         let _animIdle_decorators;
         let _animIdle_initializers = [];
-        let _animIdle_extraInitializers = [];
         let _animWalk_decorators;
         let _animWalk_initializers = [];
-        let _animWalk_extraInitializers = [];
         let _animGatherFood_decorators;
         let _animGatherFood_initializers = [];
-        let _animGatherFood_extraInitializers = [];
         let _animGatherStone_decorators;
         let _animGatherStone_initializers = [];
-        let _animGatherStone_extraInitializers = [];
         let _animBuild_decorators;
         let _animBuild_initializers = [];
-        let _animBuild_extraInitializers = [];
         let _animSelected_decorators;
         let _animSelected_initializers = [];
-        let _animSelected_extraInitializers = [];
         var JobAnimation = class extends _classSuper {
             static { _classThis = this; }
+            constructor() {
+                super(...arguments);
+                this.#animations = (__runInitializers(this, _instanceExtraInitializers), new Map());
+                this.#models = new Map();
+                this.modelBase = __runInitializers(this, _modelBase_initializers, void 0);
+                this.modelMine = __runInitializers(this, _modelMine_initializers, void 0);
+                this.modelBuild = __runInitializers(this, _modelBuild_initializers, void 0);
+                this.modelFood = __runInitializers(this, _modelFood_initializers, void 0);
+                this.animIdle = __runInitializers(this, _animIdle_initializers, void 0);
+                this.animWalk = __runInitializers(this, _animWalk_initializers, void 0);
+                this.animGatherFood = __runInitializers(this, _animGatherFood_initializers, void 0);
+                this.animGatherStone = __runInitializers(this, _animGatherStone_initializers, void 0);
+                this.animBuild = __runInitializers(this, _animBuild_initializers, void 0);
+                this.animSelected = __runInitializers(this, _animSelected_initializers, void 0);
+            }
             static {
                 const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
                 _modelBase_decorators = [ƒ.serialize(ƒ.Graph)];
@@ -1086,16 +1100,16 @@ var Script;
                 _animGatherStone_decorators = [ƒ.serialize(ƒ.Animation)];
                 _animBuild_decorators = [ƒ.serialize(ƒ.Animation)];
                 _animSelected_decorators = [ƒ.serialize(ƒ.Animation)];
-                __esDecorate(null, null, _modelBase_decorators, { kind: "field", name: "modelBase", static: false, private: false, access: { has: obj => "modelBase" in obj, get: obj => obj.modelBase, set: (obj, value) => { obj.modelBase = value; } }, metadata: _metadata }, _modelBase_initializers, _modelBase_extraInitializers);
-                __esDecorate(null, null, _modelMine_decorators, { kind: "field", name: "modelMine", static: false, private: false, access: { has: obj => "modelMine" in obj, get: obj => obj.modelMine, set: (obj, value) => { obj.modelMine = value; } }, metadata: _metadata }, _modelMine_initializers, _modelMine_extraInitializers);
-                __esDecorate(null, null, _modelBuild_decorators, { kind: "field", name: "modelBuild", static: false, private: false, access: { has: obj => "modelBuild" in obj, get: obj => obj.modelBuild, set: (obj, value) => { obj.modelBuild = value; } }, metadata: _metadata }, _modelBuild_initializers, _modelBuild_extraInitializers);
-                __esDecorate(null, null, _modelFood_decorators, { kind: "field", name: "modelFood", static: false, private: false, access: { has: obj => "modelFood" in obj, get: obj => obj.modelFood, set: (obj, value) => { obj.modelFood = value; } }, metadata: _metadata }, _modelFood_initializers, _modelFood_extraInitializers);
-                __esDecorate(null, null, _animIdle_decorators, { kind: "field", name: "animIdle", static: false, private: false, access: { has: obj => "animIdle" in obj, get: obj => obj.animIdle, set: (obj, value) => { obj.animIdle = value; } }, metadata: _metadata }, _animIdle_initializers, _animIdle_extraInitializers);
-                __esDecorate(null, null, _animWalk_decorators, { kind: "field", name: "animWalk", static: false, private: false, access: { has: obj => "animWalk" in obj, get: obj => obj.animWalk, set: (obj, value) => { obj.animWalk = value; } }, metadata: _metadata }, _animWalk_initializers, _animWalk_extraInitializers);
-                __esDecorate(null, null, _animGatherFood_decorators, { kind: "field", name: "animGatherFood", static: false, private: false, access: { has: obj => "animGatherFood" in obj, get: obj => obj.animGatherFood, set: (obj, value) => { obj.animGatherFood = value; } }, metadata: _metadata }, _animGatherFood_initializers, _animGatherFood_extraInitializers);
-                __esDecorate(null, null, _animGatherStone_decorators, { kind: "field", name: "animGatherStone", static: false, private: false, access: { has: obj => "animGatherStone" in obj, get: obj => obj.animGatherStone, set: (obj, value) => { obj.animGatherStone = value; } }, metadata: _metadata }, _animGatherStone_initializers, _animGatherStone_extraInitializers);
-                __esDecorate(null, null, _animBuild_decorators, { kind: "field", name: "animBuild", static: false, private: false, access: { has: obj => "animBuild" in obj, get: obj => obj.animBuild, set: (obj, value) => { obj.animBuild = value; } }, metadata: _metadata }, _animBuild_initializers, _animBuild_extraInitializers);
-                __esDecorate(null, null, _animSelected_decorators, { kind: "field", name: "animSelected", static: false, private: false, access: { has: obj => "animSelected" in obj, get: obj => obj.animSelected, set: (obj, value) => { obj.animSelected = value; } }, metadata: _metadata }, _animSelected_initializers, _animSelected_extraInitializers);
+                __esDecorate(null, null, _modelBase_decorators, { kind: "field", name: "modelBase", static: false, private: false, access: { has: obj => "modelBase" in obj, get: obj => obj.modelBase, set: (obj, value) => { obj.modelBase = value; } }, metadata: _metadata }, _modelBase_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _modelMine_decorators, { kind: "field", name: "modelMine", static: false, private: false, access: { has: obj => "modelMine" in obj, get: obj => obj.modelMine, set: (obj, value) => { obj.modelMine = value; } }, metadata: _metadata }, _modelMine_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _modelBuild_decorators, { kind: "field", name: "modelBuild", static: false, private: false, access: { has: obj => "modelBuild" in obj, get: obj => obj.modelBuild, set: (obj, value) => { obj.modelBuild = value; } }, metadata: _metadata }, _modelBuild_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _modelFood_decorators, { kind: "field", name: "modelFood", static: false, private: false, access: { has: obj => "modelFood" in obj, get: obj => obj.modelFood, set: (obj, value) => { obj.modelFood = value; } }, metadata: _metadata }, _modelFood_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _animIdle_decorators, { kind: "field", name: "animIdle", static: false, private: false, access: { has: obj => "animIdle" in obj, get: obj => obj.animIdle, set: (obj, value) => { obj.animIdle = value; } }, metadata: _metadata }, _animIdle_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _animWalk_decorators, { kind: "field", name: "animWalk", static: false, private: false, access: { has: obj => "animWalk" in obj, get: obj => obj.animWalk, set: (obj, value) => { obj.animWalk = value; } }, metadata: _metadata }, _animWalk_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _animGatherFood_decorators, { kind: "field", name: "animGatherFood", static: false, private: false, access: { has: obj => "animGatherFood" in obj, get: obj => obj.animGatherFood, set: (obj, value) => { obj.animGatherFood = value; } }, metadata: _metadata }, _animGatherFood_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _animGatherStone_decorators, { kind: "field", name: "animGatherStone", static: false, private: false, access: { has: obj => "animGatherStone" in obj, get: obj => obj.animGatherStone, set: (obj, value) => { obj.animGatherStone = value; } }, metadata: _metadata }, _animGatherStone_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _animBuild_decorators, { kind: "field", name: "animBuild", static: false, private: false, access: { has: obj => "animBuild" in obj, get: obj => obj.animBuild, set: (obj, value) => { obj.animBuild = value; } }, metadata: _metadata }, _animBuild_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _animSelected_decorators, { kind: "field", name: "animSelected", static: false, private: false, access: { has: obj => "animSelected" in obj, get: obj => obj.animSelected, set: (obj, value) => { obj.animSelected = value; } }, metadata: _metadata }, _animSelected_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 JobAnimation = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -1146,22 +1160,6 @@ var Script;
                 this.#animator.playmode = ƒ.ANIMATION_PLAYMODE.LOOP;
                 this.#animator.activate(true);
             }
-            constructor() {
-                super(...arguments);
-                this.#animations = new Map();
-                this.#models = new Map();
-                this.modelBase = __runInitializers(this, _modelBase_initializers, void 0);
-                this.modelMine = (__runInitializers(this, _modelBase_extraInitializers), __runInitializers(this, _modelMine_initializers, void 0));
-                this.modelBuild = (__runInitializers(this, _modelMine_extraInitializers), __runInitializers(this, _modelBuild_initializers, void 0));
-                this.modelFood = (__runInitializers(this, _modelBuild_extraInitializers), __runInitializers(this, _modelFood_initializers, void 0));
-                this.animIdle = (__runInitializers(this, _modelFood_extraInitializers), __runInitializers(this, _animIdle_initializers, void 0));
-                this.animWalk = (__runInitializers(this, _animIdle_extraInitializers), __runInitializers(this, _animWalk_initializers, void 0));
-                this.animGatherFood = (__runInitializers(this, _animWalk_extraInitializers), __runInitializers(this, _animGatherFood_initializers, void 0));
-                this.animGatherStone = (__runInitializers(this, _animGatherFood_extraInitializers), __runInitializers(this, _animGatherStone_initializers, void 0));
-                this.animBuild = (__runInitializers(this, _animGatherStone_extraInitializers), __runInitializers(this, _animBuild_initializers, void 0));
-                this.animSelected = (__runInitializers(this, _animBuild_extraInitializers), __runInitializers(this, _animSelected_initializers, void 0));
-                __runInitializers(this, _animSelected_extraInitializers);
-            }
         };
         return JobAnimation = _classThis;
     })();
@@ -1177,15 +1175,15 @@ var Script;
         let _classExtraInitializers = [];
         let _classThis;
         let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
         let _speed_decorators;
         let _speed_initializers = [];
-        let _speed_extraInitializers = [];
         var JobTaker = class extends _classSuper {
             static { _classThis = this; }
             static {
                 const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
                 _speed_decorators = [ƒ.serialize(Number)];
-                __esDecorate(null, null, _speed_decorators, { kind: "field", name: "speed", static: false, private: false, access: { has: obj => "speed" in obj, get: obj => obj.speed, set: (obj, value) => { obj.speed = value; } }, metadata: _metadata }, _speed_initializers, _speed_extraInitializers);
+                __esDecorate(null, null, _speed_decorators, { kind: "field", name: "speed", static: false, private: false, access: { has: obj => "speed" in obj, get: obj => obj.speed, set: (obj, value) => { obj.speed = value; } }, metadata: _metadata }, _speed_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 JobTaker = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -1201,12 +1199,12 @@ var Script;
             #paused;
             constructor() {
                 super();
-                this.#job = Script.JobType.NONE;
+                this.#job = (__runInitializers(this, _instanceExtraInitializers), Script.JobType.NONE);
                 this.#currentJob = Script.JobType.NONE;
                 this.#progress = 0;
                 this.#timers = [];
                 this.speed = __runInitializers(this, _speed_initializers, 1);
-                this.#paused = (__runInitializers(this, _speed_extraInitializers), false);
+                this.#paused = false;
                 this.#needToRemoveTarget = false;
                 this.gatherResource = (deltaTime) => {
                     switch (this.#progress) {
@@ -1475,7 +1473,6 @@ var Script;
         let _get_radius_decorators;
         let _offset_decorators;
         let _offset_initializers = [];
-        let _offset_extraInitializers = [];
         var PickSphere = class extends _classSuper {
             static { _classThis = this; }
             static {
@@ -1483,7 +1480,7 @@ var Script;
                 _get_radius_decorators = [ƒ.serialize(Number)];
                 _offset_decorators = [ƒ.serialize(ƒ.Vector3)];
                 __esDecorate(this, null, _get_radius_decorators, { kind: "getter", name: "radius", static: false, private: false, access: { has: obj => "radius" in obj, get: obj => obj.radius }, metadata: _metadata }, null, _instanceExtraInitializers);
-                __esDecorate(null, null, _offset_decorators, { kind: "field", name: "offset", static: false, private: false, access: { has: obj => "offset" in obj, get: obj => obj.offset, set: (obj, value) => { obj.offset = value; } }, metadata: _metadata }, _offset_initializers, _offset_extraInitializers);
+                __esDecorate(null, null, _offset_decorators, { kind: "field", name: "offset", static: false, private: false, access: { has: obj => "offset" in obj, get: obj => obj.offset, set: (obj, value) => { obj.offset = value; } }, metadata: _metadata }, _offset_initializers, _instanceExtraInitializers);
                 __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
                 PickSphere = _classThis = _classDescriptor.value;
                 if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
@@ -1494,7 +1491,6 @@ var Script;
                 this.#radius = (__runInitializers(this, _instanceExtraInitializers), 1);
                 this.#radiusSquared = 1;
                 this.offset = __runInitializers(this, _offset_initializers, new ƒ.Vector3());
-                __runInitializers(this, _offset_extraInitializers);
                 if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                     return;
             }
@@ -1561,18 +1557,18 @@ var Script;
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;
-    function findFirstCameraInGraph(_graph) {
-        let cam = _graph.getComponent(ƒ.ComponentCamera);
-        if (cam)
-            return cam;
+    function findFirstComponentInGraph(_graph, _cmp) {
+        let foundCmp = _graph.getComponent(_cmp);
+        if (foundCmp)
+            return foundCmp;
         for (let child of _graph.getChildren()) {
-            cam = findFirstCameraInGraph(child);
-            if (cam)
-                return cam;
+            foundCmp = findFirstComponentInGraph(child, _cmp);
+            if (foundCmp)
+                return foundCmp;
         }
         return undefined;
     }
-    Script.findFirstCameraInGraph = findFirstCameraInGraph;
+    Script.findFirstComponentInGraph = findFirstComponentInGraph;
     function enumToArray(anEnum) {
         return Object.keys(anEnum)
             .map(n => Number.parseInt(n))

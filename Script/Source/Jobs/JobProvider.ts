@@ -20,18 +20,34 @@ namespace Script {
         jobDuration: number = 500;
         @ƒ.serialize(Number)
         cooldown: number = 30000;
+        @ƒ.serialize(ƒ.Animation)
+        animationActive: ƒ.Animation;
+        @ƒ.serialize(ƒ.Animation)
+        animationCooldown: ƒ.Animation;
+
         #currentCooldown = 0;
         #targeted: boolean;
+        #animator: ƒ.ComponentAnimation;
         start(_e: CustomEvent<UpdateEvent>): void {
             JobProvider.JobProviders.add(this);
+            this.#animator = findFirstComponentInGraph(this.node, ƒ.ComponentAnimation);
         }
         remove(_e: CustomEvent): void {
             JobProvider.JobProviders.delete(this);
         }
-        jobStart(): void { }
+        jobStart(): void {
+            if (this.#animator && this.animationActive) {
+                this.#animator.animation = this.animationActive;
+                this.#animator.time = 0;
+            }
+        }
         jobFinish(): void {
             this.#currentCooldown = this.cooldown;
             this.target(false);
+            if (this.#animator && this.animationCooldown) {
+                this.#animator.animation = this.animationCooldown;
+                this.#animator.time = 0;
+            }
         }
         target(_targeted: boolean) {
             this.#targeted = _targeted;

@@ -127,6 +127,8 @@ declare namespace Script {
         protected _jobType: JobType;
         jobDuration: number;
         cooldown: number;
+        animationActive: ƒ.Animation;
+        animationCooldown: ƒ.Animation;
         start(_e: CustomEvent<UpdateEvent>): void;
         remove(_e: CustomEvent): void;
         jobStart(): void;
@@ -278,7 +280,7 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
-    export function findFirstCameraInGraph(_graph: ƒ.Node): ƒ.ComponentCamera;
+    export function findFirstComponentInGraph<T extends ƒ.Component>(_graph: ƒ.Node, _cmp: new () => T): T;
     export function enumToArray<T extends object>(anEnum: T): T[keyof T][];
     export function randomEnum<T extends object>(anEnum: T): T[keyof T];
     export function mobileOrTabletCheck(): boolean;

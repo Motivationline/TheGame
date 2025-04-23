@@ -1,12 +1,12 @@
 namespace Script {
     import ƒ = FudgeCore;
 
-    export function findFirstCameraInGraph(_graph: ƒ.Node): ƒ.ComponentCamera {
-        let cam = _graph.getComponent(ƒ.ComponentCamera);
-        if (cam) return cam;
+    export function findFirstComponentInGraph<T extends ƒ.Component>(_graph: ƒ.Node, _cmp: new () => T): T {
+        let foundCmp = _graph.getComponent(_cmp);
+        if (foundCmp) return foundCmp;
         for (let child of _graph.getChildren()) {
-            cam = findFirstCameraInGraph(child);
-            if (cam) return cam;
+            foundCmp = findFirstComponentInGraph(child, _cmp);
+            if (foundCmp) return foundCmp;
         }
         return undefined;
     }
