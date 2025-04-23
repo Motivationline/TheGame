@@ -63,7 +63,9 @@
               "active": true,
               "_jobType": 0,
               "jobDuration": 2000,
-              "cooldown": 30000
+              "cooldown": 30000,
+              "animationActive": "AnimationGLTF|2025-04-23T12:31:14.177Z|06514",
+              "animationCooldown": "AnimationGLTF|2025-04-23T12:31:14.178Z|20131"
             }
           }
         ],
@@ -76,7 +78,14 @@
           }
         ]
       },
-      "children": [],
+      "children": [
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "GraphGLTF|2025-04-17T10:18:46.161Z|80005"
+          }
+        }
+      ],
       "idResource": "Graph|2025-04-08T06:37:31.827Z|46952",
       "type": "Graph"
     }
@@ -1413,7 +1422,23 @@
     "ƒ.GraphGLTF": {
       "name": "Scene",
       "active": true,
-      "components": {},
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-23T12:31:14.177Z|06514",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": false
+            }
+          }
+        ]
+      },
       "idResource": "GraphGLTF|2025-04-17T10:18:46.161Z|80005",
       "type": "GraphGLTF",
       "url": "Assets\\Indicator\\Stone_Gather_Indicator_Full.glb"
