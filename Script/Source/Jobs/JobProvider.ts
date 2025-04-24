@@ -11,6 +11,19 @@ namespace Script {
         NONE,
     }
 
+    interface JobTypeInfo {
+        name: string,
+        description: string,
+        img: string,
+    }
+
+    export const jobTypeInfo = new Map<JobType, JobTypeInfo>([
+        [JobType.NONE, {name: "Nichts", description: "Entspannt sich", img:"Assets/UI/nothing_button.svg"}],
+        [JobType.BUILD, {name: "Architekt", description: "Baut Gebäude", img:"Assets/UI/buildings_button.svg"}],
+        [JobType.GATHER_FOOD, {name: "Farmer", description: "Sammelt Essen", img:"Assets/UI/farmer_button.svg"}],
+        [JobType.GATHER_STONE, {name: "Miner", description: "Sammelt Stein", img:"Assets/UI/miner_button.svg"}],
+    ]);
+
     @ƒ.serialize
     export abstract class JobProvider extends UpdateScriptComponent {
         static JobProviders: Set<JobProvider> = new Set();

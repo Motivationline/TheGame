@@ -1,18 +1,47 @@
-html, body {
+@font-face {
+  font-family: NationalPark;
+  src: url(Assets/UI/NationalPark-VariableFont_wght.ttf);
+}
+
+html,
+body {
   padding: 0px;
   margin: 0px;
   width: 100%;
   height: 100%;
- overflow: hidden;
+  overflow: hidden;
+  font-family: NationalPark, sans-serif;
+
+  --color-food:  #663659;
+  --color-rock:  #B76B37;
+  --color-eumling: #107BA0;
+  --color-settings: #294860;
+  --color-off-white: #F9ECD7;
 }
 
-dialog { 
-  text-align: center; 
+.no-button {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  text-align: inherit;
+  font: inherit;
+  border-radius: 0;
+  color: inherit;
+  appearance: none;
+  cursor: pointer;
+}
+.no-button:disabled {
+  cursor: not-allowed;
 }
 
-canvas.fullscreen { 
-  width: 100vw; 
-  height: 100vh; 
+dialog {
+  text-align: center;
+}
+
+canvas.fullscreen {
+  width: 100vw;
+  height: 100vh;
 }
 
 div.overlay {
@@ -21,8 +50,28 @@ div.overlay {
   pointer-events: none;
 }
 
-div.overlay > * {
+div.overlay>* {
   pointer-events: all;
+}
+
+.menu {
+  display: grid;
+  place-items: center;
+  margin-bottom: 3vh;
+}
+.menu.bottom {
+  align-items: end;
+}
+.menu > div {
+  border-image-source: url("Assets/UI/window_background.svg");
+  border-image-slice: 14% 8% fill;
+  border-image-repeat: stretch;
+  border-image-width: 4em;
+  /* border-image-outset: 4em; */
+  /* background-image: url("Assets/UI/window_background.svg");
+  background-size: 100% 100%; */
+  padding: 2rem;
+  position: relative;
 }
 
 .bg {
@@ -43,13 +92,158 @@ div.overlay > * {
 #resources {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   pointer-events: none;
-  background-color: white;
+}
+#resource-food-wrapper,
+#resource-stone-wrapper {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: contain;
+  padding: 0.75em 1em 0.5em 3em;
+  font-weight: 800;
+  font-size: 2em;
+  text-align: center;
+}
+#resource-food-wrapper {
+  background-image: url("Assets/UI/food_bar.svg");
+  color: var(--color-food);
+}
+#resource-stone-wrapper {
+  background-image: url("Assets/UI/stone_bar.svg");
+  color: var(--color-rock);
 }
 
-#eumling-plus {
+.image-icon {
+  aspect-ratio: 1;
+  min-height: 1em;
+}
+
+.popover-title {
+  text-align: center;
+  --underline-size: 0.25em;
+  padding-bottom: var(--underline-size);
+}
+.popover-title > span {
+  text-align: center;
+  font-size: 3em;
+  font-weight: 700;
+  position: relative;
+}
+.popover-title > span::after {
+  content: " ";
+  width: 100%;
+  background: url("Assets/UI/underline_text.svg") no-repeat center center;
+  background-size: 100% 100%;
+  height: var(--underline-size);
   position: absolute;
-  right: 0;
+  left: 0;
+  bottom: calc(-0.0 * var(--underline-size));
+}
+
+#build-and-eumling {
+  position: absolute;
+  left: 0;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#eumling-display {
+  background-image: url("Assets/UI/eumlinge_button.svg");
+  background-repeat: no-repeat;
+  position: relative;
+}
+#eumling-amt {
+  position: absolute;
+  top: 0.25em;
+  right: -0.25em;
+  height: 1.5em;
+  aspect-ratio: 1;
+  background-image: url("Assets/UI/eumlinge_numbers.svg");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: grid;
+  place-items: center;
+  color: var(--color-eumling);
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+#build-btn {
+  background-image: url("Assets/UI/buildings_button.svg");
+  aspect-ratio: 1;
+}
+
+button.close {
+  position: absolute;
+  --size: 4rem;
+  top: calc(-0.5 * var(--size));
+  right: calc(-0.5 * var(--size));
+  background-image: url("Assets/UI/close_button.svg");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  aspect-ratio: 1;
+  width: var(--size);
+}
+
+#job-menu,
+#build-menu {
+  color: var(--color-off-white);
+}
+#job-wrapper,
+#build-menu-buildings {
+  display: flex;
+  flex-direction: row;
+  gap: 3em;
+}
+button.build {
+  display: flex;
+  flex-direction: column;
+  width: 10em;
+  text-align: center;
+}
+.job-name,
+.build-name {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+.build-cost {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  font-weight: bold;
+}
+.build-cost-stone,
+.build-cost-food {
+  height: 2em;
+  padding: 2em 0em 1em 2em;
+}
+.cannot-afford {
+  filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+}
+
+.build-cost-food {
+background: url("Assets/UI/food_bar.svg") no-repeat center center;
+color: var(--color-food);
+}
+.build-cost-stone {
+background: url("Assets/UI/stone_bar.svg") no-repeat center center;
+color: var(--color-rock);
+}
+.job-description,
+.build-description {
+  font-size: 1.25em;
+  font-weight: 600;
+}
+
+.job-button {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.job-image {
+  aspect-ratio: 1;
+  min-width: 5em;
 }

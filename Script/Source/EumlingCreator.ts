@@ -36,12 +36,16 @@ namespace Script {
             btn.dataset.costFood = current.food.toString();
             btn.dataset.costStone = current.stone.toString();
             btn.dataset.eumlingLimit = (this.eumlingAmount + 1).toString();
-            if (Data.food < current.food || Data.stone < current.stone || Data.eumlingLimit <= this.eumlingAmount) {
-                btn.disabled = true;
-            } else {
-                btn.disabled = false;
-            }            
-            btn.innerHTML = `+ Eumling (${this.eumlingAmount} / ${Data.eumlingLimit})<br>${current.food} Food, ${current.stone} Stone`
+            btn.innerHTML = `
+            + Eumling (${this.eumlingAmount} / ${Data.eumlingLimit})
+            <div class="build-cost">
+                <span class="build-cost-food" >${current.food}</span>
+                <span class="build-cost-stone">${current.stone}</span>
+            </div>
+            `
+
+            document.getElementById("eumling-amt").innerText = this.eumlingAmount.toString();
+            Data.food += 0;
         }
     }
     if (ƒ.Project.mode === ƒ.MODE.RUNTIME) {

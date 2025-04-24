@@ -242,16 +242,28 @@ var Script;
                     if (set === "costFood") {
                         if (Number(element.dataset.costFood) > this.#food) {
                             enabled = false;
+                            element.querySelector(".build-cost-food")?.classList.add("cannot-afford");
+                        }
+                        else {
+                            element.querySelector(".build-cost-food")?.classList.remove("cannot-afford");
                         }
                     }
                     else if (set === "costStone") {
                         if (Number(element.dataset.costStone) > this.#stone) {
                             enabled = false;
+                            element.querySelector(".build-cost-stone")?.classList.add("cannot-afford");
+                        }
+                        else {
+                            element.querySelector(".build-cost-stone")?.classList.remove("cannot-afford");
                         }
                     }
                     else if (set === "eumlingLimit") {
                         if (Number(element.dataset.eumlingLimit) > this.eumlingLimit) {
                             enabled = false;
+                            element.querySelector(".build-cost-eumling")?.classList.add("cannot-afford");
+                        }
+                        else {
+                            element.querySelector(".build-cost-eumling")?.classList.remove("cannot-afford");
                         }
                     }
                 }
@@ -300,13 +312,15 @@ var Script;
             btn.dataset.costFood = current.food.toString();
             btn.dataset.costStone = current.stone.toString();
             btn.dataset.eumlingLimit = (this.eumlingAmount + 1).toString();
-            if (Script.Data.food < current.food || Script.Data.stone < current.stone || Script.Data.eumlingLimit <= this.eumlingAmount) {
-                btn.disabled = true;
-            }
-            else {
-                btn.disabled = false;
-            }
-            btn.innerHTML = `+ Eumling (${this.eumlingAmount} / ${Script.Data.eumlingLimit})<br>${current.food} Food, ${current.stone} Stone`;
+            btn.innerHTML = `
+            + Eumling (${this.eumlingAmount} / ${Script.Data.eumlingLimit})
+            <div class="build-cost">
+                <span class="build-cost-food" >${current.food}</span>
+                <span class="build-cost-stone">${current.stone}</span>
+            </div>
+            `;
+            document.getElementById("eumling-amt").innerText = this.eumlingAmount.toString();
+            Script.Data.food += 0;
         }
     }
     Script.EumlingCreator = EumlingCreator;
@@ -470,10 +484,12 @@ var Script;
                     buildupCmp.nodeToEnable = marker.getChild(0);
                     marker.getChild(0)?.activate(false);
                 }
+                // close this UI
+                Script.enableUI("close");
             };
             if (ƒ.Project.mode === ƒ.MODE.EDITOR)
                 return;
-            this.wrapper = document.getElementById("build-menu");
+            this.wrapper = document.getElementById("build-menu").parentElement;
             this.buildings = document.getElementById("build-menu-buildings");
             // set center to occupied
             let pos = new ƒ.Vector2();
@@ -508,8 +524,15 @@ var Script;
                 if (!build.includeInMenu)
                     continue;
                 const button = Script.createElementAdvanced("button", {
-                    innerHTML: `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`,
-                    classes: ["build"],
+                    innerHTML: `
+                    <span class="build-name">${build.name ?? build.graph.name}</span>
+                    <img src="Assets/UI/${build.name.toLocaleLowerCase()}_button.svg" />
+                    <div class="build-cost">
+                        <span class="build-cost-food">${build.costFood}</span>
+                        <span class="build-cost-stone">${build.costStone}</span>
+                    </div>
+                    <span class="build-description">${build.description}</span>`,
+                    classes: ["build", "no-button"],
                 });
                 if (Script.Data.food < build.costFood || Script.Data.stone < build.costStone)
                     button.disabled = true;
@@ -521,6 +544,7 @@ var Script;
                 buttons.push(button);
             }
             this.buildings.replaceChildren(...buttons);
+            Script.Data.food += 0;
         }
         async placeGraphOnGrid(_posOfTile, _size, _graph) {
             this.forEachSelectedTile(_posOfTile, _size, (t, pos) => {
@@ -582,6 +606,7 @@ var Script;
             this.selectedBuilding = _build;
             this.marker.mtxLocal.scaling = ƒ.Vector3.ONE(_build.size);
             this.currentPosition = undefined;
+            this.wrapper.classList.add("hidden");
         }
     }
     Script.GridBuilder = GridBuilder;
@@ -599,6 +624,12 @@ var Script;
         JobType[JobType["BUILD"] = 3] = "BUILD";
         JobType[JobType["NONE"] = 4] = "NONE";
     })(JobType = Script.JobType || (Script.JobType = {}));
+    Script.jobTypeInfo = new Map([
+        [JobType.NONE, { name: "Nichts", description: "Entspannt sich", img: "Assets/UI/nothing_button.svg" }],
+        [JobType.BUILD, { name: "Architekt", description: "Baut Gebäude", img: "Assets/UI/buildings_button.svg" }],
+        [JobType.GATHER_FOOD, { name: "Farmer", description: "Sammelt Essen", img: "Assets/UI/farmer_button.svg" }],
+        [JobType.GATHER_STONE, { name: "Miner", description: "Sammelt Stein", img: "Assets/UI/miner_button.svg" }],
+    ]);
     let JobProvider = (() => {
         var _a;
         let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
@@ -791,6 +822,7 @@ var Script;
         nextUI.enable();
         activeUI = nextUI;
     }
+    Script.enableUI = enableUI;
     class CameraController {
         constructor() {
             this.canvas = document.querySelector("canvas");
@@ -873,7 +905,6 @@ var Script;
     class PickController {
         constructor() {
             this.canvas = document.querySelector("canvas");
-            this.wrapper = document.getElementById("main-menu");
             this.click = (_event) => {
                 let picks = this.findAllPickedObjectsUsingPickSphere({ x: _event.clientX, y: _event.clientY });
                 if (!picks.length)
@@ -883,11 +914,9 @@ var Script;
             };
         }
         enable() {
-            this.wrapper.classList.remove("hidden");
             this.canvas.addEventListener("click", this.click);
         }
         disable() {
-            this.wrapper.classList.add("hidden");
             this.canvas.removeEventListener("click", this.click);
         }
         findAllPickedObjectsUsingPickSphere(_pointer) {
@@ -898,7 +927,7 @@ var Script;
     }
     class JobController {
         constructor() {
-            this.dialog = document.getElementById("job-dialog");
+            this.wrapElement = document.getElementById("job-menu").parentElement;
             this.wrapper = document.getElementById("job-wrapper");
             this.close = (_e) => {
                 if (_e.newState === "closed") {
@@ -906,19 +935,26 @@ var Script;
                 }
             };
             this.disable = () => {
-                this.dialog.removeEventListener("toggle", this.close);
-                this.dialog.hidePopover();
+                this.wrapElement.classList.add("hidden");
                 selectedEumling.getComponent(Script.JobTaker).paused = false;
             };
         }
         enable() {
-            this.dialog.showPopover();
-            this.dialog.addEventListener("toggle", this.close);
+            this.wrapElement.classList.remove("hidden");
             selectedEumling.getComponent(Script.JobTaker).paused = true;
             let buttons = [];
             let keys = Script.availableJobs.values();
             for (let job of keys) {
-                const btn = Script.createElementAdvanced("button", { innerHTML: Script.JobType[job] });
+                const info = Script.jobTypeInfo.get(job);
+                if (!info)
+                    continue;
+                const btn = Script.createElementAdvanced("button", { innerHTML: `
+                    <span class="job-name">${info.name}</span>
+                    <img src="${info.img}" class="job-image" />
+                    <span class="job-description">${info.description}</span>
+                    `,
+                    classes: ["no-button", "job-button"]
+                });
                 btn.addEventListener("click", () => {
                     selectedEumling.getComponent(Script.JobTaker).job = job;
                     enableUI("close");
@@ -984,6 +1020,8 @@ var Script;
         let _size_initializers = [];
         let _name_decorators;
         let _name_initializers = [];
+        let _description_decorators;
+        let _description_initializers = [];
         let _costFood_decorators;
         let _costFood_initializers = [];
         let _costStone_decorators;
@@ -997,12 +1035,14 @@ var Script;
                 _graph_decorators = [ƒ.serialize(ƒ.Graph)];
                 _size_decorators = [ƒ.serialize(Number)];
                 _name_decorators = [ƒ.serialize(String)];
+                _description_decorators = [ƒ.serialize(String)];
                 _costFood_decorators = [ƒ.serialize(Number)];
                 _costStone_decorators = [ƒ.serialize(Number)];
                 _includeInMenu_decorators = [ƒ.serialize(Boolean)];
                 __esDecorate(null, null, _graph_decorators, { kind: "field", name: "graph", static: false, private: false, access: { has: obj => "graph" in obj, get: obj => obj.graph, set: (obj, value) => { obj.graph = value; } }, metadata: _metadata }, _graph_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _size_decorators, { kind: "field", name: "size", static: false, private: false, access: { has: obj => "size" in obj, get: obj => obj.size, set: (obj, value) => { obj.size = value; } }, metadata: _metadata }, _size_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _name_decorators, { kind: "field", name: "name", static: false, private: false, access: { has: obj => "name" in obj, get: obj => obj.name, set: (obj, value) => { obj.name = value; } }, metadata: _metadata }, _name_initializers, _instanceExtraInitializers);
+                __esDecorate(null, null, _description_decorators, { kind: "field", name: "description", static: false, private: false, access: { has: obj => "description" in obj, get: obj => obj.description, set: (obj, value) => { obj.description = value; } }, metadata: _metadata }, _description_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _costFood_decorators, { kind: "field", name: "costFood", static: false, private: false, access: { has: obj => "costFood" in obj, get: obj => obj.costFood, set: (obj, value) => { obj.costFood = value; } }, metadata: _metadata }, _costFood_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _costStone_decorators, { kind: "field", name: "costStone", static: false, private: false, access: { has: obj => "costStone" in obj, get: obj => obj.costStone, set: (obj, value) => { obj.costStone = value; } }, metadata: _metadata }, _costStone_initializers, _instanceExtraInitializers);
                 __esDecorate(null, null, _includeInMenu_decorators, { kind: "field", name: "includeInMenu", static: false, private: false, access: { has: obj => "includeInMenu" in obj, get: obj => obj.includeInMenu, set: (obj, value) => { obj.includeInMenu = value; } }, metadata: _metadata }, _includeInMenu_initializers, _instanceExtraInitializers);
@@ -1019,6 +1059,7 @@ var Script;
                 this.graph = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _graph_initializers, void 0));
                 this.size = __runInitializers(this, _size_initializers, 1);
                 this.name = __runInitializers(this, _name_initializers, "");
+                this.description = __runInitializers(this, _description_initializers, "");
                 this.costFood = __runInitializers(this, _costFood_initializers, 5);
                 this.costStone = __runInitializers(this, _costStone_initializers, 5);
                 this.includeInMenu = __runInitializers(this, _includeInMenu_initializers, false);

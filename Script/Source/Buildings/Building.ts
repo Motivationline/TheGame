@@ -13,6 +13,8 @@ namespace Script {
         size: number = 1;
         @ƒ.serialize(String)
         name: string = "";
+        @ƒ.serialize(String)
+        description: string = "";
         @ƒ.serialize(Number)
         costFood: number = 5;
         @ƒ.serialize(Number)

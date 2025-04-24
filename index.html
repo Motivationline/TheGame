@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <title>TheGame</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="styles.css" />
 
     <!--Editor settings of this project-->
-    <meta type="settings" autoview="Graph|2025-03-05T11:38:04.024Z|25869" project="{'name':'TheGame','graphAutoView':'Graph|2025-03-05T11:38:04.024Z|25869'}" />
+    <meta type="settings" autoview="Graph|2025-03-05T11:38:04.024Z|25869"
+        project="{'name':'TheGame','graphAutoView':'Graph|2025-03-05T11:38:04.024Z|25869'}" />
 
     <!--Activate the following line to include the FUDGE-version of Oimo-Physics. You may want to download a local copy to work offline and be independent from future changes!-->
     <!--<script type="text/javascript" src="https://hs-furtwangen.github.io/FUDGE/Distribution/OimoPhysics.js"></script>-->
@@ -30,30 +32,48 @@
     <!--Canvas for FUDGE to render to-->
     <canvas class="fullscreen">
     </canvas>
-    
+
     <div class="overlay" id="click-start">
         Click anywhere
     </div>
-    <div class="overlay">
-        <div id="build-menu" class="hidden">
-            <button data-target="close">close</button>
+    <div class="overlay hidden menu bottom">
+        <div id="build-menu">
+            <button data-target="close" class="no-button close">
+            </button>
+            <div class="popover-title">
+                <span>Wähle ein Gebäude</span>
+            </div>
             <div id="build-menu-buildings">
             </div>
         </div>
-        <div id="main-menu" class="hidden">
-            <button data-target="build">build</button>
+    </div>
+    <div class="overlay hidden menu bottom">
+        <div id="job-menu">
+            <button data-target="close" class="no-button close">
+            </button>
+            <div class="popover-title">
+                <span>Wähle einen Beruf</span>
+            </div>
+            <div method="dialog" id="job-wrapper">
+            </div>
         </div>
     </div>
-    <dialog id="job-dialog" popover="">
-        <h1>Job Selection</h1>
-        <form method="dialog" id="job-wrapper">
-</form>
-    </dialog>
     <div id="resources">
-        Stone <span id="resource-stone">0</span> Food <span id="resource-food">0</span>
+        <div id="resource-food-wrapper">
+            <span id="resource-food">0</span>
+        </div>
+        <div id="resource-stone-wrapper">
+            <span id="resource-stone">0</span>
+        </div>
     </div>
-    <div id="eumling-plus">
+    <div id="build-and-eumling">
+        <div id="eumling-display" class="image-icon">
+            <span id="eumling-amt">0</span>
+        </div>
         <button id="eumling-btn" class="build">+ Eumling</button>
+        <button data-target="build" id="build-btn" class="no-button">
+        </button>
     </div>
 </body>
+
 </html>

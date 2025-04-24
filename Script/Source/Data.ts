@@ -46,14 +46,23 @@ namespace Script {
                     if(set === "costFood") {
                         if(Number(element.dataset.costFood) > this.#food){
                             enabled = false;
+                            element.querySelector(".build-cost-food")?.classList.add("cannot-afford");
+                        } else {
+                            element.querySelector(".build-cost-food")?.classList.remove("cannot-afford");
                         }
                     } else if (set === "costStone") {
                         if(Number(element.dataset.costStone) > this.#stone){
                             enabled = false;
+                            element.querySelector(".build-cost-stone")?.classList.add("cannot-afford");
+                        } else {
+                            element.querySelector(".build-cost-stone")?.classList.remove("cannot-afford");
                         }
                     } else if (set === "eumlingLimit") {
                         if(Number(element.dataset.eumlingLimit) > this.eumlingLimit){
                             enabled = false;
+                            element.querySelector(".build-cost-eumling")?.classList.add("cannot-afford");
+                        } else {
+                            element.querySelector(".build-cost-eumling")?.classList.remove("cannot-afford");
                         }
                     }
                 }

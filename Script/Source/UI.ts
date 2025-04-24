@@ -9,16 +9,16 @@ namespace Script {
     export const grid = new Grid(new ƒ.Vector2(44, 44));
     export const gridBuilder = new GridBuilder(grid)
 
-    export interface ToggleableUI {
+    export interface ToggleableInteraction {
         enable: () => void;
         disable: () => void;
     }
-    let uis: Map<string, ToggleableUI>;
-    let activeUI: ToggleableUI;
+    let uis: Map<string, ToggleableInteraction>;
+    let activeUI: ToggleableInteraction;
     export function setupUI() {
         if (ƒ.Project.mode === ƒ.MODE.EDITOR) return;
 
-        uis = new Map<string, ToggleableUI>([
+        uis = new Map<string, ToggleableInteraction>([
             ["build", gridBuilder],
             ["close", new PickController()],
             ["job", new JobController()],
@@ -36,7 +36,7 @@ namespace Script {
 
     }
 
-    function enableUI(_type: string) {
+    export function enableUI(_type: string) {
         let nextUI = uis.get(_type);
         if (!nextUI) return;
         if (activeUI) activeUI.disable();
@@ -44,7 +44,7 @@ namespace Script {
         activeUI = nextUI;
     }
 
-    class CameraController implements ToggleableUI {
+    class CameraController implements ToggleableInteraction {
         canvas = document.querySelector("canvas");
         camera = findFirstComponentInGraph(viewport.getBranch(), ƒ.ComponentCamera);
         currentZoom: number = 3;
@@ -131,17 +131,14 @@ namespace Script {
     }
 
     let selectedEumling: ƒ.Node;
-    class PickController implements ToggleableUI {
+    class PickController implements ToggleableInteraction {
         canvas = document.querySelector("canvas");
-        wrapper = document.getElementById("main-menu");
 
         enable() {
-            this.wrapper.classList.remove("hidden");
             this.canvas.addEventListener("click", this.click);
         }
 
         disable() {
-            this.wrapper.classList.add("hidden");
             this.canvas.removeEventListener("click", this.click);
         }
 
@@ -159,19 +156,27 @@ namespace Script {
         }
     }
 
-    class JobController implements ToggleableUI {
-        dialog: HTMLDialogElement = <HTMLDialogElement>document.getElementById("job-dialog");
+    class JobController implements ToggleableInteraction {
+        wrapElement: HTMLDialogElement = <HTMLDialogElement>document.getElementById("job-menu").parentElement;
         wrapper: HTMLDialogElement = <HTMLDialogElement>document.getElementById("job-wrapper");
 
         enable(): void {
-            this.dialog.showPopover();
-            this.dialog.addEventListener("toggle", <EventListener>this.close);
+            this.wrapElement.classList.remove("hidden");
             selectedEumling.getComponent(JobTaker).paused = true;
             
             let buttons: HTMLElement[] = [];
             let keys = availableJobs.values();
             for (let job of keys) {
-                const btn = createElementAdvanced("button", { innerHTML: JobType[job] });
+                const info = jobTypeInfo.get(job);
+                if(!info) continue;
+                const btn = createElementAdvanced("button", { innerHTML: 
+                    `
+                    <span class="job-name">${info.name}</span>
+                    <img src="${info.img}" class="job-image" />
+                    <span class="job-description">${info.description}</span>
+                    `,
+                    classes: ["no-button", "job-button"]
+                 });
                 btn.addEventListener("click", () => {
                     selectedEumling.getComponent(JobTaker).job = job;
                     enableUI("close");
@@ -187,8 +192,7 @@ namespace Script {
         }
         
         disable = () => {
-            this.dialog.removeEventListener("toggle", <EventListener>this.close);
-            this.dialog.hidePopover();
+            this.wrapElement.classList.add("hidden");
             selectedEumling.getComponent(JobTaker).paused = false;
         }
 

@@ -88,7 +88,7 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
-    class GridBuilder implements ToggleableUI {
+    class GridBuilder implements ToggleableInteraction {
         grid: Grid;
         wrapper: HTMLElement;
         buildings: HTMLElement;
@@ -114,14 +114,20 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
-    enum JobType {
+    export enum JobType {
         GATHER_STONE = 0,
         GATHER_FOOD = 1,
         STORE_RESOURCE = 2,
         BUILD = 3,
         NONE = 4
     }
-    abstract class JobProvider extends UpdateScriptComponent {
+    interface JobTypeInfo {
+        name: string;
+        description: string;
+        img: string;
+    }
+    export const jobTypeInfo: Map<JobType, JobTypeInfo>;
+    export abstract class JobProvider extends UpdateScriptComponent {
         #private;
         static JobProviders: Set<JobProvider>;
         protected _jobType: JobType;
@@ -138,40 +144,42 @@ declare namespace Script {
         get targeted(): boolean;
         update(_e: CustomEvent<UpdateEvent>): void;
     }
-    class JobProviderNone extends JobProvider {
+    export class JobProviderNone extends JobProvider {
         _jobType: JobType;
     }
-    class JobProviderGatherFood extends JobProvider {
-        _jobType: JobType;
-        jobDuration: number;
-    }
-    class JobProviderGatherStone extends JobProvider {
+    export class JobProviderGatherFood extends JobProvider {
         _jobType: JobType;
         jobDuration: number;
     }
-    class JobProviderStoreResource extends JobProvider {
+    export class JobProviderGatherStone extends JobProvider {
+        _jobType: JobType;
+        jobDuration: number;
+    }
+    export class JobProviderStoreResource extends JobProvider {
         jobDuration: number;
         _jobType: JobType;
         cooldown: number;
         target(_targeted: boolean): void;
     }
-    class JobProviderBuild extends JobProvider {
+    export class JobProviderBuild extends JobProvider {
         _jobType: JobType;
         nodeToRemove: ƒ.Node;
         nodeToEnable: ƒ.Node;
         constructor(resourceAmt: number);
         jobFinish(): void;
     }
+    export {};
 }
 declare namespace Script {
     const availableJobs: Set<JobType>;
     const grid: Grid;
     const gridBuilder: GridBuilder;
-    interface ToggleableUI {
+    interface ToggleableInteraction {
         enable: () => void;
         disable: () => void;
     }
     function setupUI(): void;
+    function enableUI(_type: string): void;
 }
 declare namespace Script {
     import ƒ = FudgeCore;
@@ -179,6 +187,7 @@ declare namespace Script {
         graph: ƒ.Graph;
         size: number;
         name: string;
+        description: string;
         costFood: number;
         costStone: number;
         includeInMenu: boolean;
@@ -199,6 +208,7 @@ declare namespace Script {
         graph: ƒ.Graph;
         size: number;
         name: string;
+        description: string;
         costFood: number;
         costStone: number;
         includeInMenu: boolean;

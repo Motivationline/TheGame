@@ -2,7 +2,7 @@
 namespace Script {
     import ƒ = FudgeCore;
 
-    export class GridBuilder implements ToggleableUI {
+    export class GridBuilder implements ToggleableInteraction {
         wrapper: HTMLElement;
         buildings: HTMLElement;
         canvas = document.querySelector("canvas");
@@ -15,7 +15,7 @@ namespace Script {
         constructor(public grid: Grid = new Grid(new ƒ.Vector2(10, 10))) {
             if (ƒ.Project.mode === ƒ.MODE.EDITOR) return;
 
-            this.wrapper = document.getElementById("build-menu");
+            this.wrapper = document.getElementById("build-menu").parentElement;
             this.buildings = document.getElementById("build-menu-buildings");
 
             // set center to occupied
@@ -54,8 +54,15 @@ namespace Script {
             for (let build of Building.all) {
                 if (!build.includeInMenu) continue;
                 const button = createElementAdvanced("button", {
-                    innerHTML: `${build.name ?? build.graph.name}<br>${build.costFood} Food, ${build.costStone} Stone<br>(${build.size}x${build.size})`,
-                    classes: ["build"],
+                    innerHTML: `
+                    <span class="build-name">${build.name ?? build.graph.name}</span>
+                    <img src="Assets/UI/${build.name.toLocaleLowerCase()}_button.svg" />
+                    <div class="build-cost">
+                        <span class="build-cost-food">${build.costFood}</span>
+                        <span class="build-cost-stone">${build.costStone}</span>
+                    </div>
+                    <span class="build-description">${build.description}</span>`,
+                    classes: ["build", "no-button"],
                 })
                 if (Data.food < build.costFood || Data.stone < build.costStone) button.disabled = true;
                 button.dataset.costFood = build.costFood.toString();
@@ -67,6 +74,7 @@ namespace Script {
             }
 
             this.buildings.replaceChildren(...buttons);
+            Data.food += 0;
         }
 
 
@@ -110,6 +118,9 @@ namespace Script {
                 buildupCmp.nodeToEnable = marker.getChild(0);
                 marker.getChild(0)?.activate(false);
             }
+
+            // close this UI
+            enableUI("close");
         }
 
         public async placeGraphOnGrid(_posOfTile: ƒ.Vector2, _size: number, _graph: ƒ.Graph): Promise<ƒ.Node> {
@@ -178,6 +189,8 @@ namespace Script {
             this.selectedBuilding = _build;
             this.marker.mtxLocal.scaling = ƒ.Vector3.ONE(_build.size);
             this.currentPosition = undefined;
+            
+            this.wrapper.classList.add("hidden");
         }
 
     }

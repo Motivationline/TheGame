@@ -1,0 +1,7 @@
+font: https://fonts.google.com/specimen/National+Park
+
+food font color: #663659
+rock font color: #B76B37
+eumling number color: #107BA0
+off-white font color: #F9ECD7
+settings font color: #294860
