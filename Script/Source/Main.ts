@@ -10,7 +10,7 @@ namespace Script {
 
   async function start(_event: CustomEvent) {
     viewport = _event.detail;
-
+    viewport.gizmosEnabled = true;
 
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -55,7 +55,7 @@ namespace Script {
     // gathering spots
     let foodSpot = Building.all.find(b => b.name === "GatherFood");
     if (foodSpot) {
-      for (let i: number = 0; i < 20; i++) {
+      for (let i: number = 0; i < 200; i++) {
         pos.set(Math.floor(randomRange(0, 44)), Math.floor(randomRange(0, 44)));
         let tile = grid.getTile(pos, false);
         if (tile) continue;
@@ -65,7 +65,7 @@ namespace Script {
     // gathering spots
     let stoneSpot = Building.all.find(b => b.name === "GatherStone");
     if (stoneSpot) {
-      for (let i: number = 0; i < 20; i++) {
+      for (let i: number = 0; i < 200; i++) {
         pos.set(Math.floor(randomRange(0, 44)), Math.floor(randomRange(0, 44)));
         let tile = grid.getTile(pos, false);
         if (tile) continue;

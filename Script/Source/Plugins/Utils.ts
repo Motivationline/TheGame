@@ -105,4 +105,10 @@ namespace Script {
     export function getDerivedComponents<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T[] {
         return <T[]>node.getAllComponents().filter(c => (c instanceof component));
     }
+    export function vector2Distance(_a: ƒ.Vector2, _b: ƒ.Vector2): number {
+        return Math.sqrt(
+            Math.pow(_a.x - _b.x, 2) +
+            Math.pow(_a.y - _b.y, 2)
+        )
+    }
 }

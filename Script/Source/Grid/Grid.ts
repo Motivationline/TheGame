@@ -1,3 +1,4 @@
+/// <reference path="Pathfinder.ts" />
 
 namespace Script {
     import ƒ = FudgeCore;
@@ -10,9 +11,11 @@ namespace Script {
     export class Grid {
         #size: ƒ.Vector2;
         #tiles: (Tile | undefined)[][] = [];
+        #pathfinder: Pathfinder;
 
         constructor(_size: ƒ.Vector2) {
             this.size = _size;
+            this.#pathfinder = new Pathfinder(this);
         }
 
         set size(_size: ƒ.Vector2) {
@@ -54,6 +57,33 @@ namespace Script {
                 _pos.y - this.#size.y / 2,
             )
         }
+        public getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): ƒ.Vector2[] {
+            return this.#pathfinder.getPath(_from, _to);
+        }
     }
 
+    export class GridDisplayComponent extends ƒ.Component {
+        public static readonly iSubclass: number = ƒ.Component.registerSubclass(GridDisplayComponent);
+
+        drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void {
+            const corners: ƒ.Vector3[] = [];
+            for (let x: number = 0; x < grid.size.x; x++) {
+                corners.push(
+                    ƒ.Recycler.reuse(ƒ.Vector3).set(x, 0, 0),
+                    ƒ.Recycler.reuse(ƒ.Vector3).set(x, 0, grid.size.y),
+                )
+            }
+            for (let y: number = 0; y < grid.size.y; y++) {
+                corners.push(
+                    ƒ.Recycler.reuse(ƒ.Vector3).set(0, 0, y),
+                    ƒ.Recycler.reuse(ƒ.Vector3).set(grid.size.x, 0.01, y),
+                )
+            }
+            let mtx = ƒ.Recycler.get(ƒ.Matrix4x4);
+            mtx.translateX(-grid.size.x / 2);
+            mtx.translateZ(-grid.size.y / 2);
+            ƒ.Gizmos.drawLines(corners, mtx, new ƒ.Color(0, 0, 0, 1));
+            ƒ.Recycler.storeMultiple(...corners, mtx);
+        }
+    }
 }

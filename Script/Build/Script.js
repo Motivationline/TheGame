@@ -332,11 +332,84 @@ var Script;
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;
+    class Pathfinder {
+        constructor(grid) {
+            this.grid = grid;
+        }
+        getPath(_from, _to) {
+            if (Script.grid.getTile(_to, false))
+                return [];
+            // using A* algorithm
+            this.openList = new Map([[_to.toString(), { f: 0, node: _to, g: 0 }]]); // starting with _to so the result is already in the correct order
+            this.closedList = new Set();
+            this.target = _from;
+            let list = [];
+            while (this.openList.size > 0) {
+                list = this.openList.values().toArray().sort((a, b) => a.f - b.f);
+                const currentNode = list.shift();
+                this.openList.delete(currentNode.node.toString());
+                if (currentNode.node.equals(this.target)) {
+                    return this.nodesToArray(currentNode);
+                }
+                this.closedList.add(currentNode.node.toString());
+                this.expandNode(currentNode);
+            }
+            return [];
+        }
+        nodesToArray(_startNode) {
+            const list = [];
+            let node = _startNode;
+            while (node) {
+                list.push(node.node);
+                node = node.previous;
+            }
+            return list;
+        }
+        expandNode(_node) {
+            let pos = new ƒ.Vector2();
+            for (let x = -1; x <= 1; x++) {
+                for (let y = -1; y <= 1; y++) {
+                    this.expandNodeNeighbor(pos.set(_node.node.x + x, _node.node.y + y), _node);
+                }
+            }
+        }
+        expandNodeNeighbor(_pos, _currentNode) {
+            // pos is already on closed list -> it's already done getting checked
+            if (this.closedList.has(_pos.toString()))
+                return;
+            let tile = this.grid.getTile(_pos, false);
+            // tile is outside of existing grid
+            if (tile === null)
+                return;
+            // tile is blocked = unwalkable
+            if (tile !== undefined)
+                return;
+            let g = _currentNode.g + Script.vector2Distance(_pos, _currentNode.node);
+            let existingNode = this.openList.get(_pos.toString());
+            if (existingNode && g >= existingNode.g)
+                return;
+            if (!existingNode)
+                existingNode = { node: _pos.clone, f: 0, g: 0 };
+            existingNode.previous = _currentNode;
+            existingNode.g = g;
+            existingNode.f = g + Script.vector2Distance(_pos, this.target);
+            this.openList.set(existingNode.node.toString(), existingNode);
+        }
+    }
+    Script.Pathfinder = Pathfinder;
+})(Script || (Script = {}));
+/// <reference path="Pathfinder.ts" />
+var Script;
+/// <reference path="Pathfinder.ts" />
+(function (Script) {
+    var ƒ = FudgeCore;
     class Grid {
         #size;
         #tiles = [];
+        #pathfinder;
         constructor(_size) {
             this.size = _size;
+            this.#pathfinder = new Script.Pathfinder(this);
         }
         set size(_size) {
             this.#size = _size;
@@ -370,8 +443,29 @@ var Script;
         tilePosToWorldPos(_pos, _out = new ƒ.Vector2()) {
             return _out.set(_pos.x - this.#size.x / 2, _pos.y - this.#size.y / 2);
         }
+        getPath(_from, _to) {
+            return this.#pathfinder.getPath(_from, _to);
+        }
     }
     Script.Grid = Grid;
+    class GridDisplayComponent extends ƒ.Component {
+        static { this.iSubclass = ƒ.Component.registerSubclass(GridDisplayComponent); }
+        drawGizmos(_cmpCamera) {
+            const corners = [];
+            for (let x = 0; x < Script.grid.size.x; x++) {
+                corners.push(ƒ.Recycler.reuse(ƒ.Vector3).set(x, 0, 0), ƒ.Recycler.reuse(ƒ.Vector3).set(x, 0, Script.grid.size.y));
+            }
+            for (let y = 0; y < Script.grid.size.y; y++) {
+                corners.push(ƒ.Recycler.reuse(ƒ.Vector3).set(0, 0, y), ƒ.Recycler.reuse(ƒ.Vector3).set(Script.grid.size.x, 0.01, y));
+            }
+            let mtx = ƒ.Recycler.get(ƒ.Matrix4x4);
+            mtx.translateX(-Script.grid.size.x / 2);
+            mtx.translateZ(-Script.grid.size.y / 2);
+            ƒ.Gizmos.drawLines(corners, mtx, new ƒ.Color(0, 0, 0, 1));
+            ƒ.Recycler.storeMultiple(...corners, mtx);
+        }
+    }
+    Script.GridDisplayComponent = GridDisplayComponent;
 })(Script || (Script = {}));
 /// <reference path="Grid/Grid.ts" />
 var Script;
@@ -382,6 +476,7 @@ var Script;
     const canvas = document.querySelector("canvas");
     async function start(_event) {
         Script.viewport = _event.detail;
+        Script.viewport.gizmosEnabled = true;
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
@@ -416,7 +511,7 @@ var Script;
         // gathering spots
         let foodSpot = Script.Building.all.find(b => b.name === "GatherFood");
         if (foodSpot) {
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 200; i++) {
                 pos.set(Math.floor(Script.randomRange(0, 44)), Math.floor(Script.randomRange(0, 44)));
                 let tile = Script.grid.getTile(pos, false);
                 if (tile)
@@ -427,7 +522,7 @@ var Script;
         // gathering spots
         let stoneSpot = Script.Building.all.find(b => b.name === "GatherStone");
         if (stoneSpot) {
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 200; i++) {
                 pos.set(Math.floor(Script.randomRange(0, 44)), Math.floor(Script.randomRange(0, 44)));
                 let tile = Script.grid.getTile(pos, false);
                 if (tile)
@@ -1506,6 +1601,140 @@ var Script;
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;
+    let MoveTo = (() => {
+        var _a;
+        let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
+        let _classDescriptor;
+        let _classExtraInitializers = [];
+        let _classThis;
+        let _classSuper = Script.UpdateScriptComponent;
+        let _instanceExtraInitializers = [];
+        let _speed_decorators;
+        let _speed_initializers = [];
+        var MoveTo = class extends _classSuper {
+            static { _classThis = this; }
+            constructor() {
+                super(...arguments);
+                this.speed = (__runInitializers(this, _instanceExtraInitializers), __runInitializers(this, _speed_initializers, 1));
+                this.#currentPosGrid = new ƒ.Vector2();
+                this.#path = [];
+                this.#timer = 1000;
+                this.#prevDistance = Infinity;
+                this.#gizmoColor = new ƒ.Color(Math.random(), Math.random(), Math.random(), 1);
+            }
+            static {
+                const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+                _speed_decorators = [ƒ.serialize(Number)];
+                __esDecorate(null, null, _speed_decorators, { kind: "field", name: "speed", static: false, private: false, access: { has: obj => "speed" in obj, get: obj => obj.speed, set: (obj, value) => { obj.speed = value; } }, metadata: _metadata }, _speed_initializers, _instanceExtraInitializers);
+                __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+                MoveTo = _classThis = _classDescriptor.value;
+                if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            }
+            static { this.iSubclass = ƒ.Component.registerSubclass(MoveTo); }
+            #currentPosGrid;
+            #path;
+            #nextTargetWorld;
+            #nextTargetGrid;
+            start(_e) {
+                Script.grid.worldPosToTilePos(new ƒ.Vector2(this.node.mtxLocal.translation.x, this.node.mtxLocal.translation.z), this.#currentPosGrid);
+            }
+            #timer;
+            update(_e) {
+                this.#timer -= _e.detail.deltaTime;
+                if (this.#timer > 0)
+                    return;
+                if (this.moveToTarget(_e.detail.deltaTime)) {
+                    // need new target
+                    this.setTarget(new ƒ.Vector2(Math.floor(Script.randomRange(0, Script.grid.size.x)), Math.floor(Script.randomRange(0, Script.grid.size.y))), false);
+                }
+            }
+            setTarget(_pos, inWorldCoordinates = true) {
+                if (inWorldCoordinates)
+                    _pos = Script.grid.worldPosToTilePos(_pos);
+                this.#path = Script.grid.getPath(this.#currentPosGrid, _pos);
+                this.setNextTarget();
+            }
+            setNextTarget() {
+                if (this.#nextTargetGrid) {
+                    this.#currentPosGrid.copy(this.#nextTargetGrid);
+                }
+                let next = this.#path.shift();
+                if (!next) {
+                    if (this.#nextTargetWorld)
+                        ƒ.Recycler.store(this.#nextTargetWorld);
+                    this.#nextTargetWorld = undefined;
+                    if (this.#nextTargetGrid)
+                        ƒ.Recycler.store(this.#nextTargetGrid);
+                    this.#nextTargetGrid = undefined;
+                    return;
+                }
+                if (!this.#nextTargetWorld) {
+                    this.#nextTargetWorld = ƒ.Recycler.reuse(ƒ.Vector3);
+                }
+                if (!this.#nextTargetGrid) {
+                    this.#nextTargetGrid = ƒ.Recycler.reuse(ƒ.Vector2);
+                }
+                this.#nextTargetGrid.copy(next);
+                Script.grid.tilePosToWorldPos(next, next);
+                this.#nextTargetWorld.set(next.x + 0.5, 0, next.y + 0.5);
+                this.#prevDistance = Infinity;
+                this.node.mtxLocal.lookAt(this.#nextTargetWorld);
+            }
+            #prevDistance;
+            moveToTarget(deltaTime) {
+                if (!this.#nextTargetWorld)
+                    return true;
+                let distance = this.node.mtxWorld.translation.getDistance(this.#nextTargetWorld);
+                if (distance > this.#prevDistance) {
+                    // we probably walked past the target
+                    let currentTarget = this.#nextTargetWorld;
+                    this.setNextTarget();
+                    if (!this.#nextTargetWorld) {
+                        this.node.mtxLocal.translate(ƒ.Vector3.DIFFERENCE(currentTarget, this.node.mtxWorld.translation));
+                        return true;
+                    }
+                    return false;
+                }
+                this.#prevDistance = distance;
+                // move to target
+                deltaTime = Math.min(50, Math.max(0, deltaTime));
+                this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
+                return false;
+            }
+            #gizmoColor;
+            drawGizmos(_cmpCamera) {
+                if (!this.#nextTargetWorld)
+                    return;
+                const corners = [this.node.mtxWorld.translation, this.#nextTargetWorld];
+                let prev = this.#nextTargetWorld;
+                let pos = new ƒ.Vector2();
+                for (let point of this.#path) {
+                    Script.grid.tilePosToWorldPos(point, pos);
+                    const currentPos = ƒ.Recycler.reuse(ƒ.Vector3).set(pos.x + 0.5, 0.0, pos.y + 0.5);
+                    if (prev) {
+                        corners.push(prev, currentPos);
+                    }
+                    prev = currentPos;
+                    // let mtx = ƒ.Matrix4x4.IDENTITY();
+                    // mtx.translateX(currentPos.x + 0.5);
+                    // mtx.translateZ(currentPos.z + 0.5);
+                    // mtx.scale(ƒ.Vector3.ONE(0.2));
+                    // ƒ.Gizmos.drawSphere(mtx, ƒ.Color.CSS("red"));
+                }
+                ƒ.Gizmos.drawLines(corners, ƒ.Matrix4x4.IDENTITY(), this.#gizmoColor);
+                // ƒ.Recycler.storeMultiple(... new Set(corners).values().toArray());
+            }
+            static {
+                __runInitializers(_classThis, _classExtraInitializers);
+            }
+        };
+        return MoveTo = _classThis;
+    })();
+    Script.MoveTo = MoveTo;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
     let PickSphere = (() => {
         var _a;
         let _classDecorators = [(_a = ƒ).serialize.bind(_a)];
@@ -1702,5 +1931,10 @@ var Script;
         return node.getAllComponents().filter(c => (c instanceof component));
     }
     Script.getDerivedComponents = getDerivedComponents;
+    function vector2Distance(_a, _b) {
+        return Math.sqrt(Math.pow(_a.x - _b.x, 2) +
+            Math.pow(_a.y - _b.y, 2));
+    }
+    Script.vector2Distance = vector2Distance;
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map

@@ -67,6 +67,27 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
+    export class Pathfinder {
+        private grid;
+        openList: Map<string, AStarNode>;
+        closedList: Set<string>;
+        target: ƒ.Vector2;
+        constructor(grid: Grid);
+        getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): ƒ.Vector2[];
+        private nodesToArray;
+        private expandNode;
+        private expandNodeNeighbor;
+    }
+    interface AStarNode {
+        node: ƒ.Vector2;
+        previous?: AStarNode;
+        f: number;
+        g: number;
+    }
+    export {};
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
     interface Tile {
         type: string;
         origin: boolean;
@@ -80,6 +101,11 @@ declare namespace Script {
         setTile(_tile: Tile | undefined, _pos: ƒ.Vector2): void;
         worldPosToTilePos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
         tilePosToWorldPos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
+        getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): ƒ.Vector2[];
+    }
+    class GridDisplayComponent extends ƒ.Component {
+        static readonly iSubclass: number;
+        drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void;
     }
 }
 declare namespace Script {
@@ -263,6 +289,20 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
+    class MoveTo extends UpdateScriptComponent {
+        #private;
+        static readonly iSubclass: number;
+        speed: number;
+        start(_e: CustomEvent<UpdateEvent>): void;
+        update(_e: CustomEvent<UpdateEvent>): void;
+        setTarget(_pos: ƒ.Vector2, inWorldCoordinates?: boolean): void;
+        private setNextTarget;
+        protected moveToTarget(deltaTime: number): boolean;
+        drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
     export class PickSphere extends ƒ.Component {
         #private;
         static readonly iSubclass: number;
@@ -310,5 +350,6 @@ declare namespace Script {
     export function getPlanePositionFromMousePosition(_mousePosition: ƒ.Vector2): ƒ.Vector3;
     export function getDerivedComponent<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T | undefined;
     export function getDerivedComponents<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T[];
+    export function vector2Distance(_a: ƒ.Vector2, _b: ƒ.Vector2): number;
     export {};
 }

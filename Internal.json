@@ -637,7 +637,15 @@
     "ƒ.Graph": {
       "name": "MainScene",
       "active": true,
-      "components": {},
+      "components": {
+        "GridDisplayComponent": [
+          {
+            "Script.GridDisplayComponent": {
+              "active": true
+            }
+          }
+        ]
+      },
       "children": [
         {
           "ƒ.Node": {
@@ -837,6 +845,48 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
+          }
+        },
+        {
+          "ƒ.GraphInstance": {
+            "deserializeFromSource": true,
+            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
           }
         }
       ],
@@ -1389,6 +1439,72 @@
       "type": "AnimationGLTF",
       "url": "Assets\\Indicator\\Food_Gatherer_Full.glb",
       "events": {}
+    }
+  },
+  "Graph|2025-04-25T11:30:22.748Z|41220": {
+    "ƒ.Graph": {
+      "name": "Walker",
+      "active": true,
+      "components": {
+        "ComponentMaterial": [
+          {
+            "ƒ.ComponentMaterial": {
+              "sortForAlpha": false,
+              "clrPrimary": "[1, 1, 1, 0.49]",
+              "clrSecondary": "[1, 1, 1, 1]",
+              "pivot": {
+                "translation": "[0, 0]",
+                "rotation": 0,
+                "scaling": "[1, 1]"
+              },
+              "Component": {
+                "active": true
+              },
+              "idMaterial": "Material|2025-04-08T06:38:46.828Z|94095"
+            }
+          }
+        ],
+        "ComponentMesh": [
+          {
+            "ƒ.ComponentMesh": {
+              "idMesh": "MeshCube|2025-04-08T06:37:52.687Z|13643",
+              "pivot": {
+                "translation": "[0, 0.25000000000000006, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[0.5000000000000001, 0.5000000000000001, 0.5000000000000001]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "ComponentTransform": [
+          {
+            "ƒ.ComponentTransform": {
+              "local": {
+                "translation": "[-21.500000000000007, 0, -21.500000000000007]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ],
+        "MoveTo": [
+          {
+            "Script.MoveTo": {
+              "active": true,
+              "speed": 1
+            }
+          }
+        ]
+      },
+      "children": [],
+      "idResource": "Graph|2025-04-25T11:30:22.748Z|41220",
+      "type": "Graph"
     }
   }
 }
