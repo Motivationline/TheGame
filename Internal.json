@@ -1016,6 +1016,32 @@
       "events": {}
     }
   },
+  "GraphGLTF|2025-04-25T09:12:15.354Z|10706": {
+    "ƒ.GraphGLTF": {
+      "name": "Eumling_Scene",
+      "active": true,
+      "components": {
+        "ComponentAnimation": [
+          {
+            "ƒ.ComponentAnimation": {
+              "Component": {
+                "active": true
+              },
+              "idAnimation": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
+              "playmode": "loop",
+              "quantization": "continous",
+              "scale": 1,
+              "scaleWithGameTime": true,
+              "animateInEditor": false
+            }
+          }
+        ]
+      },
+      "idResource": "GraphGLTF|2025-04-25T09:12:15.354Z|10706",
+      "type": "GraphGLTF",
+      "url": "Assets\\Eumling\\Eumling_Architekt.glb"
+    }
+  },
   "Graph|2025-04-09T07:19:42.868Z|15220": {
     "ƒ.Graph": {
       "name": "Eumling",
@@ -1049,6 +1075,7 @@
               "active": true,
               "modelBase": "GraphGLTF|2025-04-10T11:33:30.270Z|12636",
               "modelMine": "GraphGLTF|2025-04-14T07:19:34.018Z|55474",
+              "modelBuild": "GraphGLTF|2025-04-25T09:12:15.354Z|10706",
               "modelFood": "GraphGLTF|2025-04-16T14:49:49.859Z|72837",
               "animIdle": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132",
               "animWalk": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782",
@@ -1080,110 +1107,6 @@
       "type": "Graph"
     }
   },
-  "GraphGLTF|2025-04-09T12:26:24.730Z|28009": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
-      "active": true,
-      "components": {},
-      "idResource": "GraphGLTF|2025-04-09T12:26:24.730Z|28009",
-      "type": "GraphGLTF",
-      "url": "Assets\\Environment\\Ground\\Sandboden_Tile.glb"
-    }
-  },
-  "GraphGLTF|2025-04-09T12:26:28.790Z|34974": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
-      "active": true,
-      "components": {},
-      "idResource": "GraphGLTF|2025-04-09T12:26:28.790Z|34974",
-      "type": "GraphGLTF",
-      "url": "Assets\\Environment\\Ground\\Waldboden_Tile.glb"
-    }
-  },
-  "GraphGLTF|2025-04-09T12:26:32.762Z|17197": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
-      "active": true,
-      "components": {},
-      "idResource": "GraphGLTF|2025-04-09T12:26:32.762Z|17197",
-      "type": "GraphGLTF",
-      "url": "Assets\\Environment\\Ground\\Steinboden_Tile.glb"
-    }
-  },
-  "GraphGLTF|2025-04-09T12:26:35.751Z|49623": {
-    "ƒ.GraphGLTF": {
-      "name": "Scene",
-      "active": true,
-      "components": {},
-      "idResource": "GraphGLTF|2025-04-09T12:26:35.751Z|49623",
-      "type": "GraphGLTF",
-      "url": "Assets\\Environment\\Ground\\Blumenwiese_Tile.glb"
-    }
-  },
-  "Graph|2025-04-10T08:37:14.623Z|16480": {
-    "ƒ.Graph": {
-      "name": "Sand",
-      "active": true,
-      "components": {
-        "ComponentTransform": [
-          {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0.5, 0, 0.5]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ]
-      },
-      "children": [
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-09T12:26:24.730Z|28009"
-          }
-        }
-      ],
-      "idResource": "Graph|2025-04-10T08:37:14.623Z|16480",
-      "type": "Graph"
-    }
-  },
-  "Graph|2025-04-10T09:44:09.714Z|76594": {
-    "ƒ.Graph": {
-      "name": "Forest",
-      "active": true,
-      "components": {
-        "ComponentTransform": [
-          {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0.5, 0, 0.5]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ]
-      },
-      "children": [
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-09T12:26:28.790Z|34974"
-          }
-        }
-      ],
-      "idResource": "Graph|2025-04-10T09:44:09.714Z|76594",
-      "type": "Graph"
-    }
-  },
   "AnimationGLTF|2025-04-10T11:33:30.282Z|80849": {
     "ƒ.AnimationGLTF": {
       "idResource": "AnimationGLTF|2025-04-10T11:33:30.282Z|80849",
@@ -1191,70 +1114,6 @@
       "type": "AnimationGLTF",
       "url": "Assets\\Eumling\\Eumling.glb",
       "events": {}
-    }
-  },
-  "Graph|2025-04-10T13:08:31.732Z|93956": {
-    "ƒ.Graph": {
-      "name": "Stone",
-      "active": true,
-      "components": {
-        "ComponentTransform": [
-          {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0.5, 0, 0.5]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ]
-      },
-      "children": [
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-09T12:26:32.762Z|17197"
-          }
-        }
-      ],
-      "idResource": "Graph|2025-04-10T13:08:31.732Z|93956",
-      "type": "Graph"
-    }
-  },
-  "Graph|2025-04-10T13:17:41.049Z|34656": {
-    "ƒ.Graph": {
-      "name": "Flower",
-      "active": true,
-      "components": {
-        "ComponentTransform": [
-          {
-            "ƒ.ComponentTransform": {
-              "local": {
-                "translation": "[0.5, 0, 0.5]",
-                "rotation": "[0, 0, 0]",
-                "scaling": "[1, 1, 1]"
-              },
-              "Component": {
-                "active": true
-              }
-            }
-          }
-        ]
-      },
-      "children": [
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "GraphGLTF|2025-04-09T12:26:35.751Z|49623"
-          }
-        }
-      ],
-      "idResource": "Graph|2025-04-10T13:17:41.049Z|34656",
-      "type": "Graph"
     }
   },
   "Material|2025-04-10T14:39:54.061Z|50893": {
