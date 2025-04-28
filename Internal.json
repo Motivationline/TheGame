@@ -1131,7 +1131,7 @@
               "animWalk": "AnimationGLTF|2025-04-10T09:01:35.649Z|00782",
               "animGatherFood": "AnimationGLTF|2025-04-17T13:18:40.288Z|81182",
               "animGatherStone": "AnimationGLTF|2025-04-10T09:01:35.663Z|98534",
-              "animSelected": "AnimationGLTF|2025-04-10T09:01:35.642Z|75132"
+              "animSelected": "AnimationGLTF|2025-04-28T14:35:56.108Z|36665"
             }
           }
         ],
@@ -1505,6 +1505,15 @@
       "children": [],
       "idResource": "Graph|2025-04-25T11:30:22.748Z|41220",
       "type": "Graph"
+    }
+  },
+  "AnimationGLTF|2025-04-28T14:35:56.108Z|36665": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-28T14:35:56.108Z|36665",
+      "name": "Click",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
     }
   }
 }
