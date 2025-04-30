@@ -6,6 +6,7 @@ namespace Script {
     export interface Tile {
         type: string,
         origin: boolean,
+        node: ƒ.Node,
     }
 
     export class Grid {
@@ -34,6 +35,9 @@ namespace Script {
             return this.#size;
         }
 
+        /**
+         * @returns null if outside the grid, undefined if empty, else the found Tile
+         */
         public getTile(_pos: ƒ.Vector2, inWorldCoordinates: boolean = true): Tile | undefined | null {
             if (inWorldCoordinates)
                 _pos = this.worldPosToTilePos(_pos);
@@ -57,7 +61,7 @@ namespace Script {
                 _pos.y - this.#size.y / 2,
             )
         }
-        public getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): ƒ.Vector2[] {
+        public getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): MovePath {
             return this.#pathfinder.getPath(_from, _to);
         }
     }

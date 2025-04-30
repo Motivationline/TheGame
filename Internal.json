@@ -846,48 +846,6 @@
               }
             ]
           }
-        },
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
-          }
-        },
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
-          }
-        },
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
-          }
-        },
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
-          }
-        },
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
-          }
-        },
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
-          }
-        },
-        {
-          "ƒ.GraphInstance": {
-            "deserializeFromSource": true,
-            "idSource": "Graph|2025-04-25T11:30:22.748Z|41220"
-          }
         }
       ],
       "idResource": "Graph|2025-03-05T11:38:04.024Z|25869",
@@ -1090,6 +1048,15 @@
       "idResource": "GraphGLTF|2025-04-25T09:12:15.354Z|10706",
       "type": "GraphGLTF",
       "url": "Assets\\Eumling\\Eumling_Architekt.glb"
+    }
+  },
+  "AnimationGLTF|2025-04-28T14:35:56.108Z|36665": {
+    "ƒ.AnimationGLTF": {
+      "idResource": "AnimationGLTF|2025-04-28T14:35:56.108Z|36665",
+      "name": "Click",
+      "type": "AnimationGLTF",
+      "url": "Assets\\Eumling\\Eumling.glb",
+      "events": {}
     }
   },
   "Graph|2025-04-09T07:19:42.868Z|15220": {
@@ -1505,15 +1472,6 @@
       "children": [],
       "idResource": "Graph|2025-04-25T11:30:22.748Z|41220",
       "type": "Graph"
-    }
-  },
-  "AnimationGLTF|2025-04-28T14:35:56.108Z|36665": {
-    "ƒ.AnimationGLTF": {
-      "idResource": "AnimationGLTF|2025-04-28T14:35:56.108Z|36665",
-      "name": "Click",
-      "type": "AnimationGLTF",
-      "url": "Assets\\Eumling\\Eumling.glb",
-      "events": {}
     }
   }
 }

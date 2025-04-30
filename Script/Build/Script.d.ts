@@ -73,7 +73,7 @@ declare namespace Script {
         closedList: Set<string>;
         target: ƒ.Vector2;
         constructor(grid: Grid);
-        getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): ƒ.Vector2[];
+        getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): MovePath;
         private nodesToArray;
         private expandNode;
         private expandNodeNeighbor;
@@ -91,17 +91,21 @@ declare namespace Script {
     interface Tile {
         type: string;
         origin: boolean;
+        node: ƒ.Node;
     }
     class Grid {
         #private;
         constructor(_size: ƒ.Vector2);
         set size(_size: ƒ.Vector2);
         get size(): ƒ.Vector2;
+        /**
+         * @returns null if outside the grid, undefined if empty, else the found Tile
+         */
         getTile(_pos: ƒ.Vector2, inWorldCoordinates?: boolean): Tile | undefined | null;
         setTile(_tile: Tile | undefined, _pos: ƒ.Vector2): void;
         worldPosToTilePos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
         tilePosToWorldPos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
-        getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): ƒ.Vector2[];
+        getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): MovePath;
     }
     class GridDisplayComponent extends ƒ.Component {
         static readonly iSubclass: number;
@@ -267,13 +271,34 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
-    class JobTaker extends UpdateScriptComponent {
+    type MovePath = ƒ.Vector2[];
+    class MoveTo extends UpdateScriptComponent {
         #private;
+        static readonly iSubclass: number;
+        speed: number;
+        start(_e: CustomEvent<UpdateEvent>): void;
+        update(_e: CustomEvent<UpdateEvent>): void;
+        setPath(_path: MovePath): void;
+        setTarget(_pos: ƒ.Vector2, inWorldCoordinates?: boolean): MovePath;
+        private setNextTarget;
+        protected moveToTarget(deltaTime: number): boolean;
+        drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    class JobTaker extends MoveTo {
+        #private;
+        static readonly iSubclass: number;
         speed: number;
         constructor();
         set job(_job: JobType);
         set paused(_paused: boolean);
-        static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined;
+        static findClosestJobProviderWithPath(_job: JobType, _location: ƒ.Vector3): {
+            job: JobProvider;
+            path: MovePath;
+        } | undefined;
+        static findPathToJobProvider(_job: JobProvider, _startLocation: ƒ.Vector3): MovePath | undefined;
         start(_e: CustomEvent<UpdateEvent>): void;
         update(_e: CustomEvent<UpdateEvent>): void;
         moveAwayNow(): void;
@@ -283,21 +308,8 @@ declare namespace Script {
         private pause;
         private unpause;
         private removeTarget;
-        private moveToTarget;
-        private findAndSetTargetForJob;
-    }
-}
-declare namespace Script {
-    import ƒ = FudgeCore;
-    class MoveTo extends UpdateScriptComponent {
-        #private;
-        static readonly iSubclass: number;
-        speed: number;
-        start(_e: CustomEvent<UpdateEvent>): void;
-        update(_e: CustomEvent<UpdateEvent>): void;
-        setTarget(_pos: ƒ.Vector2, inWorldCoordinates?: boolean): void;
-        private setNextTarget;
         protected moveToTarget(deltaTime: number): boolean;
+        private findAndSetTargetForJob;
         drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void;
     }
 }

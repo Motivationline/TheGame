@@ -8,8 +8,8 @@ namespace Script {
         constructor(private grid: Grid) {
 
         }
-        public getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): ƒ.Vector2[] {
-            if(grid.getTile(_to, false)) return [];
+        public getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): MovePath {
+            if (grid.getTile(_to, false)) return [];
             // using A* algorithm
             this.openList = new Map<string, AStarNode>([[_to.toString(), { f: 0, node: _to, g: 0 }]]); // starting with _to so the result is already in the correct order
             this.closedList = new Set<string>();
@@ -18,7 +18,7 @@ namespace Script {
             let list: AStarNode[] = [];
 
             while (this.openList.size > 0) {
-                list = this.openList.values().toArray().sort((a, b) => a.f - b.f);
+                list = this.openList.values().toArray().sort((a: AStarNode, b: AStarNode) => a.f - b.f);
                 const currentNode = list.shift();
                 this.openList.delete(currentNode.node.toString());
                 if (currentNode.node.equals(this.target)) {
@@ -30,7 +30,7 @@ namespace Script {
 
             return [];
         }
-        private nodesToArray(_startNode: AStarNode): ƒ.Vector2[] {
+        private nodesToArray(_startNode: AStarNode): MovePath {
             const list: ƒ.Vector2[] = [];
             let node = _startNode;
             while (node) {
@@ -56,7 +56,7 @@ namespace Script {
             // tile is outside of existing grid
             if (tile === null) return;
             // tile is blocked = unwalkable
-            if (tile !== undefined) 
+            if (tile !== undefined)
                 return;
 
             let g = _currentNode.g + vector2Distance(_pos, _currentNode.node);

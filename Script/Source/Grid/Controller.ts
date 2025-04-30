@@ -17,14 +17,6 @@ namespace Script {
 
             this.wrapper = document.getElementById("build-menu").parentElement;
             this.buildings = document.getElementById("build-menu-buildings");
-
-            // set center to occupied
-            let pos: ƒ.Vector2 = new ƒ.Vector2();
-            for (let y: number = -2; y <= 2; y++) {
-                for (let x: number = -2; x <= 2; x++) {
-                    this.grid.setTile({ origin: false, type: "goddess" }, pos.set(Math.floor(grid.size.x / 2) + x, Math.floor(grid.size.y / 2) + y));
-                }
-            }
         }
 
         async enable(): Promise<void> {
@@ -94,12 +86,13 @@ namespace Script {
             let tilePos = this.tilePositionFromMouseEvent(_event);
             this.checkAndSetCurrentPosition(tilePos);
             if (this.currentPositionOccupied) return;
-            this.forEachSelectedTile(this.currentPosition, this.selectedBuilding.size, (tile, pos) => {
-                this.grid.setTile({ type: "test", origin: this.currentPosition.equals(pos) }, pos);
-            });
             this.highlightGrid(_event);
 
             let marker = await this.placeGraphOnGrid(this.currentPosition, this.selectedBuilding.size, this.selectedBuilding.graph);
+
+            this.forEachSelectedTile(this.currentPosition, this.selectedBuilding.size, (tile, pos) => {
+                this.grid.setTile({ type: "test", origin: this.currentPosition.equals(pos), node: marker }, pos);
+            });
 
             // make it so building needs to be built before it takes effect
             getDerivedComponents(marker, JobProvider).forEach((jobCmp) => { jobCmp.activate(false); });
@@ -114,7 +107,7 @@ namespace Script {
                 let placeholder = await ƒ.Project.createGraphInstance(graphToPlace);
                 buildupCmp.nodeToRemove = placeholder;
                 marker.addChild(placeholder);
-                
+
                 buildupCmp.nodeToEnable = marker.getChild(0);
                 marker.getChild(0)?.activate(false);
             }
@@ -124,20 +117,20 @@ namespace Script {
         }
 
         public async placeGraphOnGrid(_posOfTile: ƒ.Vector2, _size: number, _graph: ƒ.Graph): Promise<ƒ.Node> {
-            this.forEachSelectedTile(_posOfTile, _size, (t, pos) => {
-                this.grid.setTile({ type: "test", origin: _posOfTile.equals(pos) }, pos);
-            });
-
+            
             // visually add building
             let marker = await ƒ.Project.createGraphInstance(_graph);
             viewport.getBranch().appendChild(marker);
             let worldPos = this.grid.tilePosToWorldPos(_posOfTile);
             marker.mtxLocal.translation = new ƒ.Vector3(worldPos.x + _size / 2, 0, worldPos.y + _size / 2);
-
+            
             setTimeout(() => {
                 EumlingCreator.updateButton();
             }, 1);
-
+            
+            this.forEachSelectedTile(_posOfTile, _size, (t, pos) => {
+                this.grid.setTile({ type: "test", origin: _posOfTile.equals(pos), node: marker }, pos);
+            });
             return marker;
         }
 
@@ -189,7 +182,7 @@ namespace Script {
             this.selectedBuilding = _build;
             this.marker.mtxLocal.scaling = ƒ.Vector3.ONE(_build.size);
             this.currentPosition = undefined;
-            
+
             this.wrapper.classList.add("hidden");
         }
 

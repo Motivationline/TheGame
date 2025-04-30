@@ -10,7 +10,7 @@ namespace Script {
 
   async function start(_event: CustomEvent) {
     viewport = _event.detail;
-    viewport.gizmosEnabled = true;
+    // viewport.gizmosEnabled = true;
 
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -52,6 +52,14 @@ namespace Script {
     let starterHut = Building.all.find(b => b.name === "Wohnhaus");
     if (starterHut) await gridBuilder.placeGraphOnGrid(pos, starterHut.size, starterHut.graph);
 
+    // set center to occupied by goddesstatue
+    let statue: ƒ.Node = viewport.getBranch().getChildrenByName("GodessWrapper")[0]?.getChild(0);
+    if (!statue) return;
+    for (let y: number = -2; y <= 2; y++) {
+      for (let x: number = -2; x <= 2; x++) {
+        grid.setTile({ origin: false, type: "goddess", node: statue }, pos.set(Math.floor(grid.size.x / 2) + x, Math.floor(grid.size.y / 2) + y));
+      }
+    }
     // gathering spots
     let foodSpot = Building.all.find(b => b.name === "GatherFood");
     if (foodSpot) {

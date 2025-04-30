@@ -1,7 +1,11 @@
+/// <reference path="MoveTo.ts" />
+
 namespace Script {
     import ƒ = FudgeCore;
     @ƒ.serialize
-    export class JobTaker extends UpdateScriptComponent {
+    export class JobTaker extends MoveTo {
+        public static readonly iSubclass: number = ƒ.Component.registerSubclass(JobTaker);
+
         #job: JobType = JobType.NONE;
         #currentJob: JobType = JobType.NONE;
         #progress: number = 0;
@@ -39,7 +43,6 @@ namespace Script {
             this.#timers.forEach(t => t.clear());
             this.#timers.length = 0;
 
-            this.#prevDistance = Infinity;
             this.paused = false;
         }
 
@@ -52,7 +55,7 @@ namespace Script {
             }
         }
 
-        static findClosestJobProvider(_job: JobType, _location: ƒ.Vector3): JobProvider | undefined {
+        static findClosestJobProviderWithPath(_job: JobType, _location: ƒ.Vector3): { job: JobProvider, path: MovePath } | undefined {
             const foundProviders: JobProvider[] = [];
             // console.log(_job, JobProvider.JobProviders);
             for (let provider of JobProvider.JobProviders) {
@@ -62,10 +65,62 @@ namespace Script {
             }
             if (!foundProviders.length) return undefined;
             foundProviders.sort((a, b) => a.node.mtxWorld.translation.getDistance(_location) - b.node.mtxWorld.translation.getDistance(_location));
-            return foundProviders[0];
+
+            for (let provider of foundProviders) {
+                let path = this.findPathToJobProvider(provider, _location);
+                if (path)
+                    return { job: provider, path }
+            }
+            return undefined;
+        }
+
+        static findPathToJobProvider(_job: JobProvider, _startLocation: ƒ.Vector3): MovePath | undefined {
+            // get grid position(s) of job location
+            let worldPos = new ƒ.Vector2(_job.node.mtxWorld.translation.x, _job.node.mtxWorld.translation.z);
+            let tilePos = grid.worldPosToTilePos(worldPos);
+
+            let startPos = grid.worldPosToTilePos(new ƒ.Vector2(_startLocation.x, _startLocation.z));
+
+            // find all surrounding, non-blocked blocks
+            const positionsToCheck: ƒ.Vector2[] = [tilePos];
+            const checkedPositions: Set<string> = new Set();
+            const candidates: ƒ.Vector2[] = [];
+            while (positionsToCheck.length > 0) {
+                let currentPos = positionsToCheck.pop();
+                checkedPositions.add(currentPos.toString());
+                for (let x: number = -1; x <= 1; x++) {
+                    for (let y: number = -1; y <= 1; y++) {
+                        let newPos = new ƒ.Vector2(currentPos.x + x, currentPos.y + y);
+                        if (checkedPositions.has(newPos.toString())) continue;
+                        let tile = grid.getTile(newPos, false);
+                        if (tile === null) continue;
+                        if (tile === undefined) {
+                            candidates.push(newPos);
+                            continue;
+                        }
+                        if (tile.node === _job.node) {
+                            positionsToCheck.push(newPos);
+                        }
+                    }
+                }
+            }
+
+            if (!candidates.length) return undefined;
+
+            // sort candidates by distance
+            candidates.sort((a, b) => vector2Distance(a, startPos) - vector2Distance(b, startPos));
+
+            // check which one I can find a path to
+            for (let candidate of candidates) {
+                let path = grid.getPath(startPos, candidate);
+                if (path && path.length) return path;
+            }
+
+            return undefined;
         }
 
         start(_e: CustomEvent<UpdateEvent>): void {
+            super.start(_e);
             this.#animator = this.node.getComponent(JobAnimation);
         }
 
@@ -81,8 +136,6 @@ namespace Script {
             this.#progress = 2;
             this.#timers.forEach(t => t.clear());
             this.#timers.length = 0;
-
-            this.#prevDistance = Infinity;
         }
 
         private gatherResource = (deltaTime: number) => {
@@ -109,6 +162,8 @@ namespace Script {
                             this.#target.jobFinish();
                         });
                         this.#timers.push(timer);
+                        // lookat target
+                        this.node.mtxLocal.lookAt(this.#target.node.mtxLocal.translation);
                     }
                     break;
                 }
@@ -150,7 +205,6 @@ namespace Script {
                 const target = this.findAndSetTargetForJob(this.#job);
                 if (target) {
                     this.#progress = 10;
-                    this.#prevDistance = Infinity;
                 } else {
                     this.idle(deltaTime);
                 }
@@ -197,17 +251,29 @@ namespace Script {
                 }
                 case 2: {
                     // create a random walk target
-                    const node = new ƒ.Node("walk_target");
-                    const jp = new JobProviderNone();
-                    node.addComponent(jp);
-                    node.addComponent(new ƒ.ComponentTransform);
-                    this.node.getParent().addChild(node);
-                    node.mtxLocal.translateX(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(3, 5) + this.node.mtxWorld.translation.x)));
-                    node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(3, 5) + this.node.mtxWorld.translation.z)));
-                    this.#target = jp;
-                    this.node.mtxLocal.lookAt(node.mtxLocal.translation);
+                    let pos: ƒ.Vector2 = new ƒ.Vector2(this.node.mtxWorld.translation.x, this.node.mtxWorld.translation.z);
+                    grid.worldPosToTilePos(pos, pos);
+
+                    for (let i: number = 0; i < 10; i++) {
+                        const newPos = new ƒ.Vector2(
+                            Math.max(0, Math.min(grid.size.x, Math.floor(Math.sign(randomRange(-1, 1)) * randomRange(3, 5) + pos.x))),
+                            Math.max(0, Math.min(grid.size.y, Math.floor(Math.sign(randomRange(-1, 1)) * randomRange(3, 5) + pos.y))),
+                        )
+                        let path = this.setTarget(newPos, false);
+                        if (path.length > 0) break;
+                    }
+
+                    // const node = new ƒ.Node("walk_target");
+                    // const jp = new JobProviderNone();
+                    // node.addComponent(jp);
+                    // node.addComponent(new ƒ.ComponentTransform);
+                    // this.node.getParent().addChild(node);
+                    // node.mtxLocal.translateX(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(3, 5) + this.node.mtxWorld.translation.x)));
+                    // node.mtxLocal.translateZ(Math.max(-20, Math.min(20, Math.sign(randomRange(-1, 1)) * randomRange(3, 5) + this.node.mtxWorld.translation.z)));
+                    // this.#target = jp;
+                    // this.node.mtxLocal.lookAt(node.mtxLocal.translation);
+                    // this.#needToRemoveTarget = true;
                     this.#progress = 3;
-                    this.#needToRemoveTarget = true;
                     break;
                 }
                 case 3: {
@@ -238,39 +304,45 @@ namespace Script {
             node.getParent().removeChild(node);
         }
 
-        #prevDistance: number = Infinity;
-        private moveToTarget(deltaTime: number): boolean {
+        // #prevDistance: number = Infinity;
+        protected moveToTarget(deltaTime: number): boolean {
             this.#animator.playAnimation(NonJobAnimations.WALK);
-            let distance = this.node.mtxWorld.translation.getDistance(this.#target.node.mtxWorld.translation);
-            if (distance < this.#target.node.getComponent(BuildData)?.interactionRadius) {
-                // target reached
-                this.#prevDistance = Infinity;
-                return true;
-            }
-            else if (distance > this.#prevDistance) {
-                // algorithm failed
-                this.node.mtxLocal.translate(this.node.mtxWorld.getTranslationTo(this.#target.node.mtxWorld));
-                this.#prevDistance = Infinity;
-                return true;
-            }
-            this.#prevDistance = distance;
-            // move to target
-            // this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
-            deltaTime = Math.min(1000, deltaTime); // limit delta time to 1 second max to prevent lag causing super big jumps
-            this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
-            return false;
+            return super.moveToTarget(deltaTime);
+            //     let distance = this.node.mtxWorld.translation.getDistance(this.#target.node.mtxWorld.translation);
+            //     if (distance < this.#target.node.getComponent(BuildData)?.interactionRadius) {
+            //         // target reached
+            //         this.#prevDistance = Infinity;
+            //         return true;
+            //     }
+            //     else if (distance > this.#prevDistance) {
+            //         // algorithm failed
+            //         this.node.mtxLocal.translate(this.node.mtxWorld.getTranslationTo(this.#target.node.mtxWorld));
+            //         this.#prevDistance = Infinity;
+            //         return true;
+            //     }
+            //     this.#prevDistance = distance;
+            //     // move to target
+            //     // this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
+            //     deltaTime = Math.min(1000, deltaTime); // limit delta time to 1 second max to prevent lag causing super big jumps
+            //     this.node.mtxLocal.translateZ(deltaTime / 1000 * this.speed);
+            //     return false;
         }
 
         private findAndSetTargetForJob(_job: JobType): JobProvider | undefined {
-            const target = JobTaker.findClosestJobProvider(_job, this.node.mtxWorld.translation);
+            const target = JobTaker.findClosestJobProviderWithPath(_job, this.node.mtxWorld.translation);
             if (!target) {
                 return undefined;
             }
-            target.target(true);
-            this.#target = target;
+            target.job.target(true);
+            this.#target = target.job;
             this.#currentJob = _job;
-            this.node.mtxLocal.lookAt(target.node.mtxWorld.translation);
-            return target;
+            this.node.mtxLocal.lookAt(target.job.node.mtxWorld.translation);
+            this.setPath(target.path);
+            return target.job;
+        }
+
+        drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void {
+            super.drawGizmos(_cmpCamera);
         }
     }
 }

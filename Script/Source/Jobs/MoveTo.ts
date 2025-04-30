@@ -1,5 +1,7 @@
 namespace Script {
     import ƒ = FudgeCore;
+    export type MovePath = ƒ.Vector2[];
+    
     @ƒ.serialize
     export class MoveTo extends UpdateScriptComponent {
         public static readonly iSubclass: number = ƒ.Component.registerSubclass(MoveTo);
@@ -7,7 +9,7 @@ namespace Script {
         speed: number = 1;
 
         #currentPosGrid: ƒ.Vector2 = new ƒ.Vector2();
-        #path: ƒ.Vector2[] = [];
+        #path: MovePath = [];
         #nextTargetWorld: ƒ.Vector3;
         #nextTargetGrid: ƒ.Vector2;
 
@@ -28,11 +30,17 @@ namespace Script {
             }
         }
 
-        public setTarget(_pos: ƒ.Vector2, inWorldCoordinates: boolean = true) {
+        public setPath(_path: MovePath){
+            this.#path = _path;
+            this.setNextTarget();
+        }
+
+        public setTarget(_pos: ƒ.Vector2, inWorldCoordinates: boolean = true): MovePath {
             if (inWorldCoordinates)
                 _pos = grid.worldPosToTilePos(_pos);
-            this.#path = grid.getPath(this.#currentPosGrid, _pos);
-            this.setNextTarget();
+            let path = grid.getPath(this.#currentPosGrid, _pos);
+            this.setPath(path);
+            return path;
         }
 
         private setNextTarget() {
