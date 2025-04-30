@@ -87,7 +87,8 @@ namespace Script {
             mtx.translateX(-grid.size.x / 2);
             mtx.translateZ(-grid.size.y / 2);
             ƒ.Gizmos.drawLines(corners, mtx, new ƒ.Color(0, 0, 0, 1));
-            ƒ.Recycler.storeMultiple(...corners, mtx);
+            corners.forEach(v => ƒ.Recycler.store(v));
+            ƒ.Recycler.store(mtx)
         }
     }
 }

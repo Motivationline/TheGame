@@ -795,12 +795,9 @@
                       "rotation": "[0, 0, 0]",
                       "scaling": "[1, 1, 1]"
                     },
-                    "light": {
-                      "ƒ.LightAmbient": {
-                        "color": "[1, 1, 1, 1]",
-                        "intensity": 1
-                      }
-                    },
+                    "lightType":  "LightAmbient",
+                    "color": "[1, 1, 1, 1]",
+                    "intensity": 1,
                     "Component": {
                       "active": true
                     }

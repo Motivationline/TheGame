@@ -465,7 +465,8 @@ var Script;
             mtx.translateX(-Script.grid.size.x / 2);
             mtx.translateZ(-Script.grid.size.y / 2);
             ƒ.Gizmos.drawLines(corners, mtx, new ƒ.Color(0, 0, 0, 1));
-            ƒ.Recycler.storeMultiple(...corners, mtx);
+            corners.forEach(v => ƒ.Recycler.store(v));
+            ƒ.Recycler.store(mtx);
         }
     }
     Script.GridDisplayComponent = GridDisplayComponent;
