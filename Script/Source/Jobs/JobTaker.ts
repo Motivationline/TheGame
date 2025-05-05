@@ -16,7 +16,7 @@ namespace Script {
         @ƒ.serialize(Number)
         speed: number = 1;
         #paused: boolean = false;
-
+        #defaultGatherAmount: number = 2;
 
         constructor() {
             super();
@@ -71,6 +71,7 @@ namespace Script {
                 if (path)
                     return { job: provider, path }
             }
+            // TODO mark this job taker as blocked so they don't lag the main thread trying over and over again.
             return undefined;
         }
 
@@ -190,9 +191,9 @@ namespace Script {
                 case 6: {
                     // dropped off the resources
                     if (this.#job === JobType.GATHER_FOOD) {
-                        Data.food += Math.max(1, BonusProvider.getBonus(BonusData.FOOD, 1));
+                        Data.food += Math.max(1, BonusProvider.getBonus(BonusData.FOOD, this.#defaultGatherAmount));
                     } else if (this.#job === JobType.GATHER_STONE) {
-                        Data.stone += Math.max(1, BonusProvider.getBonus(BonusData.STONE, 1));
+                        Data.stone += Math.max(1, BonusProvider.getBonus(BonusData.STONE, this.#defaultGatherAmount));
                     }
                     this.#progress = 0;
                     break;

@@ -56,6 +56,7 @@ declare namespace Script {
 }
 declare namespace Script {
     class EumlingCreator {
+        private static eumlingPriceMultiplier;
         static eumlingPrices: {
             stone: number;
             food: number;
@@ -63,6 +64,10 @@ declare namespace Script {
         static eumlingAmount: number;
         static createEumling: () => Promise<void>;
         static updateButton(): void;
+        static eumlingPrice(_eumlingNumber: number): {
+            stone: number;
+            food: number;
+        };
     }
 }
 declare namespace Script {

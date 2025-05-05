@@ -1,6 +1,7 @@
 namespace Script {
     import ƒ = FudgeCore;
     export class EumlingCreator {
+        private static eumlingPriceMultiplier: number = 1.5;
         static eumlingPrices: { stone: number, food: number }[] = [
             { food: 0, stone: 0 },
             { food: 10, stone: 0 },
@@ -9,7 +10,7 @@ namespace Script {
         ]
         static eumlingAmount: number = 0;
         static createEumling = async () => {
-            let current = this.eumlingPrices[this.eumlingAmount];
+            let current = this.eumlingPrice(this.eumlingAmount);
             if (!current) return;
             // check if there is space for new eumling
             if (Data.eumlingLimit <= this.eumlingAmount) return;
@@ -28,7 +29,7 @@ namespace Script {
         }
         static updateButton() {
             let btn = document.getElementById("eumling-btn") as HTMLButtonElement;
-            let current = this.eumlingPrices[this.eumlingAmount];
+            let current = this.eumlingPrice(this.eumlingAmount);
             if (!current) {
                 btn.classList.add("hidden");
                 return;
@@ -44,7 +45,19 @@ namespace Script {
             document.getElementById("eumling-amt-max").innerText = Data.eumlingLimit.toString();
             Data.food += 0;
         }
+        static eumlingPrice(_eumlingNumber: number): { stone: number, food: number } {
+            let current = this.eumlingPrices[_eumlingNumber]
+            if (current) return current;
+
+            let last = this.eumlingPrices[this.eumlingPrices.length - 1];
+            let multiplier = Math.pow(this.eumlingPriceMultiplier, _eumlingNumber + 1 - this.eumlingPrices.length);
+            return {
+                food: Math.floor(last.food * multiplier),
+                stone: Math.floor(last.stone * multiplier),
+            }
+        }
     }
+
     if (ƒ.Project.mode === ƒ.MODE.RUNTIME) {
         document.getElementById("eumling-btn").addEventListener("click", EumlingCreator.createEumling);
         EumlingCreator.updateButton();

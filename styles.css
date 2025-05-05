@@ -198,8 +198,8 @@ div.overlay>* {
 button.close {
   position: absolute;
   --size: 4rem;
-  top: calc(-0.5 * var(--size));
-  right: calc(-0.5 * var(--size));
+  top: calc(-0.25 * var(--size));
+  right: calc(-0.25 * var(--size));
   background-image: url("Assets/UI/close_button.svg");
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -239,6 +239,8 @@ button.build {
   height: 2em;
   padding: 1em 0.5em 0em 2em;
 }
+
+#eumling-btn:disabled > #eumling-plus,
 .cannot-afford {
   filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
 }

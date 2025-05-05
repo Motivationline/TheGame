@@ -277,6 +277,7 @@ var Script;
 (function (Script) {
     var ƒ = FudgeCore;
     class EumlingCreator {
+        static { this.eumlingPriceMultiplier = 1.5; }
         static { this.eumlingPrices = [
             { food: 0, stone: 0 },
             { food: 10, stone: 0 },
@@ -285,7 +286,7 @@ var Script;
         ]; }
         static { this.eumlingAmount = 0; }
         static { this.createEumling = async () => {
-            let current = this.eumlingPrices[this.eumlingAmount];
+            let current = this.eumlingPrice(this.eumlingAmount);
             if (!current)
                 return;
             // check if there is space for new eumling
@@ -304,7 +305,7 @@ var Script;
         }; }
         static updateButton() {
             let btn = document.getElementById("eumling-btn");
-            let current = this.eumlingPrices[this.eumlingAmount];
+            let current = this.eumlingPrice(this.eumlingAmount);
             if (!current) {
                 btn.classList.add("hidden");
                 return;
@@ -317,6 +318,17 @@ var Script;
             document.getElementById("eumling-amt").innerText = this.eumlingAmount.toString();
             document.getElementById("eumling-amt-max").innerText = Script.Data.eumlingLimit.toString();
             Script.Data.food += 0;
+        }
+        static eumlingPrice(_eumlingNumber) {
+            let current = this.eumlingPrices[_eumlingNumber];
+            if (current)
+                return current;
+            let last = this.eumlingPrices[this.eumlingPrices.length - 1];
+            let multiplier = Math.pow(this.eumlingPriceMultiplier, _eumlingNumber + 1 - this.eumlingPrices.length);
+            return {
+                food: Math.floor(last.food * multiplier),
+                stone: Math.floor(last.stone * multiplier),
+            };
         }
     }
     Script.EumlingCreator = EumlingCreator;
@@ -1393,7 +1405,12 @@ var Script;
                 Script.grid.tilePosToWorldPos(next, next);
                 this.#nextTargetWorld.set(next.x + 0.5, 0, next.y + 0.5);
                 this.#prevDistance = Infinity;
-                this.node.mtxLocal.lookAt(this.#nextTargetWorld);
+                try {
+                    this.node.mtxLocal.lookAt(this.#nextTargetWorld);
+                }
+                catch (error) {
+                    console.error(error);
+                }
             }
             #prevDistance;
             moveToTarget(deltaTime) {
@@ -1481,6 +1498,7 @@ var Script;
             #animator;
             #timers;
             #paused;
+            #defaultGatherAmount;
             constructor() {
                 super();
                 this.#job = (__runInitializers(this, _instanceExtraInitializers), Script.JobType.NONE);
@@ -1489,6 +1507,7 @@ var Script;
                 this.#timers = [];
                 this.speed = __runInitializers(this, _speed_initializers, 1);
                 this.#paused = false;
+                this.#defaultGatherAmount = 2;
                 this.#needToRemoveTarget = false;
                 this.gatherResource = (deltaTime) => {
                     switch (this.#progress) {
@@ -1542,10 +1561,10 @@ var Script;
                         case 6: {
                             // dropped off the resources
                             if (this.#job === Script.JobType.GATHER_FOOD) {
-                                Script.Data.food += Math.max(1, Script.BonusProvider.getBonus(Script.BonusData.FOOD, 1));
+                                Script.Data.food += Math.max(1, Script.BonusProvider.getBonus(Script.BonusData.FOOD, this.#defaultGatherAmount));
                             }
                             else if (this.#job === Script.JobType.GATHER_STONE) {
-                                Script.Data.stone += Math.max(1, Script.BonusProvider.getBonus(Script.BonusData.STONE, 1));
+                                Script.Data.stone += Math.max(1, Script.BonusProvider.getBonus(Script.BonusData.STONE, this.#defaultGatherAmount));
                             }
                             this.#progress = 0;
                             break;

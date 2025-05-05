@@ -65,7 +65,11 @@ namespace Script {
             grid.tilePosToWorldPos(next, next);
             this.#nextTargetWorld.set(next.x + 0.5, 0, next.y + 0.5);
             this.#prevDistance = Infinity;
-            this.node.mtxLocal.lookAt(this.#nextTargetWorld);
+            try {
+                this.node.mtxLocal.lookAt(this.#nextTargetWorld);
+            } catch (error) {
+                console.error(error);
+            }
         }
 
         #prevDistance: number = Infinity;
