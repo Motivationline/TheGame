@@ -83,6 +83,7 @@ declare namespace Script {
         previous?: AStarNode;
         f: number;
         g: number;
+        blocked: boolean;
     }
     export {};
 }
@@ -101,7 +102,7 @@ declare namespace Script {
         /**
          * @returns null if outside the grid, undefined if empty, else the found Tile
          */
-        getTile(_pos: ƒ.Vector2, inWorldCoordinates?: boolean): Tile | undefined | null;
+        getTile(_pos: ƒ.Vector2, inWorldCoordinates: boolean): Tile | undefined | null;
         setTile(_tile: Tile | undefined, _pos: ƒ.Vector2): void;
         worldPosToTilePos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;
         tilePosToWorldPos(_pos: ƒ.Vector2, _out?: ƒ.Vector2): ƒ.Vector2;

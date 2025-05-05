@@ -38,7 +38,7 @@ namespace Script {
         /**
          * @returns null if outside the grid, undefined if empty, else the found Tile
          */
-        public getTile(_pos: ƒ.Vector2, inWorldCoordinates: boolean = true): Tile | undefined | null {
+        public getTile(_pos: ƒ.Vector2, inWorldCoordinates: boolean): Tile | undefined | null {
             if (inWorldCoordinates)
                 _pos = this.worldPosToTilePos(_pos);
             if (_pos.x < 0 || _pos.y < 0) return null;
@@ -46,6 +46,7 @@ namespace Script {
             return this.#tiles[_pos.y][_pos.x];
         }
         public setTile(_tile: Tile | undefined, _pos: ƒ.Vector2) {
+            if(this.getTile(_pos, false) === null) return;
             this.#tiles[_pos.y][_pos.x] = _tile;
         }
 

@@ -334,18 +334,19 @@ var Script;
         }
         getPath(_from, _to) {
             if (Script.grid.getTile(_to, false))
-                return [];
+                return []; // target tile is blocked, we cannot walk there.
             // using A* algorithm
-            this.openList = new Map([[_to.toString(), { f: 0, node: _to, g: 0 }]]); // starting with _to so the result is already in the correct order
+            let startTile = Script.grid.getTile(_from, false);
+            this.openList = new Map([[_from.toString(), { f: 0, node: _from, g: 0, blocked: !!startTile }]]); // starting with _from so the result is reversed. Need to do that for blocked check
             this.closedList = new Set();
-            this.target = _from;
+            this.target = _to;
             let list = [];
             while (this.openList.size > 0) {
                 list = this.openList.values().toArray().sort((a, b) => a.f - b.f);
                 const currentNode = list.shift();
                 this.openList.delete(currentNode.node.toString());
                 if (currentNode.node.equals(this.target)) {
-                    return this.nodesToArray(currentNode);
+                    return this.nodesToArray(currentNode).reverse();
                 }
                 this.closedList.add(currentNode.node.toString());
                 this.expandNode(currentNode);
@@ -377,15 +378,15 @@ var Script;
             // tile is outside of existing grid
             if (tile === null)
                 return;
-            // tile is blocked = unwalkable
-            if (tile !== undefined)
+            // next tile is blocked = only walkable if current is also blocked
+            if (tile !== undefined && !_currentNode.blocked)
                 return;
             let g = _currentNode.g + Script.vector2Distance(_pos, _currentNode.node);
             let existingNode = this.openList.get(_pos.toString());
             if (existingNode && g >= existingNode.g)
                 return;
             if (!existingNode)
-                existingNode = { node: _pos.clone, f: 0, g: 0 };
+                existingNode = { node: _pos.clone, f: 0, g: 0, blocked: !!tile };
             existingNode.previous = _currentNode;
             existingNode.g = g;
             existingNode.f = g + Script.vector2Distance(_pos, this.target);
@@ -424,7 +425,7 @@ var Script;
         /**
          * @returns null if outside the grid, undefined if empty, else the found Tile
          */
-        getTile(_pos, inWorldCoordinates = true) {
+        getTile(_pos, inWorldCoordinates) {
             if (inWorldCoordinates)
                 _pos = this.worldPosToTilePos(_pos);
             if (_pos.x < 0 || _pos.y < 0)
@@ -434,6 +435,8 @@ var Script;
             return this.#tiles[_pos.y][_pos.x];
         }
         setTile(_tile, _pos) {
+            if (this.getTile(_pos, false) === null)
+                return;
             this.#tiles[_pos.y][_pos.x] = _tile;
         }
         worldPosToTilePos(_pos, _out = new ƒ.Vector2()) {
@@ -505,9 +508,8 @@ var Script;
     async function createStartingWorld() {
         const pos = new ƒ.Vector2(15, 15);
         // starter hut
-        let starterHut = Script.Building.all.find(b => b.name === "Wohnhaus");
-        if (starterHut)
-            await Script.gridBuilder.placeGraphOnGrid(pos, starterHut.size, starterHut.graph);
+        // let starterHut = Building.all.find(b => b.name === "Wohnhaus");
+        // if (starterHut) await gridBuilder.placeGraphOnGrid(pos, starterHut.size, starterHut.graph);
         // set center to occupied by goddesstatue
         let statue = Script.viewport.getBranch().getChildrenByName("GodessWrapper")[0]?.getChild(0);
         if (!statue)
@@ -520,8 +522,8 @@ var Script;
         // gathering spots
         let foodSpot = Script.Building.all.find(b => b.name === "GatherFood");
         if (foodSpot) {
-            for (let i = 0; i < 200; i++) {
-                pos.set(Math.floor(Script.randomRange(0, 44)), Math.floor(Script.randomRange(0, 44)));
+            for (let i = 0; i < 50; i++) {
+                pos.set(Math.floor((Script.randomRange(-11, 11) + 44) % 44), Math.floor(Script.randomRange(11, 33)));
                 let tile = Script.grid.getTile(pos, false);
                 if (tile)
                     continue;
@@ -531,8 +533,8 @@ var Script;
         // gathering spots
         let stoneSpot = Script.Building.all.find(b => b.name === "GatherStone");
         if (stoneSpot) {
-            for (let i = 0; i < 200; i++) {
-                pos.set(Math.floor(Script.randomRange(0, 44)), Math.floor(Script.randomRange(0, 44)));
+            for (let i = 0; i < 50; i++) {
+                pos.set(Math.floor(Script.randomRange(11, 33)), Math.floor((Script.randomRange(-11, 11) + 44) % 44));
                 let tile = Script.grid.getTile(pos, false);
                 if (tile)
                     continue;
@@ -1687,6 +1689,7 @@ var Script;
                     if (path)
                         return { job: provider, path };
                 }
+                // TODO mark this job taker as blocked so they don't lag the main thread trying over and over again.
                 return undefined;
             }
             static findPathToJobProvider(_job, _startLocation) {

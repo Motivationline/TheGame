@@ -49,8 +49,8 @@ namespace Script {
     const pos = new ƒ.Vector2(15, 15);
 
     // starter hut
-    let starterHut = Building.all.find(b => b.name === "Wohnhaus");
-    if (starterHut) await gridBuilder.placeGraphOnGrid(pos, starterHut.size, starterHut.graph);
+    // let starterHut = Building.all.find(b => b.name === "Wohnhaus");
+    // if (starterHut) await gridBuilder.placeGraphOnGrid(pos, starterHut.size, starterHut.graph);
 
     // set center to occupied by goddesstatue
     let statue: ƒ.Node = viewport.getBranch().getChildrenByName("GodessWrapper")[0]?.getChild(0);
@@ -63,8 +63,11 @@ namespace Script {
     // gathering spots
     let foodSpot = Building.all.find(b => b.name === "GatherFood");
     if (foodSpot) {
-      for (let i: number = 0; i < 200; i++) {
-        pos.set(Math.floor(randomRange(0, 44)), Math.floor(randomRange(0, 44)));
+      for (let i: number = 0; i < 50; i++) {
+        pos.set(
+          Math.floor((randomRange(-11, 11) + 44) % 44),
+          Math.floor(randomRange(11, 33)),
+        );
         let tile = grid.getTile(pos, false);
         if (tile) continue;
         await gridBuilder.placeGraphOnGrid(pos, foodSpot.size, foodSpot.graph);
@@ -73,8 +76,11 @@ namespace Script {
     // gathering spots
     let stoneSpot = Building.all.find(b => b.name === "GatherStone");
     if (stoneSpot) {
-      for (let i: number = 0; i < 200; i++) {
-        pos.set(Math.floor(randomRange(0, 44)), Math.floor(randomRange(0, 44)));
+      for (let i: number = 0; i < 50; i++) {
+        pos.set(
+          Math.floor(randomRange(11, 33)), 
+          Math.floor((randomRange(-11, 11) + 44) % 44)
+        );
         let tile = grid.getTile(pos, false);
         if (tile) continue;
         await gridBuilder.placeGraphOnGrid(pos, stoneSpot.size, stoneSpot.graph);

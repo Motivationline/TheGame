@@ -9,11 +9,12 @@ namespace Script {
 
         }
         public getPath(_from: ƒ.Vector2, _to: ƒ.Vector2): MovePath {
-            if (grid.getTile(_to, false)) return [];
+            if (grid.getTile(_to, false)) return []; // target tile is blocked, we cannot walk there.
             // using A* algorithm
-            this.openList = new Map<string, AStarNode>([[_to.toString(), { f: 0, node: _to, g: 0 }]]); // starting with _to so the result is already in the correct order
+            let startTile = grid.getTile(_from, false);
+            this.openList = new Map<string, AStarNode>([[_from.toString(), { f: 0, node: _from, g: 0, blocked: !!startTile }]]); // starting with _from so the result is reversed. Need to do that for blocked check
             this.closedList = new Set<string>();
-            this.target = _from;
+            this.target = _to;
 
             let list: AStarNode[] = [];
 
@@ -22,7 +23,7 @@ namespace Script {
                 const currentNode = list.shift();
                 this.openList.delete(currentNode.node.toString());
                 if (currentNode.node.equals(this.target)) {
-                    return this.nodesToArray(currentNode);
+                    return this.nodesToArray(currentNode).reverse();
                 }
                 this.closedList.add(currentNode.node.toString());
                 this.expandNode(currentNode);
@@ -55,14 +56,14 @@ namespace Script {
             let tile = this.grid.getTile(_pos, false);
             // tile is outside of existing grid
             if (tile === null) return;
-            // tile is blocked = unwalkable
-            if (tile !== undefined)
+            // next tile is blocked = only walkable if current is also blocked
+            if (tile !== undefined && !_currentNode.blocked)
                 return;
 
             let g = _currentNode.g + vector2Distance(_pos, _currentNode.node);
             let existingNode = this.openList.get(_pos.toString());
             if (existingNode && g >= existingNode.g) return;
-            if (!existingNode) existingNode = { node: _pos.clone, f: 0, g: 0 };
+            if (!existingNode) existingNode = { node: _pos.clone, f: 0, g: 0, blocked: !!tile };
             existingNode.previous = _currentNode;
             existingNode.g = g;
             existingNode.f = g + vector2Distance(_pos, this.target);
@@ -75,5 +76,6 @@ namespace Script {
         previous?: AStarNode,
         f: number,
         g: number,
+        blocked: boolean,
     }
 }

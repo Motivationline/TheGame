@@ -6,10 +6,10 @@
       "shader": "ShaderLit",
       "coat": {
         "ƒ.CoatColored": {
+          "alphaClip": 0.01,
           "color": "[1, 1, 1, 1]"
         }
-      },
-      "alphaClip": 0.01
+      }
     }
   },
   "MeshQuad|2025-04-07T11:28:36.118Z|26450": {
@@ -32,10 +32,10 @@
       "shader": "ShaderLitTextured",
       "coat": {
         "ƒ.CoatTextured": {
+          "alphaClip": 0.01,
           "color": "[1, 1, 1, 1]"
         }
-      },
-      "alphaClip": 0.01
+      }
     }
   },
   "AnimationGLTF|2025-04-23T12:31:14.177Z|06514": {
@@ -251,14 +251,14 @@
       "shader": "ShaderPhong",
       "coat": {
         "ƒ.CoatRemissive": {
+          "alphaClip": 0.01,
           "color": "[1, 1, 1, 1]",
           "diffuse": 1,
           "specular": 0.5,
           "intensity": 0.7,
           "metallic": 0
         }
-      },
-      "alphaClip": 0.01
+      }
     }
   },
   "GraphGLTF|2025-04-08T10:32:49.691Z|74350": {
@@ -790,12 +790,12 @@
               "ComponentLight": [
                 {
                   "ƒ.ComponentLight": {
+                    "lightType": "LightAmbient",
                     "pivot": {
                       "translation": "[0, 0, 0]",
                       "rotation": "[0, 0, 0]",
                       "scaling": "[1, 1, 1]"
                     },
-                    "lightType":  "LightAmbient",
                     "color": "[1, 1, 1, 1]",
                     "intensity": 1,
                     "Component": {
@@ -1065,7 +1065,7 @@
           {
             "ƒ.ComponentTransform": {
               "local": {
-                "translation": "[-4, 0, -4]",
+                "translation": "[0, 0, 0]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
@@ -1137,6 +1137,7 @@
       "shader": "ShaderPhongTextured",
       "coat": {
         "ƒ.CoatRemissiveTextured": {
+          "alphaClip": 0.01,
           "color": "[1, 1, 1, 1]",
           "idTexture": "TextureImage|2025-04-10T14:40:17.873Z|95219",
           "diffuse": 1,
@@ -1144,8 +1145,7 @@
           "intensity": 0.7,
           "metallic": 0
         }
-      },
-      "alphaClip": 0.01
+      }
     }
   },
   "TextureImage|2025-04-10T14:40:17.873Z|95219": {
@@ -1298,6 +1298,16 @@
             "Script.BuildData": {
               "active": true,
               "interactionRadius": 3
+            }
+          }
+        ],
+        "BonusProvider": [
+          {
+            "Script.BonusProvider": {
+              "active": true,
+              "bonusType": 0,
+              "bonusData": 0,
+              "amount": 2
             }
           }
         ]
