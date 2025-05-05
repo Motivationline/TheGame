@@ -36,15 +36,12 @@ namespace Script {
             btn.dataset.costFood = current.food.toString();
             btn.dataset.costStone = current.stone.toString();
             btn.dataset.eumlingLimit = (this.eumlingAmount + 1).toString();
-            btn.innerHTML = `
-            + Eumling (${this.eumlingAmount} / ${Data.eumlingLimit})
-            <div class="build-cost">
-                <span class="build-cost-food" >${current.food}</span>
-                <span class="build-cost-stone">${current.stone}</span>
-            </div>
-            `
+
+            btn.querySelector("span.build-cost-food").innerHTML = current.food.toString();
+            btn.querySelector("span.build-cost-stone").innerHTML = current.stone.toString();
 
             document.getElementById("eumling-amt").innerText = this.eumlingAmount.toString();
+            document.getElementById("eumling-amt-max").innerText = Data.eumlingLimit.toString();
             Data.food += 0;
         }
     }

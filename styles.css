@@ -147,28 +147,48 @@ div.overlay>* {
   bottom: 0;
   display: flex;
   flex-direction: column;
+  width: 10em;
 }
 
-#eumling-display {
+#eumling-btn {
   background-image: url("Assets/UI/eumlinge_button.svg");
   background-repeat: no-repeat;
+  background-position: center center;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
 }
-#eumling-amt {
+#eumling-amt-in-btn {
   position: absolute;
   top: 0.25em;
   right: -0.25em;
   height: 1.5em;
-  aspect-ratio: 1;
-  background-image: url("Assets/UI/eumlinge_numbers.svg");
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  background-size: contain;
+  padding: 0 0.25em;
+  /* aspect-ratio: 1; */
+  border-image-source: url("Assets/UI/eumlinge_numbers.svg");
+  border-image-slice: 49% 49% 49% 49% fill;
+  border-image-repeat: stretch;
+  border-image-width: 1em;
   display: grid;
   place-items: center;
   color: var(--color-eumling);
   font-weight: 800;
   font-size: 1.5rem;
+}
+#eumling-plus {
+  background-image: url("Assets/UI/eumlinge_button_plus.svg");
+  background-size: contain;
+  width: 25%;
+  height: 25%;
+  margin-bottom: -15%;
+}
+#eumling-btn > .build-cost {
+  bottom: -0.5em;
+  display: flex;
+  justify-content: center;
+  padding: auto;
 }
 #build-btn {
   background-image: url("Assets/UI/buildings_button.svg");
@@ -217,7 +237,7 @@ button.build {
 .build-cost-stone,
 .build-cost-food {
   height: 2em;
-  padding: 2em 0em 1em 2em;
+  padding: 1em 0.5em 0em 2em;
 }
 .cannot-afford {
   filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);

@@ -67,10 +67,17 @@
         </div>
     </div>
     <div id="build-and-eumling">
-        <div id="eumling-display" class="image-icon">
-            <span id="eumling-amt">0</span>
-        </div>
-        <button id="eumling-btn" class="build">+ Eumling</button>
+        <button id="eumling-btn" class="image-icon no-button build">
+            <span id="eumling-amt-in-btn">
+                <span>
+                    <span id="eumling-amt">0</span>/<span id="eumling-amt-max" class="build-cost-eumling">2</span>
+                </span>
+            </span>
+            <div id="eumling-plus"></div>
+            <div class="build-cost">
+                <span class="build-cost-food">10</span><span class="build-cost-stone">10</span>
+            </div>
+        </button>
         <button data-target="build" id="build-btn" class="no-button">
         </button>
     </div>
