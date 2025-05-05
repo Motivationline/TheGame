@@ -616,7 +616,8 @@
           {
             "Script.BuildData": {
               "active": true,
-              "interactionRadius": 1
+              "interactionRadius": 1,
+              "buildUpGraph": "Graph|2025-04-22T09:39:38.302Z|76334"
             }
           }
         ]
@@ -724,8 +725,8 @@
                     "size": 2,
                     "name": "Mine",
                     "description": "Verbessert Miner",
-                    "costFood": 0,
-                    "costStone": 30,
+                    "costFood": 20,
+                    "costStone": 0,
                     "includeInMenu": true
                   }
                 },
@@ -736,8 +737,8 @@
                     "size": 2,
                     "name": "Wohnhaus",
                     "description": "Behaust 2 Eumlinge",
-                    "costFood": 0,
-                    "costStone": 0,
+                    "costFood": 10,
+                    "costStone": 10,
                     "includeInMenu": true
                   }
                 },
@@ -748,8 +749,8 @@
                     "size": 3,
                     "name": "Farmhaus",
                     "description": "Verbessert Farmer",
-                    "costFood": 10,
-                    "costStone": 10,
+                    "costFood": 0,
+                    "costStone": 20,
                     "includeInMenu": true
                   }
                 },

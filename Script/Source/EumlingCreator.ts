@@ -1,7 +1,7 @@
 namespace Script {
     import ƒ = FudgeCore;
     export class EumlingCreator {
-        private static eumlingPriceMultiplier: number = 1.5;
+        private static eumlingPriceMultiplier: number = 1.2;
         static eumlingPrices: { stone: number, food: number }[] = [
             { food: 0, stone: 0 },
             { food: 10, stone: 0 },

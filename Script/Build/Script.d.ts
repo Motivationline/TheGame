@@ -42,17 +42,23 @@ declare namespace Script {
     }
 }
 declare namespace Script {
-    class Data {
+    export class Data {
         #private;
         static set food(_food: number);
         static set stone(_stone: number);
         static get food(): number;
         static get stone(): number;
         static get eumlingLimit(): number;
+        static buildingCost(build: Build): BuildCost;
         static canAffordBuilding(building: Build): boolean;
         static buyBuilding(building: Build): boolean;
         private static updateCostButtons;
     }
+    interface BuildCost {
+        stone: number;
+        food: number;
+    }
+    export {};
 }
 declare namespace Script {
     class EumlingCreator {

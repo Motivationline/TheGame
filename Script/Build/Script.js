@@ -205,6 +205,8 @@ var Script;
     class Data {
         static #stone = 0;
         static #food = 0;
+        static #builtBuildings = new Map();
+        static #buildingPriceMultiplier = 1.5;
         static set food(_food) {
             this.#food = _food;
             document.getElementById("resource-food").innerText = this.#food.toString();
@@ -224,14 +226,27 @@ var Script;
         static get eumlingLimit() {
             return Script.BonusProvider.getBonus(Script.BonusData.EUMLING_AMOUNT, 0);
         }
+        static buildingCost(build) {
+            if (!this.#builtBuildings.has(build)) {
+                this.#builtBuildings.set(build, 0);
+            }
+            let currentAmount = this.#builtBuildings.get(build);
+            return {
+                food: Math.floor(build.costFood * Math.pow(this.#buildingPriceMultiplier, currentAmount)),
+                stone: Math.floor(build.costStone * Math.pow(this.#buildingPriceMultiplier, currentAmount)),
+            };
+        }
         static canAffordBuilding(building) {
-            return building.costFood <= this.#food && building.costStone <= this.#stone;
+            const cost = this.buildingCost(building);
+            return cost.food <= this.#food && cost.stone <= this.#stone;
         }
         static buyBuilding(building) {
             if (!this.canAffordBuilding(building))
                 return false;
-            this.food -= building.costFood;
-            this.stone -= building.costStone;
+            const cost = this.buildingCost(building);
+            this.food -= cost.food;
+            this.stone -= cost.stone;
+            this.#builtBuildings.set(building, (this.#builtBuildings.get(building) ?? 0) + 1);
             return true;
         }
         static updateCostButtons() {
@@ -277,7 +292,7 @@ var Script;
 (function (Script) {
     var ƒ = FudgeCore;
     class EumlingCreator {
-        static { this.eumlingPriceMultiplier = 1.5; }
+        static { this.eumlingPriceMultiplier = 1.2; }
         static { this.eumlingPrices = [
             { food: 0, stone: 0 },
             { food: 10, stone: 0 },
@@ -616,8 +631,8 @@ var Script;
             this.currentPosition = undefined;
             this.canvas.addEventListener("mousemove", this.highlightGrid);
             this.canvas.addEventListener("mouseup", this.placeOnGrid);
+            this.generateBuildingButtons();
             if (!this.marker) {
-                this.generateBuildingButtons();
                 let graph = ƒ.Project.getResourcesByName("Tile")[0];
                 this.marker = await ƒ.Project.createGraphInstance(graph);
                 Script.viewport.getBranch().appendChild(this.marker);
@@ -634,21 +649,22 @@ var Script;
             for (let build of Script.Building.all) {
                 if (!build.includeInMenu)
                     continue;
+                const cost = Script.Data.buildingCost(build);
                 const button = Script.createElementAdvanced("button", {
                     innerHTML: `
                     <span class="build-name">${build.name ?? build.graph.name}</span>
                     <img src="Assets/UI/${build.name.toLocaleLowerCase()}_button.svg" />
                     <div class="build-cost">
-                        <span class="build-cost-food">${build.costFood}</span>
-                        <span class="build-cost-stone">${build.costStone}</span>
+                        <span class="build-cost-food">${cost.food}</span>
+                        <span class="build-cost-stone">${cost.stone}</span>
                     </div>
                     <span class="build-description">${build.description}</span>`,
                     classes: ["build", "no-button"],
                 });
-                if (Script.Data.food < build.costFood || Script.Data.stone < build.costStone)
+                if (Script.Data.food < cost.food || Script.Data.stone < cost.stone)
                     button.disabled = true;
-                button.dataset.costFood = build.costFood.toString();
-                button.dataset.costStone = build.costStone.toString();
+                button.dataset.costFood = cost.food.toString();
+                button.dataset.costStone = cost.stone.toString();
                 button.addEventListener("click", () => {
                     this.selectBuilding(build);
                 });
@@ -1585,8 +1601,8 @@ var Script;
                     switch (this.#progress) {
                         case 10: {
                             let reachedTarget = this.moveToTarget(deltaTime);
-                            this.#animator.playAnimation(this.#job);
                             if (reachedTarget) {
+                                this.#animator.playAnimation(this.#job);
                                 this.#progress = 11;
                                 this.#target.jobStart();
                                 let timer = new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
@@ -1594,6 +1610,8 @@ var Script;
                                     this.#target.jobFinish();
                                 });
                                 this.#timers.push(timer);
+                                // lookat target
+                                this.node.mtxLocal.lookAt(this.#target.node.mtxLocal.translation);
                             }
                             break;
                         }
@@ -1725,6 +1743,8 @@ var Script;
                     checkedPositions.add(currentPos.toString());
                     for (let x = -1; x <= 1; x++) {
                         for (let y = -1; y <= 1; y++) {
+                            if (x !== 0 && y !== 0)
+                                continue; // discard diagonals
                             let newPos = new ƒ.Vector2(currentPos.x + x, currentPos.y + y);
                             if (checkedPositions.has(newPos.toString()))
                                 continue;

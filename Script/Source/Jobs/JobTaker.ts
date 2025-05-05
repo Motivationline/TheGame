@@ -91,6 +91,7 @@ namespace Script {
                 checkedPositions.add(currentPos.toString());
                 for (let x: number = -1; x <= 1; x++) {
                     for (let y: number = -1; y <= 1; y++) {
+                        if(x !== 0 && y !== 0) continue; // discard diagonals
                         let newPos = new ƒ.Vector2(currentPos.x + x, currentPos.y + y);
                         if (checkedPositions.has(newPos.toString())) continue;
                         let tile = grid.getTile(newPos, false);
@@ -213,8 +214,8 @@ namespace Script {
             switch (this.#progress) {
                 case 10: {
                     let reachedTarget = this.moveToTarget(deltaTime);
-                    this.#animator.playAnimation(this.#job);
                     if (reachedTarget) {
+                        this.#animator.playAnimation(this.#job);
                         this.#progress = 11;
                         this.#target.jobStart();
                         let timer = new ƒ.Timer(ƒ.Time.game, this.#target.jobDuration, 1, () => {
@@ -222,6 +223,8 @@ namespace Script {
                             this.#target.jobFinish();
                         });
                         this.#timers.push(timer);
+                        // lookat target
+                        this.node.mtxLocal.lookAt(this.#target.node.mtxLocal.translation);
                     }
                     break;
                 }

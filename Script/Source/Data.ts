@@ -5,6 +5,8 @@ namespace Script {
     export class Data {
         static #stone: number = 0;
         static #food: number = 0;
+        static #builtBuildings = new Map<Build, number>();
+        static #buildingPriceMultiplier = 1.5;
 
         static set food(_food: number) {
             this.#food = _food;
@@ -27,14 +29,28 @@ namespace Script {
             return BonusProvider.getBonus(BonusData.EUMLING_AMOUNT, 0);
         }
 
+        static buildingCost(build: Build): BuildCost {
+            if (!this.#builtBuildings.has(build)) {
+                this.#builtBuildings.set(build, 0);
+            }
+            let currentAmount = this.#builtBuildings.get(build);
+            return {
+                food: Math.floor(build.costFood * Math.pow(this.#buildingPriceMultiplier, currentAmount)),
+                stone: Math.floor(build.costStone * Math.pow(this.#buildingPriceMultiplier, currentAmount)),
+            }
+        }
+
         static canAffordBuilding(building: Build): boolean {
-            return building.costFood <= this.#food && building.costStone <= this.#stone;
+            const cost = this.buildingCost(building);
+            return cost.food <= this.#food && cost.stone <= this.#stone;
         }
 
         static buyBuilding(building: Build): boolean {
             if (!this.canAffordBuilding(building)) return false;
-            this.food -= building.costFood;
-            this.stone -= building.costStone;
+            const cost = this.buildingCost(building);
+            this.food -= cost.food;
+            this.stone -= cost.stone;
+            this.#builtBuildings.set(building, (this.#builtBuildings.get(building) ?? 0) + 1);
             return true;
         }
 
@@ -42,23 +58,23 @@ namespace Script {
             const elements: NodeListOf<HTMLButtonElement> = document.querySelectorAll("button.build") as NodeListOf<HTMLButtonElement>;
             for (let element of elements) {
                 let enabled: boolean = true;
-                for(let set in element.dataset) {
-                    if(set === "costFood") {
-                        if(Number(element.dataset.costFood) > this.#food){
+                for (let set in element.dataset) {
+                    if (set === "costFood") {
+                        if (Number(element.dataset.costFood) > this.#food) {
                             enabled = false;
                             element.querySelector(".build-cost-food")?.classList.add("cannot-afford");
                         } else {
                             element.querySelector(".build-cost-food")?.classList.remove("cannot-afford");
                         }
                     } else if (set === "costStone") {
-                        if(Number(element.dataset.costStone) > this.#stone){
+                        if (Number(element.dataset.costStone) > this.#stone) {
                             enabled = false;
                             element.querySelector(".build-cost-stone")?.classList.add("cannot-afford");
                         } else {
                             element.querySelector(".build-cost-stone")?.classList.remove("cannot-afford");
                         }
                     } else if (set === "eumlingLimit") {
-                        if(Number(element.dataset.eumlingLimit) > this.eumlingLimit){
+                        if (Number(element.dataset.eumlingLimit) > this.eumlingLimit) {
                             enabled = false;
                             element.querySelector(".build-cost-eumling")?.classList.add("cannot-afford");
                         } else {
@@ -69,5 +85,10 @@ namespace Script {
                 element.disabled = !enabled;
             }
         }
+    }
+
+    interface BuildCost {
+        stone: number,
+        food: number,
     }
 }

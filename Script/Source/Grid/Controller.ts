@@ -26,8 +26,8 @@ namespace Script {
             this.canvas.addEventListener("mousemove", this.highlightGrid);
             this.canvas.addEventListener("mouseup", this.placeOnGrid);
 
+            this.generateBuildingButtons();
             if (!this.marker) {
-                this.generateBuildingButtons();
                 let graph = <ƒ.Graph>ƒ.Project.getResourcesByName("Tile")[0];
                 this.marker = await ƒ.Project.createGraphInstance(graph);
                 viewport.getBranch().appendChild(this.marker);
@@ -45,20 +45,21 @@ namespace Script {
 
             for (let build of Building.all) {
                 if (!build.includeInMenu) continue;
+                const cost = Data.buildingCost(build);
                 const button = createElementAdvanced("button", {
                     innerHTML: `
                     <span class="build-name">${build.name ?? build.graph.name}</span>
                     <img src="Assets/UI/${build.name.toLocaleLowerCase()}_button.svg" />
                     <div class="build-cost">
-                        <span class="build-cost-food">${build.costFood}</span>
-                        <span class="build-cost-stone">${build.costStone}</span>
+                        <span class="build-cost-food">${cost.food}</span>
+                        <span class="build-cost-stone">${cost.stone}</span>
                     </div>
                     <span class="build-description">${build.description}</span>`,
                     classes: ["build", "no-button"],
                 })
-                if (Data.food < build.costFood || Data.stone < build.costStone) button.disabled = true;
-                button.dataset.costFood = build.costFood.toString();
-                button.dataset.costStone = build.costStone.toString();
+                if (Data.food < cost.food || Data.stone < cost.stone) button.disabled = true;
+                button.dataset.costFood = cost.food.toString();
+                button.dataset.costStone = cost.stone.toString();
                 button.addEventListener("click", () => {
                     this.selectBuilding(build);
                 });
