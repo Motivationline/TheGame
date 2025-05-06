@@ -22,6 +22,7 @@ namespace Script {
         min: number;
         max: number;
         step: number;
+        variant: "range" | "percent";
     }
 
     export class Settings {
@@ -92,19 +93,46 @@ namespace Script {
         private static generateNumberInput(_setting: SettingNumber): HTMLElement {
             const id: string = randomString(10);
             const element = createElementAdvanced("label", { classes: ["settings-number-wrapper", "settings-label"], innerHTML: `<span class="settings-number-label settings-label-text">${_setting.name}</span>`, attributes: [["for", id]] });
-            const input = createElementAdvanced("input", {
-                classes: ["settings-number-input", "settings-input", "slider"],
-                attributes: [["type", "range"], ["value", _setting.value.toString()], ["name", id], ["min", _setting.min.toString()], ["max", _setting.max.toString()], ["step", _setting.step.toString()]],
-                id
-            });
+            switch (_setting.variant) {
+                case "percent": {
+                    const buttonMinus = createElementAdvanced("button", {
+                        classes: ["settings-number-input-button","settings-input"],
+                        innerHTML: "-"
+                    })
+                    const input = createElementAdvanced("input", {
+                        classes: ["settings-number-input", "settings-input", "slider"],
+                        attributes: [["type", "number"], ["value", (_setting.value * 100).toString()], ["name", id], ["min", (_setting.min * 100).toString()], ["max", (_setting.max * 100).toString()], ["step", (_setting.step * 100).toString()]],
+                        id
+                    });
+                    const buttonPlus = createElementAdvanced("button", {
+                        classes: ["settings-number-input-button","settings-input"],
+                        innerHTML: "+"
+                    })
+                    element.append(buttonMinus, input, buttonPlus);
+                    input.addEventListener("change", () => {
+                        let value = Math.min(_setting.max, Math.max(_setting.min, Number(input.value) / 100));
+                        _setting.value = value;
+                        input.value = Math.round(value * 100).toString();
+                    });
+                    buttonMinus.addEventListener("click", ()=>{input.stepDown(); input.dispatchEvent(new InputEvent("change"))});
+                    buttonPlus.addEventListener("click", ()=>{input.stepUp(); input.dispatchEvent(new InputEvent("change"))});
+                    break;
+                }
+                case "range": {
+                    const input = createElementAdvanced("input", {
+                        classes: ["settings-number-input", "settings-input", "number-input"],
+                        attributes: [["type", "range"], ["value", _setting.value.toString()], ["name", id], ["min", _setting.min.toString()], ["max", _setting.max.toString()], ["step", _setting.step.toString()]],
+                        id
+                    })
+                    input.addEventListener("input", () => {
+                        _setting.value = Number(input.value);
+                        const percent = _setting.value / (_setting.max - _setting.min) * 100;
+                        input.style.setProperty("--percent", `${percent}%`);
+                    });
+                    break;
+                }
+            }
 
-            element.appendChild(input);
-
-            input.addEventListener("input", () => {
-                _setting.value = Number(input.value);
-                const percent = _setting.value / (_setting.max - _setting.min) * 100;
-                input.style.setProperty("--percent", `${percent}%`);
-            });
             return element;
         }
     }

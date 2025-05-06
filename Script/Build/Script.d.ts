@@ -268,6 +268,7 @@ declare namespace Script {
         min: number;
         max: number;
         step: number;
+        variant: "range" | "percent";
     }
     export class Settings {
         private static settings;

@@ -1292,17 +1292,45 @@ var Script;
         static generateNumberInput(_setting) {
             const id = Script.randomString(10);
             const element = Script.createElementAdvanced("label", { classes: ["settings-number-wrapper", "settings-label"], innerHTML: `<span class="settings-number-label settings-label-text">${_setting.name}</span>`, attributes: [["for", id]] });
-            const input = Script.createElementAdvanced("input", {
-                classes: ["settings-number-input", "settings-input", "slider"],
-                attributes: [["type", "range"], ["value", _setting.value.toString()], ["name", id], ["min", _setting.min.toString()], ["max", _setting.max.toString()], ["step", _setting.step.toString()]],
-                id
-            });
-            element.appendChild(input);
-            input.addEventListener("input", () => {
-                _setting.value = Number(input.value);
-                const percent = _setting.value / (_setting.max - _setting.min) * 100;
-                input.style.setProperty("--percent", `${percent}%`);
-            });
+            switch (_setting.variant) {
+                case "percent": {
+                    const buttonMinus = Script.createElementAdvanced("button", {
+                        classes: ["settings-number-input-button", "settings-input"],
+                        innerHTML: "-"
+                    });
+                    const input = Script.createElementAdvanced("input", {
+                        classes: ["settings-number-input", "settings-input", "slider"],
+                        attributes: [["type", "number"], ["value", (_setting.value * 100).toString()], ["name", id], ["min", (_setting.min * 100).toString()], ["max", (_setting.max * 100).toString()], ["step", (_setting.step * 100).toString()]],
+                        id
+                    });
+                    const buttonPlus = Script.createElementAdvanced("button", {
+                        classes: ["settings-number-input-button", "settings-input"],
+                        innerHTML: "+"
+                    });
+                    element.append(buttonMinus, input, buttonPlus);
+                    input.addEventListener("change", () => {
+                        let value = Math.min(_setting.max, Math.max(_setting.min, Number(input.value) / 100));
+                        _setting.value = value;
+                        input.value = Math.round(value * 100).toString();
+                    });
+                    buttonMinus.addEventListener("click", () => { input.stepDown(); input.dispatchEvent(new InputEvent("change")); });
+                    buttonPlus.addEventListener("click", () => { input.stepUp(); input.dispatchEvent(new InputEvent("change")); });
+                    break;
+                }
+                case "range": {
+                    const input = Script.createElementAdvanced("input", {
+                        classes: ["settings-number-input", "settings-input", "number-input"],
+                        attributes: [["type", "range"], ["value", _setting.value.toString()], ["name", id], ["min", _setting.min.toString()], ["max", _setting.max.toString()], ["step", _setting.step.toString()]],
+                        id
+                    });
+                    input.addEventListener("input", () => {
+                        _setting.value = Number(input.value);
+                        const percent = _setting.value / (_setting.max - _setting.min) * 100;
+                        input.style.setProperty("--percent", `${percent}%`);
+                    });
+                    break;
+                }
+            }
             return element;
         }
     }
@@ -1343,7 +1371,7 @@ var Script;
                 else {
                     this.gainNodes[channel].connect(this.gainNodes[AUDIO_CHANNEL.MASTER]);
                 }
-                let setting = { type: "number", max: 1, min: 0, name: enumToName.get(channel), step: 0.01, value: 1 };
+                let setting = { type: "number", max: 1, min: 0, name: enumToName.get(channel), step: 0.2, value: 1, variant: "percent" };
                 setting = Script.Settings.proxySetting(setting, (_old, _new) => { AudioManager.setChannelVolume(channel, _new); });
                 settingCategory.settings.push(setting);
             }

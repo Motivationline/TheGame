@@ -33,7 +33,7 @@ namespace Script {
                 } else {
                     this.gainNodes[channel].connect(this.gainNodes[AUDIO_CHANNEL.MASTER]);
                 }
-                let setting: SettingNumber = { type: "number", max: 1, min: 0, name: enumToName.get(channel), step: 0.01, value: 1 };
+                let setting: SettingNumber = { type: "number", max: 1, min: 0, name: enumToName.get(channel), step: 0.2, value: 1, variant: "percent" };
                 setting = Settings.proxySetting(setting, (_old: number, _new: number) => { AudioManager.setChannelVolume(channel, _new) });
                 settingCategory.settings.push(setting);
             }
