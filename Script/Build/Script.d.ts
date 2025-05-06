@@ -225,6 +225,151 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
+    export function findFirstComponentInGraph<T extends ƒ.Component>(_graph: ƒ.Node, _cmp: new () => T): T;
+    export function enumToArray<T extends object>(anEnum: T): T[keyof T][];
+    export function randomEnum<T extends object>(anEnum: T): T[keyof T];
+    export function mobileOrTabletCheck(): boolean;
+    interface CreateElementAdvancedOptions {
+        classes: string[];
+        id: string;
+        innerHTML: string;
+        attributes: [string, string][];
+    }
+    export function createElementAdvanced<K extends keyof HTMLElementTagNameMap>(_type: K, _options?: Partial<CreateElementAdvancedOptions>): HTMLElementTagNameMap[K];
+    export function shuffleArray<T>(_array: Array<T>): Array<T>;
+    export function waitMS(_ms: number): Promise<void>;
+    export function randomArrayElement<T>(_array: Array<T>): T | undefined;
+    export function randomRange(min?: number, max?: number): number;
+    export function randomString(length: number): string;
+    export function capitalize(s: string): string;
+    export function getPlanePositionFromMousePosition(_mousePosition: ƒ.Vector2): ƒ.Vector3;
+    export function getDerivedComponent<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T | undefined;
+    export function getDerivedComponents<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T[];
+    export function vector2Distance(_a: ƒ.Vector2, _b: ƒ.Vector2): number;
+    export {};
+}
+declare namespace Script {
+    export type Setting = SettingCategory | SettingNumber | SettingString;
+    interface SettingsBase {
+        type: string;
+        name: string;
+    }
+    export interface SettingCategory extends SettingsBase {
+        type: "category";
+        settings: Setting[];
+    }
+    export interface SettingString extends SettingsBase {
+        type: "string";
+        value: string;
+    }
+    export interface SettingNumber extends SettingsBase {
+        type: "number";
+        value: number;
+        min: number;
+        max: number;
+        step: number;
+    }
+    export class Settings {
+        private static settings;
+        static proxySetting<T extends Setting>(_setting: T, onValueChange: (_old: any, _new: any) => void): T;
+        static addSettings(..._settings: Setting[]): void;
+        static generateHTML(_settings?: Setting[]): HTMLElement;
+        private static generateSingleHTML;
+        private static generateStringInput;
+        private static generateNumberInput;
+    }
+    export {};
+}
+declare namespace Script {
+    enum AUDIO_CHANNEL {
+        MASTER = 0,
+        SOUNDS = 1,
+        MUSIC = 2
+    }
+    class AudioManager {
+        private static Instance;
+        private gainNodes;
+        private constructor();
+        static addAudioCmpToChannel(_cmpAudio: ComponentAudioMixed, _channel: AUDIO_CHANNEL): void;
+        static setChannelVolume(_channel: AUDIO_CHANNEL, _volume: number): void;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    class ComponentAudioMixed extends ƒ.ComponentAudio {
+        #private;
+        static readonly iSubclass: number;
+        private gainTarget;
+        private isConnected;
+        constructor(_audio?: ƒ.Audio, _loop?: boolean, _start?: boolean, _audioManager?: ƒ.AudioManager, _channel?: AUDIO_CHANNEL);
+        get channel(): AUDIO_CHANNEL;
+        set channel(_channel: AUDIO_CHANNEL);
+        setGainTarget(node: AudioNode): void;
+        connect(_on: boolean): void;
+        fadeTo(_volume: number, _duration: number): void;
+        drawGizmos(): void;
+    }
+}
+declare namespace Script {
+    class MusicController {
+        #private;
+        constructor();
+        private checkEumlings;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    abstract class SoundEmitter extends UpdateScriptComponent {
+        #private;
+        static readonly iSubclass: number;
+        protected singleton: boolean;
+        volume: number;
+        local: boolean;
+        addRandomness: boolean;
+        channel: AUDIO_CHANNEL;
+        mtxPivot: ƒ.Matrix4x4;
+        boxSize: ƒ.Vector3;
+        surfaceOfBoxOnly: boolean;
+        s0: ƒ.Audio;
+        s1: ƒ.Audio;
+        s2: ƒ.Audio;
+        s3: ƒ.Audio;
+        s4: ƒ.Audio;
+        s5: ƒ.Audio;
+        s6: ƒ.Audio;
+        s7: ƒ.Audio;
+        s8: ƒ.Audio;
+        s9: ƒ.Audio;
+        s10: ƒ.Audio;
+        s11: ƒ.Audio;
+        s12: ƒ.Audio;
+        s13: ƒ.Audio;
+        s14: ƒ.Audio;
+        s15: ƒ.Audio;
+        s16: ƒ.Audio;
+        s17: ƒ.Audio;
+        s18: ƒ.Audio;
+        s19: ƒ.Audio;
+        start(_e: CustomEvent<UpdateEvent>): void;
+        playRandomSound: () => void;
+        private getTranslation;
+        drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void;
+    }
+    class SoundEmitterInterval extends SoundEmitter {
+        static readonly iSubclass: number;
+        minWaitTimeMS: number;
+        maxWaitTimeMS: number;
+        start(_e: CustomEvent<UpdateEvent>): void;
+        private startTimer;
+    }
+    class SoundEmitterOnEvent extends SoundEmitter {
+        static readonly iSubclass: number;
+        event: string;
+        start(_e: CustomEvent<UpdateEvent>): void;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
     interface Build {
         graph: ƒ.Graph;
         size: number;
@@ -350,30 +495,5 @@ declare namespace Script {
         sortBy?: "distanceToRay" | "distanceToRayOrigin";
         branch: ƒ.Node;
     }
-    export {};
-}
-declare namespace Script {
-    import ƒ = FudgeCore;
-    export function findFirstComponentInGraph<T extends ƒ.Component>(_graph: ƒ.Node, _cmp: new () => T): T;
-    export function enumToArray<T extends object>(anEnum: T): T[keyof T][];
-    export function randomEnum<T extends object>(anEnum: T): T[keyof T];
-    export function mobileOrTabletCheck(): boolean;
-    interface CreateElementAdvancedOptions {
-        classes: string[];
-        id: string;
-        innerHTML: string;
-        attributes: [string, string][];
-    }
-    export function createElementAdvanced<K extends keyof HTMLElementTagNameMap>(_type: K, _options?: Partial<CreateElementAdvancedOptions>): HTMLElementTagNameMap[K];
-    export function shuffleArray<T>(_array: Array<T>): Array<T>;
-    export function waitMS(_ms: number): Promise<void>;
-    export function randomArrayElement<T>(_array: Array<T>): T | undefined;
-    export function randomRange(min?: number, max?: number): number;
-    export function randomString(length: number): string;
-    export function capitalize(s: string): string;
-    export function getPlanePositionFromMousePosition(_mousePosition: ƒ.Vector2): ƒ.Vector3;
-    export function getDerivedComponent<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T | undefined;
-    export function getDerivedComponents<T extends ƒ.Component>(node: ƒ.Node, component: abstract new () => T): T[];
-    export function vector2Distance(_a: ƒ.Vector2, _b: ƒ.Vector2): number;
     export {};
 }

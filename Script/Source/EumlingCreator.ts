@@ -29,6 +29,7 @@ namespace Script {
         }
         static updateButton() {
             let btn = document.getElementById("eumling-btn") as HTMLButtonElement;
+            if (this.eumlingAmount > 0) btn.classList.remove("wiggle");
             let current = this.eumlingPrice(this.eumlingAmount);
             if (!current) {
                 btn.classList.add("hidden");

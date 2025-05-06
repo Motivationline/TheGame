@@ -75,7 +75,7 @@ div.overlay>* {
 }
 
 .bg {
-  background-color: whitesmoke;
+  background-color: var(--color-off-white);
 }
 
 .hidden {
@@ -83,10 +83,27 @@ div.overlay>* {
 }
 
 #click-start {
-  background-color: white;
+  background-color: var(--color-off-white);
   z-index: 10000;
   display: grid;
   place-items: center;
+  color: var(--color-eumling);
+  font-size: min(12vh, 5vw);
+  font-weight: bold;
+}
+#click-start > * {
+  pointer-events: none;
+}
+
+.wiggle {
+  animation: wiggle 2.5s infinite ease;
+}
+@keyframes wiggle {
+  0% {transform: rotate(0deg);}
+  90% {transform: rotate(0deg);scale: 1;}
+  93% {transform: rotate(5deg);scale: 1.1;}
+  96% {transform: rotate(-5deg);scale: 1.1;}
+  100% {transform: rotate(0deg);scale: 1;}
 }
 
 #resources {
@@ -118,18 +135,20 @@ div.overlay>* {
   aspect-ratio: 1;
   min-height: 1em;
 }
-
+.h,
 .popover-title {
   text-align: center;
   --underline-size: 0.25em;
   padding-bottom: var(--underline-size);
 }
+.h > span,
 .popover-title > span {
   text-align: center;
   font-size: 3em;
   font-weight: 700;
   position: relative;
 }
+.h > span::after,
 .popover-title > span::after {
   content: " ";
   width: 100%;
@@ -208,7 +227,8 @@ button.close {
 }
 
 #job-menu,
-#build-menu {
+#build-menu,
+#settings-menu {
   color: var(--color-off-white);
 }
 #job-wrapper,
@@ -268,4 +288,22 @@ color: var(--color-rock);
 .job-image {
   aspect-ratio: 1;
   min-width: 5em;
+}
+
+#settings-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+#settings-btn {
+  background-image: url("Assets/UI/settings.svg");
+  aspect-ratio: 1;
+  width: 10em;
+}
+
+.settings-category-name {
+  font-size: 1.5em;
+}
+.settings-label {
+  display: block;
 }

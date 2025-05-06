@@ -22,6 +22,7 @@ namespace Script {
             ["build", gridBuilder],
             ["close", new PickController()],
             ["job", new JobController()],
+            ["settings", new SettingsController()],
         ])
         activeUI = uis.get("close");
         activeUI?.enable();
@@ -157,26 +158,27 @@ namespace Script {
     }
 
     class JobController implements ToggleableInteraction {
-        wrapElement: HTMLDialogElement = <HTMLDialogElement>document.getElementById("job-menu").parentElement;
-        wrapper: HTMLDialogElement = <HTMLDialogElement>document.getElementById("job-wrapper");
+        wrapElement: HTMLDivElement = <HTMLDivElement>document.getElementById("job-menu").parentElement;
+        wrapper: HTMLDivElement = <HTMLDivElement>document.getElementById("job-wrapper");
 
         enable(): void {
             this.wrapElement.classList.remove("hidden");
             selectedEumling.getComponent(JobTaker).paused = true;
-            
+
             let buttons: HTMLElement[] = [];
             let keys = availableJobs.values();
             for (let job of keys) {
                 const info = jobTypeInfo.get(job);
-                if(!info) continue;
-                const btn = createElementAdvanced("button", { innerHTML: 
-                    `
+                if (!info) continue;
+                const btn = createElementAdvanced("button", {
+                    innerHTML:
+                        `
                     <span class="job-name">${info.name}</span>
                     <img src="${info.img}" class="job-image" />
                     <span class="job-description">${info.description}</span>
                     `,
                     classes: ["no-button", "job-button"]
-                 });
+                });
                 btn.addEventListener("click", () => {
                     selectedEumling.getComponent(JobTaker).job = job;
                     enableUI("close");
@@ -190,11 +192,29 @@ namespace Script {
                 enableUI("close");
             }
         }
-        
+
         disable = () => {
             this.wrapElement.classList.add("hidden");
             selectedEumling.getComponent(JobTaker).paused = false;
         }
+
+    }
+
+    class SettingsController implements ToggleableInteraction {
+        initiated: boolean = false;
+        wrapElement: HTMLDivElement = <HTMLDivElement>document.getElementById("settings-menu").parentElement;
+        enable = () => {
+            const wrapper = document.getElementById("settings-menu");
+            if (!this.initiated) {
+                const innerHTML = Settings.generateHTML();
+                wrapper.appendChild(innerHTML);
+                this.initiated = true;
+            }
+            this.wrapElement.classList.remove("hidden");
+        };
+        disable = () => {
+            this.wrapElement.classList.add("hidden");
+        };
 
     }
 }

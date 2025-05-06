@@ -43,6 +43,8 @@ namespace Script {
     setupUI();
 
     createStartingWorld();
+
+    new MusicController();
   }
 
   async function createStartingWorld() {
