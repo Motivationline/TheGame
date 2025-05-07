@@ -92,20 +92,20 @@ namespace Script {
         }
         private static generateNumberInput(_setting: SettingNumber): HTMLElement {
             const id: string = randomString(10);
-            const element = createElementAdvanced("label", { classes: ["settings-number-wrapper", "settings-label"], innerHTML: `<span class="settings-number-label settings-label-text">${_setting.name}</span>`, attributes: [["for", id]] });
+            const element = createElementAdvanced("label", { classes: ["settings-number-wrapper", "settings-label", _setting.name.toLowerCase()], innerHTML: `<span class="settings-number-label settings-label-text">${_setting.name}</span>`, attributes: [["for", id]] });
             switch (_setting.variant) {
                 case "percent": {
                     const buttonMinus = createElementAdvanced("button", {
-                        classes: ["settings-number-input-button","settings-input"],
+                        classes: ["settings-number-input-button","minus", "settings-input"],
                         innerHTML: "-"
                     })
                     const input = createElementAdvanced("input", {
-                        classes: ["settings-number-input", "settings-input", "slider"],
+                        classes: ["settings-number-input", "settings-input", "number-input"],
                         attributes: [["type", "number"], ["value", (_setting.value * 100).toString()], ["name", id], ["min", (_setting.min * 100).toString()], ["max", (_setting.max * 100).toString()], ["step", (_setting.step * 100).toString()]],
                         id
                     });
                     const buttonPlus = createElementAdvanced("button", {
-                        classes: ["settings-number-input-button","settings-input"],
+                        classes: ["settings-number-input-button","plus", "settings-input"],
                         innerHTML: "+"
                     })
                     element.append(buttonMinus, input, buttonPlus);
@@ -120,7 +120,7 @@ namespace Script {
                 }
                 case "range": {
                     const input = createElementAdvanced("input", {
-                        classes: ["settings-number-input", "settings-input", "number-input"],
+                        classes: ["settings-number-input", "settings-input", "slider"],
                         attributes: [["type", "range"], ["value", _setting.value.toString()], ["name", id], ["min", _setting.min.toString()], ["max", _setting.max.toString()], ["step", _setting.step.toString()]],
                         id
                     })

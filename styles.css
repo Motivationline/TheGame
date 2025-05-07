@@ -301,9 +301,66 @@ color: var(--color-rock);
   width: 10em;
 }
 
-.settings-category-name {
-  font-size: 1.5em;
+.settings-wrapper {
+  user-select: none;
+  font-weight: bold;
 }
-.settings-label {
+.settings-category-name {
+  font-size: 2.5em;
   display: block;
+  text-align: center;
+}
+.settings-number-wrapper {
+  display: grid;
+  grid-template-areas: "title title title title title" ". minus number plus .";
+  justify-content: center;
+}
+.settings-number-label {
+  grid-area: title;
+  font-size: 2em;
+}
+.settings-number-input-button {
+  width: 3em;
+  aspect-ratio: 1;
+  content-visibility: hidden;
+  border: none;
+  padding: 0;
+  margin: 0 1em;
+  cursor: pointer;
+}
+
+.settings-number-input-button.minus {
+  grid-area: minus;
+  background: url("Assets/UI/minus_button.svg") center center no-repeat;
+}
+.settings-number-input-button.plus {
+  grid-area: plus;
+  background: url("Assets/UI/plus_button.svg") center center no-repeat;
+}
+
+input.settings-number-input.number-input {
+  grid-area: number;
+  font: inherit;
+  font-size: inherit;
+  
+  appearance: textfield;
+  
+  background-image: url("Assets/UI/sounds_bar.svg");
+  background-color: transparent;
+  background-repeat: no-repeat;
+  padding: 1em 0 0.5em 3.25em;
+  
+  border: none;
+  outline: none;
+  
+  font-weight: bold;
+  color: var(--color-settings);
+}
+input.settings-number-input.number-input::-webkit-outer-spin-button,
+input.settings-number-input.number-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.musik > input.settings-number-input.number-input {
+  background-image: url("Assets/UI/music_bar.svg");
 }
