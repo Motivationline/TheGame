@@ -12,8 +12,8 @@ body {
   overflow: hidden;
   font-family: NationalPark, sans-serif;
 
-  --color-food:  #663659;
-  --color-rock:  #B76B37;
+  --color-food: #663659;
+  --color-rock: #B76B37;
   --color-eumling: #107BA0;
   --color-settings: #294860;
   --color-off-white: #F9ECD7;
@@ -31,6 +31,7 @@ body {
   appearance: none;
   cursor: pointer;
 }
+
 .no-button:disabled {
   cursor: not-allowed;
 }
@@ -59,10 +60,12 @@ div.overlay>* {
   place-items: center;
   margin-bottom: 3vh;
 }
+
 .menu.bottom {
   align-items: end;
 }
-.menu > div {
+
+.menu>div {
   border-image-source: url("Assets/UI/window_background.svg");
   border-image-slice: 14% 8% fill;
   border-image-repeat: stretch;
@@ -70,7 +73,7 @@ div.overlay>* {
   /* border-image-outset: 4em; */
   /* background-image: url("Assets/UI/window_background.svg");
   background-size: 100% 100%; */
-  padding: 2rem;
+  padding: 2em;
   position: relative;
 }
 
@@ -91,19 +94,39 @@ div.overlay>* {
   font-size: min(12vh, 5vw);
   font-weight: bold;
 }
-#click-start > * {
+
+#click-start>* {
   pointer-events: none;
 }
 
 .wiggle {
   animation: wiggle 2.5s infinite ease;
 }
+
 @keyframes wiggle {
-  0% {transform: rotate(0deg);}
-  90% {transform: rotate(0deg);scale: 1;}
-  93% {transform: rotate(5deg);scale: 1.1;}
-  96% {transform: rotate(-5deg);scale: 1.1;}
-  100% {transform: rotate(0deg);scale: 1;}
+  0% {
+    transform: rotate(0deg);
+  }
+
+  90% {
+    transform: rotate(0deg);
+    scale: 1;
+  }
+
+  93% {
+    transform: rotate(5deg);
+    scale: 1.1;
+  }
+
+  96% {
+    transform: rotate(-5deg);
+    scale: 1.1;
+  }
+
+  100% {
+    transform: rotate(0deg);
+    scale: 1;
+  }
 }
 
 #resources {
@@ -112,6 +135,7 @@ div.overlay>* {
   left: 0;
   pointer-events: none;
 }
+
 #resource-food-wrapper,
 #resource-stone-wrapper {
   background-repeat: no-repeat;
@@ -122,10 +146,12 @@ div.overlay>* {
   font-size: 2em;
   text-align: center;
 }
+
 #resource-food-wrapper {
   background-image: url("Assets/UI/food_bar.svg");
   color: var(--color-food);
 }
+
 #resource-stone-wrapper {
   background-image: url("Assets/UI/stone_bar.svg");
   color: var(--color-rock);
@@ -135,21 +161,24 @@ div.overlay>* {
   aspect-ratio: 1;
   min-height: 1em;
 }
+
 .h,
 .popover-title {
   text-align: center;
   --underline-size: 0.25em;
   padding-bottom: var(--underline-size);
 }
-.h > span,
-.popover-title > span {
+
+.h>span,
+.popover-title>span {
   text-align: center;
   font-size: 3em;
   font-weight: 700;
   position: relative;
 }
-.h > span::after,
-.popover-title > span::after {
+
+.h>span::after,
+.popover-title>span::after {
   content: " ";
   width: 100%;
   background: url("Assets/UI/underline_text.svg") no-repeat center center;
@@ -179,6 +208,7 @@ div.overlay>* {
   justify-content: end;
   align-items: center;
 }
+
 #eumling-amt-in-btn {
   position: absolute;
   top: 0.25em;
@@ -196,6 +226,7 @@ div.overlay>* {
   font-weight: 800;
   font-size: 1.5rem;
 }
+
 #eumling-plus {
   background-image: url("Assets/UI/eumlinge_button_plus.svg");
   background-size: contain;
@@ -203,12 +234,14 @@ div.overlay>* {
   height: 25%;
   margin-bottom: -15%;
 }
-#eumling-btn > .build-cost {
+
+#eumling-btn>.build-cost {
   bottom: -0.5em;
   display: flex;
   justify-content: center;
   padding: auto;
 }
+
 #build-btn {
   background-image: url("Assets/UI/buildings_button.svg");
   aspect-ratio: 1;
@@ -231,48 +264,55 @@ button.close {
 #settings-menu {
   color: var(--color-off-white);
 }
+
 #job-wrapper,
 #build-menu-buildings {
   display: flex;
   flex-direction: row;
   gap: 3em;
 }
+
 button.build {
   display: flex;
   flex-direction: column;
   width: 10em;
   text-align: center;
 }
+
 .job-name,
 .build-name {
   font-size: 1.5em;
   font-weight: bold;
 }
+
 .build-cost {
   display: grid;
   grid-template-columns: 1fr 1fr;
   position: relative;
   font-weight: bold;
 }
+
 .build-cost-stone,
 .build-cost-food {
   height: 2em;
   padding: 1em 0.5em 0em 2em;
 }
 
-#eumling-btn:disabled > #eumling-plus,
+#eumling-btn:disabled>#eumling-plus,
 .cannot-afford {
   filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
 }
 
 .build-cost-food {
-background: url("Assets/UI/food_bar.svg") no-repeat center center;
-color: var(--color-food);
+  background: url("Assets/UI/food_bar.svg") no-repeat center center;
+  color: var(--color-food);
 }
+
 .build-cost-stone {
-background: url("Assets/UI/stone_bar.svg") no-repeat center center;
-color: var(--color-rock);
+  background: url("Assets/UI/stone_bar.svg") no-repeat center center;
+  color: var(--color-rock);
 }
+
 .job-description,
 .build-description {
   font-size: 1.25em;
@@ -290,77 +330,101 @@ color: var(--color-rock);
   min-width: 5em;
 }
 
+
 #settings-button {
   position: absolute;
   top: 0;
   right: 0;
 }
+
 #settings-btn {
   background-image: url("Assets/UI/settings.svg");
   aspect-ratio: 1;
   width: 10em;
 }
 
+#settings-menu {
+  aspect-ratio: 16/9;
+  height: 65vh;
+  font-size: 2vh;
+}
+
 .settings-wrapper {
   user-select: none;
   font-weight: bold;
 }
+
 .settings-category-name {
   font-size: 2.5em;
   display: block;
   text-align: center;
 }
+
 .settings-number-wrapper {
   display: grid;
   grid-template-areas: "title title title title title" ". minus number plus .";
   justify-content: center;
-}
-.settings-number-label {
-  grid-area: title;
   font-size: 2em;
 }
+
+.settings-number-label {
+  grid-area: title;
+  font-size: 1em;
+  text-align: center;
+}
+
 .settings-number-input-button {
-  width: 3em;
+  font-size: inherit;
+  width: 2em;
   aspect-ratio: 1;
   content-visibility: hidden;
   border: none;
   padding: 0;
-  margin: 0 1em;
+  /* margin: 0 1em; */
   cursor: pointer;
 }
 
 .settings-number-input-button.minus {
   grid-area: minus;
   background: url("Assets/UI/minus_button.svg") center center no-repeat;
+  background-size: contain;
 }
+
 .settings-number-input-button.plus {
   grid-area: plus;
   background: url("Assets/UI/plus_button.svg") center center no-repeat;
+  background-size: contain;
 }
 
 input.settings-number-input.number-input {
   grid-area: number;
   font: inherit;
-  font-size: inherit;
-  
+
   appearance: textfield;
-  
+
   background-image: url("Assets/UI/sounds_bar.svg");
   background-color: transparent;
   background-repeat: no-repeat;
-  padding: 1em 0 0.5em 3.25em;
-  
+  background-position: center center;
+  padding: 0.5em 0em 0em 1.7em;
+  aspect-ratio: 300/137;
+
   border: none;
   outline: none;
-  
+
   font-weight: bold;
   color: var(--color-settings);
-}
-input.settings-number-input.number-input::-webkit-outer-spin-button,
-input.settings-number-input.number-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
+  text-align: center;
 }
 
-.musik > input.settings-number-input.number-input {
+input.settings-number-input.number-input::-webkit-outer-spin-button,
+input.settings-number-input.number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.musik>input.settings-number-input.number-input {
   background-image: url("Assets/UI/music_bar.svg");
+  aspect-ratio: 300/150;
+  padding-bottom: 0.3em;
+  padding-top: 0.3em;
 }
