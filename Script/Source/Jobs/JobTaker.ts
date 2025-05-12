@@ -292,7 +292,9 @@ namespace Script {
 
         private pause = () => {
             this.#animator.playAnimation(NonJobAnimations.SELECTED);
-            this.node.mtxLocal.lookIn(new ƒ.Vector3(-1, 0, -1));
+            const direction: ƒ.Vector3 = ƒ.Recycler.get(ƒ.Vector3).set(-1, 0, -1).normalize();
+            this.node.mtxLocal.lookIn(direction);
+            ƒ.Recycler.store(direction);
         }
         private unpause = () => {
             if (this.#target && this.#target.node)
