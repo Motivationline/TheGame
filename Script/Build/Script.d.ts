@@ -423,6 +423,9 @@ declare namespace Script {
         animBuild: ƒ.Animation;
         animSelected: ƒ.Animation;
         start(_e: CustomEvent<UpdateEvent>): Promise<void>;
+        private forwardEvent;
+        private addEvents;
+        private removeEvents;
         playAnimation(anim: AnimationType): void;
         setModel(model: JobType): void;
     }

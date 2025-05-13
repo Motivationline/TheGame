@@ -42,9 +42,16 @@ namespace Script {
 
     setupUI();
 
+    setupSounds(camera.node);
+
     createStartingWorld();
 
     new MusicController();
+  }
+
+  function setupSounds(camera: ƒ.Node){
+    ƒ.AudioManager.default.listenTo(viewport.getBranch());
+    ƒ.AudioManager.default.listenWith(camera.getComponent(ƒ.ComponentAudioListener));
   }
 
   async function createStartingWorld() {

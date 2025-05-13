@@ -668,7 +668,7 @@
                     "direction": "diagonal",
                     "near": 1,
                     "far": 2000,
-                    "aspect": 0.9800629590766002,
+                    "aspect": 1.3702702702702703,
                     "pivot": {
                       "translation": "[0, 0, 0]",
                       "rotation": "[0, 0, 0]",
@@ -705,6 +705,13 @@
                     "Component": {
                       "active": true
                     }
+                  }
+                }
+              ],
+              "ComponentAudioListener": [
+                {
+                  "ƒ.ComponentAudioListener": {
+                    "active": true
                   }
                 }
               ]
@@ -797,8 +804,6 @@
                       "rotation": "[0, 0, 0]",
                       "scaling": "[1, 1, 1]"
                     },
-                    "color": "[1, 1, 1, 1]",
-                    "intensity": 1,
                     "Component": {
                       "active": true
                     }
@@ -1057,6 +1062,62 @@
       "events": {}
     }
   },
+  "Audio|2025-05-07T14:39:07.361Z|02546": {
+    "ƒ.Audio": {
+      "url": "Assets\\Audio\\SFX\\Eumlinge\\Footstep_1.wav",
+      "idResource": "Audio|2025-05-07T14:39:07.361Z|02546",
+      "name": "Assets\\Audio\\SFX\\Eumlinge\\Footstep_1.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2025-05-07T14:39:07.361Z|13225": {
+    "ƒ.Audio": {
+      "url": "Assets\\Audio\\SFX\\Eumlinge\\Footstep_2.wav",
+      "idResource": "Audio|2025-05-07T14:39:07.361Z|13225",
+      "name": "Assets\\Audio\\SFX\\Eumlinge\\Footstep_2.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2025-05-07T14:39:07.360Z|65380": {
+    "ƒ.Audio": {
+      "url": "Assets\\Audio\\SFX\\Eumlinge\\Berries_Searching.wav",
+      "idResource": "Audio|2025-05-07T14:39:07.360Z|65380",
+      "name": "Assets\\Audio\\SFX\\Eumlinge\\Berries_Searching.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2025-05-07T14:39:07.361Z|27929": {
+    "ƒ.Audio": {
+      "url": "Assets\\Audio\\SFX\\Eumlinge\\Building_End.wav",
+      "idResource": "Audio|2025-05-07T14:39:07.361Z|27929",
+      "name": "Assets\\Audio\\SFX\\Eumlinge\\Building_End.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2025-05-07T14:39:07.361Z|65136": {
+    "ƒ.Audio": {
+      "url": "Assets\\Audio\\SFX\\Eumlinge\\Eumling_Select.wav",
+      "idResource": "Audio|2025-05-07T14:39:07.361Z|65136",
+      "name": "Assets\\Audio\\SFX\\Eumlinge\\Eumling_Select.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2025-05-07T14:39:07.361Z|04696": {
+    "ƒ.Audio": {
+      "url": "Assets\\Audio\\SFX\\Eumlinge\\Job_Switch.wav",
+      "idResource": "Audio|2025-05-07T14:39:07.361Z|04696",
+      "name": "Assets\\Audio\\SFX\\Eumlinge\\Job_Switch.wav",
+      "type": "Audio"
+    }
+  },
+  "Audio|2025-05-07T14:39:07.361Z|55035": {
+    "ƒ.Audio": {
+      "url": "Assets\\Audio\\SFX\\Eumlinge\\Stone_Impact.wav",
+      "idResource": "Audio|2025-05-07T14:39:07.361Z|55035",
+      "name": "Assets\\Audio\\SFX\\Eumlinge\\Stone_Impact.wav",
+      "type": "Audio"
+    }
+  },
   "Graph|2025-04-09T07:19:42.868Z|15220": {
     "ƒ.Graph": {
       "name": "Eumling",
@@ -1106,6 +1167,117 @@
               "active": true,
               "radius": 0.5000000000000001,
               "offset": "[0, 0.5, 0]"
+            }
+          }
+        ],
+        "SoundEmitterOnEvent": [
+          {
+            "Script.SoundEmitterOnEvent": {
+              "active": true,
+              "volume": 1,
+              "local": true,
+              "addRandomness": true,
+              "channel": 1,
+              "mtxPivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "boxSize": "[0, 0, 0]",
+              "surfaceOfBoxOnly": false,
+              "s0": "Audio|2025-05-07T14:39:07.361Z|02546",
+              "s1": "Audio|2025-05-07T14:39:07.361Z|13225",
+              "event": "step"
+            }
+          },
+          {
+            "Script.SoundEmitterOnEvent": {
+              "active": true,
+              "volume": 1,
+              "local": true,
+              "addRandomness": true,
+              "channel": 1,
+              "mtxPivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "boxSize": "[0, 0, 0]",
+              "surfaceOfBoxOnly": false,
+              "s0": "Audio|2025-05-07T14:39:07.360Z|65380",
+              "event": "searchBerry"
+            }
+          },
+          {
+            "Script.SoundEmitterOnEvent": {
+              "active": true,
+              "volume": 1,
+              "local": true,
+              "addRandomness": true,
+              "channel": 1,
+              "mtxPivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "boxSize": "[0, 0, 0]",
+              "surfaceOfBoxOnly": false,
+              "s0": "Audio|2025-05-07T14:39:07.361Z|27929",
+              "event": "buildEnd"
+            }
+          },
+          {
+            "Script.SoundEmitterOnEvent": {
+              "active": true,
+              "volume": 1,
+              "local": false,
+              "addRandomness": true,
+              "channel": 1,
+              "mtxPivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "boxSize": "[0, 0, 0]",
+              "surfaceOfBoxOnly": false,
+              "s0": "Audio|2025-05-07T14:39:07.361Z|65136",
+              "event": "select"
+            }
+          },
+          {
+            "Script.SoundEmitterOnEvent": {
+              "active": true,
+              "volume": 1,
+              "local": false,
+              "addRandomness": true,
+              "channel": 1,
+              "mtxPivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "boxSize": "[0, 0, 0]",
+              "surfaceOfBoxOnly": false,
+              "s0": "Audio|2025-05-07T14:39:07.361Z|04696",
+              "event": "switchJob"
+            }
+          },
+          {
+            "Script.SoundEmitterOnEvent": {
+              "active": true,
+              "volume": 1,
+              "local": true,
+              "addRandomness": true,
+              "channel": 1,
+              "mtxPivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "boxSize": "[0, 0, 0]",
+              "surfaceOfBoxOnly": false,
+              "s0": "Audio|2025-05-07T14:39:07.361Z|55035",
+              "event": "hitStone"
             }
           }
         ]
@@ -1480,6 +1652,14 @@
       "children": [],
       "idResource": "Graph|2025-04-25T11:30:22.748Z|41220",
       "type": "Graph"
+    }
+  },
+  "Audio|2025-05-07T14:39:07.361Z|04122": {
+    "ƒ.Audio": {
+      "url": "Assets\\Audio\\SFX\\Eumlinge\\Building_Loop.wav",
+      "idResource": "Audio|2025-05-07T14:39:07.361Z|04122",
+      "name": "Assets\\Audio\\SFX\\Eumlinge\\Building_Loop.wav",
+      "type": "Audio"
     }
   }
 }

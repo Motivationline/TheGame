@@ -164,6 +164,8 @@ namespace Script {
         enable(): void {
             this.wrapElement.classList.remove("hidden");
             selectedEumling.getComponent(JobTaker).paused = true;
+            
+            selectedEumling.dispatchEvent(new CustomEvent("select"));
 
             let buttons: HTMLElement[] = [];
             let keys = availableJobs.values();
