@@ -468,7 +468,6 @@ declare namespace Script {
         private idle;
         private pause;
         private unpause;
-        private removeTarget;
         protected moveToTarget(deltaTime: number): boolean;
         private findAndSetTargetForJob;
         drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void;

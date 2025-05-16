@@ -31,12 +31,8 @@ namespace Script {
             ])
         }
 
-        #needToRemoveTarget: boolean = false;
         set job(_job: JobType) {
             if (this.#job === _job) return;
-            if (this.#needToRemoveTarget) {
-                this.removeTarget();
-            }
             this.#job = _job;
             this.#animator.setModel(this.#job);
             this.#animator.playAnimation(JobType.NONE);
@@ -288,7 +284,6 @@ namespace Script {
                 case 3: {
                     const reached = this.moveToTarget(deltaTime);
                     if (reached) {
-                        this.removeTarget();
                         this.#progress = 0;
                     }
                 }
@@ -304,15 +299,6 @@ namespace Script {
         private unpause = () => {
             if (this.#target && this.#target.node)
                 this.node.mtxLocal.lookAt(this.#target.node.mtxWorld.translation);
-        }
-
-        private removeTarget() {
-            this.#needToRemoveTarget = false;
-            if (!this.#target || !this.#target.node) return;
-            this.#target.target(false);
-            let node = this.#target.node;
-            node.removeComponent(this.#target);
-            node.getParent().removeChild(node);
         }
 
         // #prevDistance: number = Infinity;
