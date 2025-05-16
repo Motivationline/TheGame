@@ -9,15 +9,14 @@ declare namespace Script {
 }
 declare namespace Script {
     import ƒ = FudgeCore;
-    interface UpdateEvent {
-        deltaTime: number;
-    }
-    abstract class UpdateScriptComponent extends ƒ.Component {
+    abstract class UpdateScriptComponent extends ƒ.ComponentScript {
+        #private;
         constructor();
-        static updateAllInBranch(_branch: ƒ.Node): void;
-        prestart?(_e: CustomEvent<UpdateEvent>): void;
-        start?(_e: CustomEvent<UpdateEvent>): void;
-        update?(_e: CustomEvent<UpdateEvent>): void;
+        private addInternal;
+        private removeInternal;
+        private updateInternal;
+        start?(_e: CustomEvent): void;
+        update?(_e: CustomEvent): void;
         remove?(_e: CustomEvent): void;
     }
 }
@@ -36,7 +35,7 @@ declare namespace Script {
         bonusData: BonusData;
         amount: number;
         static BonusProviders: Map<BonusData, Set<BonusProvider>>;
-        start(_e: CustomEvent<UpdateEvent>): void;
+        start(_e: CustomEvent): void;
         remove(_e: CustomEvent): void;
         static getBonus(data: BonusData, startAmount?: number): number;
     }
@@ -177,14 +176,14 @@ declare namespace Script {
         cooldown: number;
         animationActive: ƒ.Animation;
         animationCooldown: ƒ.Animation;
-        start(_e: CustomEvent<UpdateEvent>): void;
+        start(_e: CustomEvent): void;
         remove(_e: CustomEvent): void;
         jobStart(): void;
         jobFinish(): void;
         target(_targeted: boolean): void;
         get jobType(): JobType;
         get targeted(): boolean;
-        update(_e: CustomEvent<UpdateEvent>): void;
+        update(_e: CustomEvent): void;
     }
     export class JobProviderNone extends JobProvider {
         _jobType: JobType;
@@ -351,7 +350,7 @@ declare namespace Script {
         s17: ƒ.Audio;
         s18: ƒ.Audio;
         s19: ƒ.Audio;
-        start(_e: CustomEvent<UpdateEvent>): void;
+        start(_e: CustomEvent): void;
         playRandomSound: () => void;
         private getTranslation;
         drawGizmos(_cmpCamera?: ƒ.ComponentCamera): void;
@@ -360,13 +359,13 @@ declare namespace Script {
         static readonly iSubclass: number;
         minWaitTimeMS: number;
         maxWaitTimeMS: number;
-        start(_e: CustomEvent<UpdateEvent>): void;
+        start(_e: CustomEvent): void;
         private startTimer;
     }
     class SoundEmitterOnEvent extends SoundEmitter {
         static readonly iSubclass: number;
         event: string;
-        start(_e: CustomEvent<UpdateEvent>): void;
+        start(_e: CustomEvent): void;
     }
 }
 declare namespace Script {
@@ -422,7 +421,7 @@ declare namespace Script {
         animGatherStone: ƒ.Animation;
         animBuild: ƒ.Animation;
         animSelected: ƒ.Animation;
-        start(_e: CustomEvent<UpdateEvent>): Promise<void>;
+        start(_e: CustomEvent): Promise<void>;
         private forwardEvent;
         private addEvents;
         private removeEvents;
@@ -437,8 +436,8 @@ declare namespace Script {
         #private;
         static readonly iSubclass: number;
         speed: number;
-        start(_e: CustomEvent<UpdateEvent>): void;
-        update(_e: CustomEvent<UpdateEvent>): void;
+        start(_e: CustomEvent): void;
+        update(_e: CustomEvent): void;
         setPath(_path: MovePath): void;
         setTarget(_pos: ƒ.Vector2, inWorldCoordinates?: boolean): MovePath;
         private setNextTarget;
@@ -460,8 +459,8 @@ declare namespace Script {
             path: MovePath;
         } | undefined;
         static findPathToJobProvider(_job: JobProvider, _startLocation: ƒ.Vector3): MovePath | undefined;
-        start(_e: CustomEvent<UpdateEvent>): void;
-        update(_e: CustomEvent<UpdateEvent>): void;
+        start(_e: CustomEvent): void;
+        update(_e: CustomEvent): void;
         moveAwayNow(): void;
         private gatherResource;
         private build;

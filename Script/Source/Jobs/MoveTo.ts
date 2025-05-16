@@ -13,15 +13,15 @@ namespace Script {
         #nextTargetWorld: ƒ.Vector3;
         #nextTargetGrid: ƒ.Vector2;
 
-        start(_e: CustomEvent<UpdateEvent>): void {
+        start(_e: CustomEvent): void {
             grid.worldPosToTilePos(new ƒ.Vector2(this.node.mtxLocal.translation.x, this.node.mtxLocal.translation.z), this.#currentPosGrid);
         }
 
         #timer = 1000;
-        update(_e: CustomEvent<UpdateEvent>): void {
-            this.#timer -= _e.detail.deltaTime;
+        update(_e: CustomEvent): void {
+            this.#timer -= ƒ.Loop.timeFrameGame;
             if(this.#timer > 0) return;
-            if (this.moveToTarget(_e.detail.deltaTime)) {
+            if (this.moveToTarget(ƒ.Loop.timeFrameGame)) {
                 // need new target
                 this.setTarget(new ƒ.Vector2(
                     Math.floor(randomRange(0, grid.size.x)),

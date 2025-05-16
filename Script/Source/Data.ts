@@ -1,7 +1,7 @@
 /// <reference path="Buildings/BonusProvider.ts" />
 
 namespace Script {
-    import ƒ = FudgeCore;
+    // import ƒ = FudgeCore;
     export class Data {
         static #stone: number = 0;
         static #food: number = 0;

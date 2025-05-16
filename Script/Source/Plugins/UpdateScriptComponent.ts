@@ -1,47 +1,39 @@
 namespace Script {
     import ƒ = FudgeCore;
-    export interface UpdateEvent {
-        deltaTime: number,
-    }
 
-    export abstract class UpdateScriptComponent extends ƒ.Component {
+    export abstract class UpdateScriptComponent extends ƒ.ComponentScript {
+        #runStart = true;
         constructor() {
             super();
             if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                 return;
 
-            this.addEventListener("preupdate", this.prestart, { once: true })
-            this.addEventListener("update", this.start, { once: true })
-            this.addEventListener("update", this.update)
-            this.addEventListener(ƒ.EVENT.COMPONENT_REMOVE, this.remove);
-            this.addEventListener(ƒ.EVENT.COMPONENT_DEACTIVATE, this.remove);
+            this.addEventListener(ƒ.EVENT.COMPONENT_ACTIVATE, this.addInternal);
+            this.addEventListener(ƒ.EVENT.COMPONENT_DEACTIVATE, this.removeInternal);
+            this.addEventListener(ƒ.EVENT.COMPONENT_ADD, this.addInternal);
+            this.addEventListener(ƒ.EVENT.COMPONENT_REMOVE, this.removeInternal);
         }
 
-        // runs updates of all updateable components
-        public static updateAllInBranch(_branch: ƒ.Node) {
-            let event = new CustomEvent<UpdateEvent>("update", {detail: {deltaTime: ƒ.Loop.timeFrameGame}});
-            let preEvent = new CustomEvent<UpdateEvent>("preupdate", {detail: {deltaTime: ƒ.Loop.timeFrameGame}});
-            for (let node of _branch) {
-                for (let component of node.getAllComponents()) {
-                    if (component instanceof UpdateScriptComponent) {
-                        if (component.active)
-                            component.dispatchEvent(preEvent);
-                    }
-                }
-            }
-            for (let node of _branch) {
-                for (let component of node.getAllComponents()) {
-                    if (component instanceof UpdateScriptComponent) {
-                        if (component.active)
-                            component.dispatchEvent(event);
-                    }
-                }
-            }
+        private addInternal = (_e: CustomEvent) => {
+            this.#runStart = true;
+            this.node.addEventListener(ƒ.EVENT.RENDER_PREPARE, this.updateInternal)
         }
 
-        prestart?(_e: CustomEvent<UpdateEvent>): void;
-        start?(_e: CustomEvent<UpdateEvent>): void;
-        update?(_e: CustomEvent<UpdateEvent>): void;
+        private removeInternal = (_e: CustomEvent) => {
+            this.remove?.(_e);
+            this.node.removeEventListener(ƒ.EVENT.RENDER_PREPARE, this.updateInternal);
+        }
+
+        private updateInternal = (_e: CustomEvent) => {
+            if (this.#runStart) {
+                this.start?.(_e);
+                this.#runStart = false;
+            }
+            this.update?.(_e);
+        }
+
+        start?(_e: CustomEvent): void;
+        update?(_e: CustomEvent): void;
         remove?(_e: CustomEvent): void;
 
     }

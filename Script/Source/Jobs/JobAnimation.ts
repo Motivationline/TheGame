@@ -40,7 +40,7 @@ namespace Script {
         @ƒ.serialize(ƒ.Animation)
         animSelected: ƒ.Animation;
 
-        async start(_e: CustomEvent<UpdateEvent>): Promise<void> {
+        async start(_e: CustomEvent): Promise<void> {
             this.#animations.set(NonJobAnimations.WALK, this.animWalk);
             this.#animations.set(NonJobAnimations.SELECTED, this.animSelected);
             this.#animations.set(JobType.NONE, this.animIdle);

@@ -41,7 +41,7 @@ namespace Script {
         #currentCooldown = 0;
         #targeted: boolean;
         #animator: ƒ.ComponentAnimation;
-        start(_e: CustomEvent<UpdateEvent>): void {
+        start(_e: CustomEvent): void {
             JobProvider.JobProviders.add(this);
             this.#animator = findFirstComponentInGraph(this.node, ƒ.ComponentAnimation);
         }
@@ -71,9 +71,9 @@ namespace Script {
         get targeted() {
             return this.#targeted;
         }
-        update(_e: CustomEvent<UpdateEvent>): void {
+        update(_e: CustomEvent): void {
             if (this.#currentCooldown > 0) {
-                this.#currentCooldown -= _e.detail.deltaTime;
+                this.#currentCooldown -= ƒ.Loop.timeFrameGame;
                 if (this.#currentCooldown <= 0) {
                     if (this.#animator && this.animationCooldown) {
                         this.#animator.animation = this.animationCooldown;

@@ -71,7 +71,7 @@ namespace Script {
         #audioCmp: ComponentAudioMixed;
         #audios: ƒ.Audio[] = [];
 
-        start(_e: CustomEvent<UpdateEvent>): void {
+        start(_e: CustomEvent): void {
             this.#audioCmp = new ComponentAudioMixed(undefined, false, false, undefined, this.channel);
             if (this.local) {
                 this.node.addComponent(this.#audioCmp);
@@ -148,7 +148,7 @@ namespace Script {
         minWaitTimeMS: number;
         @ƒ.serialize(Number)
         maxWaitTimeMS: number;
-        start(_e: CustomEvent<UpdateEvent>): void {
+        start(_e: CustomEvent): void {
             super.start(_e);
             this.startTimer();
         }
@@ -165,7 +165,7 @@ namespace Script {
         @ƒ.serialize(String)
         event: string;
 
-        start(_e: CustomEvent<UpdateEvent>): void {
+        start(_e: CustomEvent): void {
             super.start(_e);
             globalSoundEmitter.addEventListener(this.event, this.playRandomSound);
             this.addEventListener(this.event, this.playRandomSound);

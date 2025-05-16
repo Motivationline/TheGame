@@ -120,14 +120,14 @@ namespace Script {
             return undefined;
         }
 
-        start(_e: CustomEvent<UpdateEvent>): void {
+        start(_e: CustomEvent): void {
             super.start(_e);
             this.#animator = this.node.getComponent(JobAnimation);
         }
 
-        update(_e: CustomEvent<UpdateEvent>): void {
+        update(_e: CustomEvent): void {
             if (this.#paused) return;
-            this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
+            this.#executableJobs.get(this.#job)?.(ƒ.Loop.timeFrameGame);
         }
 
         moveAwayNow() {

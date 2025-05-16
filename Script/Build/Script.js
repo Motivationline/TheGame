@@ -73,37 +73,32 @@ var Script;
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;
-    class UpdateScriptComponent extends ƒ.Component {
+    class UpdateScriptComponent extends ƒ.ComponentScript {
+        #runStart;
         constructor() {
             super();
+            this.#runStart = true;
+            this.addInternal = (_e) => {
+                this.#runStart = true;
+                this.node.addEventListener("renderPrepare" /* ƒ.EVENT.RENDER_PREPARE */, this.updateInternal);
+            };
+            this.removeInternal = (_e) => {
+                this.remove?.(_e);
+                this.node.removeEventListener("renderPrepare" /* ƒ.EVENT.RENDER_PREPARE */, this.updateInternal);
+            };
+            this.updateInternal = (_e) => {
+                if (this.#runStart) {
+                    this.start?.(_e);
+                    this.#runStart = false;
+                }
+                this.update?.(_e);
+            };
             if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                 return;
-            this.addEventListener("preupdate", this.prestart, { once: true });
-            this.addEventListener("update", this.start, { once: true });
-            this.addEventListener("update", this.update);
-            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.remove);
-            this.addEventListener("componentDeactivate" /* ƒ.EVENT.COMPONENT_DEACTIVATE */, this.remove);
-        }
-        // runs updates of all updateable components
-        static updateAllInBranch(_branch) {
-            let event = new CustomEvent("update", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
-            let preEvent = new CustomEvent("preupdate", { detail: { deltaTime: ƒ.Loop.timeFrameGame } });
-            for (let node of _branch) {
-                for (let component of node.getAllComponents()) {
-                    if (component instanceof UpdateScriptComponent) {
-                        if (component.active)
-                            component.dispatchEvent(preEvent);
-                    }
-                }
-            }
-            for (let node of _branch) {
-                for (let component of node.getAllComponents()) {
-                    if (component instanceof UpdateScriptComponent) {
-                        if (component.active)
-                            component.dispatchEvent(event);
-                    }
-                }
-            }
+            this.addEventListener("componentActivate" /* ƒ.EVENT.COMPONENT_ACTIVATE */, this.addInternal);
+            this.addEventListener("componentDeactivate" /* ƒ.EVENT.COMPONENT_DEACTIVATE */, this.removeInternal);
+            this.addEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.addInternal);
+            this.addEventListener("componentRemove" /* ƒ.EVENT.COMPONENT_REMOVE */, this.removeInternal);
         }
     }
     Script.UpdateScriptComponent = UpdateScriptComponent;
@@ -205,6 +200,7 @@ var Script;
 var Script;
 /// <reference path="Buildings/BonusProvider.ts" />
 (function (Script) {
+    // import ƒ = FudgeCore;
     class Data {
         static #stone = 0;
         static #food = 0;
@@ -517,7 +513,6 @@ var Script;
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
-        Script.UpdateScriptComponent.updateAllInBranch(Script.viewport.getBranch());
         Script.viewport.draw();
         // ƒ.AudioManager.default.update();
     }
@@ -853,7 +848,7 @@ var Script;
             }
             update(_e) {
                 if (this.#currentCooldown > 0) {
-                    this.#currentCooldown -= _e.detail.deltaTime;
+                    this.#currentCooldown -= ƒ.Loop.timeFrameGame;
                     if (this.#currentCooldown <= 0) {
                         if (this.#animator && this.animationCooldown) {
                             this.#animator.animation = this.animationCooldown;
@@ -2219,10 +2214,10 @@ var Script;
             }
             #timer;
             update(_e) {
-                this.#timer -= _e.detail.deltaTime;
+                this.#timer -= ƒ.Loop.timeFrameGame;
                 if (this.#timer > 0)
                     return;
-                if (this.moveToTarget(_e.detail.deltaTime)) {
+                if (this.moveToTarget(ƒ.Loop.timeFrameGame)) {
                     // need new target
                     this.setTarget(new ƒ.Vector2(Math.floor(Script.randomRange(0, Script.grid.size.x)), Math.floor(Script.randomRange(0, Script.grid.size.y))), false);
                 }
@@ -2622,7 +2617,7 @@ var Script;
             update(_e) {
                 if (this.#paused)
                     return;
-                this.#executableJobs.get(this.#job)?.(_e.detail.deltaTime);
+                this.#executableJobs.get(this.#job)?.(ƒ.Loop.timeFrameGame);
             }
             moveAwayNow() {
                 if (this.#job !== Script.JobType.NONE && this.#job !== Script.JobType.BUILD) {

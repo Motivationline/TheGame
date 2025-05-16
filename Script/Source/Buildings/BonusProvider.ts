@@ -25,7 +25,7 @@ namespace Script {
 
         static BonusProviders: Map<BonusData, Set<BonusProvider>> = new Map();
 
-        start(_e: CustomEvent<UpdateEvent>): void {
+        start(_e: CustomEvent): void {
             if (!BonusProvider.BonusProviders.has(this.bonusData))
                 BonusProvider.BonusProviders.set(this.bonusData, new Set());
             BonusProvider.BonusProviders.get(this.bonusData)?.add(this);
